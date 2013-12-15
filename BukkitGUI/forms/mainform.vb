@@ -22,6 +22,10 @@ Namespace Core
 
         Private initialize_completed As Boolean = False
 
+        ''' <summary>
+        ''' Allow output emulation in debug. Add debug caption to top
+        ''' </summary>
+        ''' <remarks></remarks>
 #If DEBUG Then
         Private ReadOnly caption As String = "[DEBUG] BukkitGUI v" & My.Application.Info.Version.ToString
 
@@ -55,7 +59,7 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
 
             'Removing disabled tasks + altering layout of general tab
             '
-            If common.isRunningLight Then
+            If common.isRunningLight Then 'in light mode, tabs are hidden, bit smaller window
                 TabCtrlMain.TabPages.Remove(TabErrorLogging)
                 TabCtrlMain.TabPages.Remove(TabServerOptions)
                 TabCtrlMain.TabPages.Remove(TabPlugins)
@@ -84,38 +88,53 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
 
             starttime = Date.Now
             'Load UI
+            'We're running all init and load calls that couldn't be ran from the splashscreen
+            'Everything is ran inside try..catch blocks so if one thing fails, other stuff continues to load.
             Try
-                superstart_init()
-                Try
+                superstart_init() 'init the superstart tab
+
+                Try 'init the plugin manager
                     If Not common.isRunningLight Then Me.pluginmanager_install_init()
                     If Not common.isRunningLight And InstalledPluginManager.loaded = True Then LoadInstalledPlugins(plugins)
                 Catch plex As Exception
                     livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize pluginmanager UI", plex.Message)
                 End Try
-                info_load()
+
+                info_load() 'load info in settings & info tab
+
+                'tray and sound
                 If Not common.isRunningLight Then tray_sound_init() Else GBOptionsInfoAboutTray.Enabled = False : GBOptionsInfoSound.Enabled = False
-                Settings_init()
-                If Not common.isRunningLight Then ErrorManager_InitUI()
-                Try
+
+                Settings_init() 'GUI settings (UI only, already loaded in splashscreen)
+
+                If Not common.isRunningLight Then ErrorManager_InitUI() 'error manager tab
+
+                Try 'backups
                     If Not common.isRunningLight Then TaskManager_UpdateUI()
                     If Not common.isRunningLight Then BackupManager_UpdateUI()
                 Catch plex As Exception
                     livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize Task/Backupmanager UI", plex.Message)
                 End Try
 
-                text_options_init()
+                text_options_init() 'console output coloring
 
                 Try
-                    If Not common.isRunningLight Then Server_settings_refresh_UI()
+                    If Not common.isRunningLight Then Server_settings_refresh_UI() 'server settings
                 Catch plex As Exception
                     livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize ServerSettings UI", plex.Message)
                 End Try
 
+                'all needed stuff is loaded. Set this as true so the GUI knows it can do everything.
                 initialize_completed = True
 
+
+                'Some additional checks, that aren't required.
+                '===========================================================
+
+                'Do we need to start the server right away?
                 autoserverstart_check() 'check if the server should be started, by the autostart on GUI start setting.
 
-
+                'resource monitor
                 If Not common.isRunningLight Then
                     tmr_update_stats.Interval = 500 ' Timer to update the UI with new RAM and CPU data
                     tmr_update_stats.Enabled = True
@@ -124,8 +143,8 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
 
                 If Not common.isRunningLight Then AdvancedOptions.AdvancedOptions_Load()
 
-
                 'Sometimes, due to downloading at high speed, downloads are finished before mainform is loaded
+                'In this case, events might not be handles
                 'These lines fix most of these problems.
                 hnd_ip_loaded(serverinteraction.external_ip_chache) 'update the IP
                 If Net.Bertware.Get.LatestRecommendedVersion IsNot Nothing Then hnd_last_version_loaded(Net.Bertware.Get.LatestRecommendedVersion) 'update last retrieved version
@@ -175,10 +194,20 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
             End If
         End Sub
 
+        ''' <summary>
+        ''' If we need to go to tray, make sure we do. (prevents the GUI to be minimized instead of hidden due to a bug on some systems)
+        ''' </summary>
+        ''' <param name="sender"></param>
+        ''' <param name="e"></param>
+        ''' <remarks></remarks>
         Private Sub mainform_Resize(sender As System.Object, e As System.EventArgs) Handles MyBase.Resize
             If tray_minimize And Me.WindowState = FormWindowState.Minimized Then SendToTray()
         End Sub
 
+        ''' <summary>
+        ''' Close form thread-safe
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Sub SafeFormClose()
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf SafeFormClose)
@@ -188,6 +217,10 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
             End If
         End Sub
 
+        ''' <summary>
+        ''' Set all dynamic handles
+        ''' </summary>
+        ''' <remarks></remarks>
         Private Sub set_handles()
             'Way not all events are handled this way
             'Though, some important are done this way
@@ -910,24 +943,25 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
             'To reduce the delays, only vital things (like color, modifying,..) are done in this routine
             'Detection of player joins etc. is done in anothor routine, on a separate thread
             Try
-                If text Is Nothing OrElse text = "" OrElse text.Trim = "" OrElse text.Contains("[INFO] Command run by remote user") OrElse text = vbCrLf Then Exit Sub
+                If text Is Nothing OrElse text = "" OrElse text.Trim = "" OrElse text.Contains("[INFO] Command run by remote user") OrElse text = vbCrLf Then Exit Sub 'check if text is valid
 
                 text = serverOutputHandler.FixJLine(text) 'Fix JLine coolor codes
 
                 Debug.WriteLine("Handling text:" & text, "debug")
 
-                text = FixTextCompat(text)
+                text = FixTextCompat(text) 'fix 1.7.2 output
+
                 Debug.WriteLine("Fixed 1.7.2:" & text, "debug")
 
-                If text.Contains("[INFO] Command run by remote user") OrElse text = vbCrLf Then Exit Sub
+                If server.CurrentServerType = McInteropType.remote And text.Contains("[INFO] Command run by remote user") Then Exit Sub 'hide jsonapi, to prevent annoying output every time you connect to a jsonapi server
 
-                Dim Type As MessageType = getMessageType(text)
+                Dim Type As MessageType = getMessageType(text) 'get the type of this sentence
 
-                Try
+                Try 'Create a new thread for parsing output
                     Dim tpo As New Thread(AddressOf serverOutputHandler.LookupAsync)
                     tpo.IsBackground = True
                     tpo.Name = "outputhandler_lookupasync"
-                    Dim p As New thds_pass_lookup
+                    Dim p As New thds_pass_lookup 'we use this class so everything's inside one argument (for multithreading)
                     p.text = text
                     p.type = Type
                     tpo.Start(p)
@@ -941,17 +975,19 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                 'HIDDEN TEXT
                 'These texts will be hidden:
                 If Type = MessageType.list Or Type = MessageType.listcount Then Exit Sub 'Don't output list results
+
+                'Those are /list output strings from plugins, might interfere with /list. Hide these to prevent console spamming
                 If text.Contains("[AutoMod] Example: /list") Then Exit Sub '[AutoMod] Example: /list blocked  | [AutoMod] Example: /list trusted
                 If text.Contains("[AutoMod] Usage: /list") Then Exit Sub '[AutoMod] Usage: /list <list_name>[action][player_name]
                 If text.Contains("[INFO] There are ") And text.Contains(" out of maximum ") And text.Contains(" players online.") Then Exit Sub '[INFO] There are 0 out of maximum 8 players online.
 
-                If AdvancedOptions.SpamFilter IsNot Nothing AndAlso AdvancedOptions.SpamFilter.Count > 0 Then
+                If AdvancedOptions.SpamFilter IsNot Nothing AndAlso AdvancedOptions.SpamFilter.Count > 0 Then 'if there are strings in the spamfilter, check for them and hide if needed
                     For Each entry As String In SpamFilter
                         If text.Contains(entry) Then Exit Sub
                     Next
                 End If
 
-
+                'Write to output
                 If Not ((Type = MessageType.warning And ErrorManager.Hide_Warnings = True) Or (Type = MessageType.severe And ErrorManager.Hide_Errors = True) Or (Type = MessageType.javastacktrace And ErrorManager.Hide_Stacktrace = True)) Then
                     Dim clr As Color = serverOutputHandler.getMessageColor(Type) 'get the color
 
@@ -960,13 +996,13 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                     thds_write_output(sm) 'print
                 End If
 
-
+                'if something MIGHT have changed, run a /list command to be sure
                 If Not (Type = MessageType.playerjoin Or Type = MessageType.playerban Or Type = MessageType.playerleave Or Type = MessageType.playerkick) Then
                     If text.Contains("disconnected") Or text.Contains("joined") Or text.Contains("logged in") Or text.Contains("was caught breaking a honeypot block") Then SendCommand("list", True)
                 End If
 
-
-                If text.Contains("Perhaps a server is already running on that port") And text.ToLower.Contains("[warning]") And text.ToLower.Contains("[info]") = False Then
+                'Check if the server failed to launch
+                If text.Contains("Perhaps a server is already running on that port") And text.ToLower.Contains("[warning]") And (text.ToLower.Contains("[info]")) = False Then 'not contains [info] to make it chat-proof
                     If server.host IsNot Nothing AndAlso server.host.HasExited = False Then server.host.Kill()
                     livebug.write(loggingLevel.Fine, "mainform", "Server couldn't be started, failed to bind to port. Asking user if java must be killed and restarted.")
                     If MessageBox.Show(lr("The server could not be started, reason:") & "Failed to bind to port" & vbCrLf & lr("This is probably caused by another server that is running already.") & vbCrLf _
@@ -976,7 +1012,8 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                     End If
                 End If
 
-                'tray l-must be in this routine
+                'tray balloons etc
+                'tray must be in this routine
                 If ((Not ShowInTaskbar) Or tray_always) Then
                     If Type = MessageType.playerjoin And tray_onPlayerJoin Then
                         Dim e As PlayerJoinEventArgs = serverOutputHandler.getPlayerJoinArgs(text)
@@ -1263,7 +1300,9 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
         Private Sub CBSuperstartServerType_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CBSuperstartServerType.SelectedIndexChanged
             Try
                 livebug.write(loggingLevel.Fine, "mainform", "Setting User Interface for server type " & CBSuperstartServerType.SelectedItem.ToString)
-                Select Case CBSuperstartServerType.SelectedIndex
+
+                'Enable/disable the needed buttons
+                Select Case CBSuperstartServerType.SelectedIndex 'we're working with the index value to prevent translation problems
                     Case 0 'bukkit
                         GBSuperstartJavaServer.Enabled = True
                         GBSuperStartMaintainance.Enabled = True
@@ -1275,6 +1314,7 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                         BtnSuperStartDownloadRecommended.Enabled = True
                         BtnSuperStartDownloadCustomBuild.Enabled = True
 
+                        'bukkit has version info
                         If BukkitTools.Fetched Then
                             lblSuperStartLatestStable.Visible = True
                             lblSuperStartLatestBeta.Visible = True
@@ -1284,11 +1324,11 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                             lblSuperStartLatestBeta.Text = lr("Latest beta:") & " " & BukkitTools.Beta_info.version & " (#" & BukkitTools.Beta_info.build & ")"
                             lblSuperStartLatestDev.Text = lr("Latest dev:") & " " & BukkitTools.Dev_info.version & " (#" & BukkitTools.Dev_info.build & ")"
                             Try
-                                NumSuperstartCustomBuild.Maximum = BukkitTools.Latest_Dev
+                                NumSuperstartCustomBuild.Maximum = BukkitTools.Latest_Dev 'dev build is always the latest
                                 If BukkitTools.Latest_Recommended <= BukkitTools.Latest_Dev AndAlso BukkitTools.Latest_Recommended > 1335 Then NumSuperstartCustomBuild.Value = BukkitTools.Latest_Recommended Else NumSuperstartCustomBuild.Value = 1335
-                            Catch ex As Exception
-                                NumSuperstartCustomBuild.Maximum = 2500
-                                NumSuperstartCustomBuild.Value = 1335
+                            Catch ex As Exception 'if something goes wrong, set these limits. 
+                                NumSuperstartCustomBuild.Maximum = 9999 'this can't be set to a specific value, because we don't know the maximum
+                                NumSuperstartCustomBuild.Value = 1335 'minimum available at dl.bukkit.org
                             End Try
                         End If
                         llblSuperStartsite.Text = lr("Site:") & " http://bukkit.org"
@@ -1299,6 +1339,7 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                         ChkSuperstartAutoUpdateNotify.Checked = config.readAsBool("bukkit_auto_update", True, "superstart")
                         ChkSuperstartAutoUpdate.Checked = config.readAsBool("bukkit_auto_update_automatic", False, "superstart")
                         PBSuperStartServerIcon.Image = My.Resources.bukkit_logo
+
                     Case 1 'vanilla
                         GBSuperstartJavaServer.Enabled = True
                         GBSuperStartMaintainance.Enabled = True
@@ -1321,6 +1362,7 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                         llblSuperStartsite.Text = lr("Site:") & " http://www.minecraft.net/download"
 
                         PBSuperStartServerIcon.Image = My.Resources.vanilla_logo
+
                     Case 2 'remote
                         GBSuperstartJavaServer.Enabled = False
                         GBSuperStartMaintainance.Enabled = False 'no tools available yet
@@ -1343,7 +1385,8 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                         llblSuperStartsite.Text = ""
 
                         PBSuperStartServerIcon.Image = Nothing
-                    Case 3 'jsonapi
+
+                    Case 3 'general java
                         GBSuperstartJavaServer.Enabled = True
                         GBSuperStartMaintainance.Enabled = False
                         GBSuperStartRemoteServer.Enabled = False
@@ -2094,6 +2137,11 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
             ALVPlayersPlayers.View = TBPlayersPlayersView.Value
         End Sub
 
+        ''' <summary>
+        ''' Compare the playerlist in the UI to the playerlist in the GUI code (server class)
+        ''' </summary>
+        ''' <param name="onlineplayers">List of actual amount of online players right now</param>
+        ''' <remarks></remarks>
         Private Sub playerlist_CheckUIList(onlineplayers As List(Of String))
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf playerlist_CheckUIList)

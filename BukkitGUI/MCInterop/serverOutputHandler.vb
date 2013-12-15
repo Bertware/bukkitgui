@@ -63,6 +63,11 @@ Namespace MCInterop
         ''' <remarks></remarks>
         Public Event StackTraceReceived(ByVal e As StackTraceReceivedEventArgs)
 
+        ''' <summary>
+        ''' This event will trigger the comparison of the listview containing player names and the list of actual online players
+        ''' </summary>
+        ''' <param name="onlineplayers"></param>
+        ''' <remarks></remarks>
         Public Event CheckUILists(onlineplayers As List(Of String))
 
         Dim _utf8comp As Boolean = False
@@ -75,6 +80,10 @@ Namespace MCInterop
             End Set
         End Property
 
+        ''' <summary>
+        ''' The output type of a console message
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Enum MessageType
             info 'info message
             warning 'warning message
@@ -267,30 +276,66 @@ Namespace MCInterop
             End Try
         End Sub
 
+        ''' <summary>
+        ''' This function reads the output and provides data for the event
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function getWarningArgs(text As String) As ErrorReceivedEventArgs
             Return New ErrorReceivedEventArgs(text, MessageType.warning)
         End Function
 
+        ''' <summary>
+        ''' This function reads the output and provides data for the event
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function getSevereArgs(text As String) As ErrorReceivedEventArgs
             Return New ErrorReceivedEventArgs(text, MessageType.severe)
         End Function
 
+        ''' <summary>
+        ''' This function reads the output and provides data for the event
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function getPlayerJoinArgs(text As String) As PlayerJoinEventArgs 'player joining
             Dim pj As PlayerJoin = AnalyzeAction(PlayerAction.player_join, text)
             livebug.write(loggingLevel.Fine, "ServerOutputHandler", "PlayerJoinEvent Raised!")
             Return New PlayerJoinEventArgs(PlayerJoinEventArgs.playerjoinreason.join, text, pj)
         End Function
 
+        ''' <summary>
+        ''' This function reads the output and provides data for the event
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function getPlayerLeaveArgs(text As String) As PlayerDisconnectEventArgs 'player leaving
             Dim pl As PlayerLeave = AnalyzeAction(PlayerAction.player_leave, text)
             Return New PlayerDisconnectEventArgs(pl.player, PlayerDisconnectEventArgs.playerleavereason.leave, text, pl)
         End Function
 
+        ''' <summary>
+        ''' This function reads the output and provides data for the event
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function getPlayerKickArgs(text As String) As PlayerDisconnectEventArgs 'player being kicked
             Dim pk As PlayerKick = AnalyzeAction(PlayerAction.player_kick, text)
             Return New PlayerDisconnectEventArgs(pk.player, PlayerDisconnectEventArgs.playerleavereason.kick, text, pk)
         End Function
 
+        ''' <summary>
+        ''' This function reads the output and provides data for the event
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function getPlayerBanArgs(text As String) As PlayerDisconnectEventArgs 'player being banned
             Dim pb As playerBan = AnalyzeAction(PlayerAction.player_ban, text)
             Return New PlayerDisconnectEventArgs(pb.player, PlayerDisconnectEventArgs.playerleavereason.ban, text, pb)
@@ -419,6 +464,12 @@ Namespace MCInterop
             End Try
         End Function
 
+        ''' <summary>
+        ''' Fix issues due to new text formatting in 1.7.2
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function FixTextCompat(text As String) As String
             text = RemoveTimeStamp(text)
             ' text = Regex.Replace(text, "\[(\d(-|:|\s|/|))*(am|pm|)(\s|)\]", "")
@@ -433,6 +484,12 @@ Namespace MCInterop
             Return text
         End Function
 
+        ''' <summary>
+        ''' Remove the timestamp in front of the text, compatible with 1.7.2 output
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks>Works for all formats</remarks>
         Public Function RemoveTimeStamp(text As String) As String
             text = Regex.Replace(text, "^(\d{1,3}(-|:|\s|/|,|)){2,4}(am|pm|)\s{0,1}", "", RegexOptions.IgnoreCase)
             text = Regex.Replace(text, "^\[(\d(-|:|\s|/|))*(am|pm|)\]\s{0,1}", "", RegexOptions.IgnoreCase)
@@ -440,6 +497,12 @@ Namespace MCInterop
             Return text
         End Function
 
+        ''' <summary>
+        ''' Convert a string into an enum value
+        ''' </summary>
+        ''' <param name="text">String to be converted in enum</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function ParseMessageType(text As String) As MessageType
             text = text.ToLower.Trim.Replace(" ", "_")
             Return DirectCast([Enum].Parse(GetType(MessageType), text), MessageType)
@@ -526,21 +589,21 @@ Namespace MCInterop
         ''' </summary>
         ''' <param name="text">the /list output</param>
         ''' <returns></returns>
-        ''' <remarks></remarks>
+        ''' <remarks>This function will also raise the needed events to update the UI</remarks>
         Public Function HandleList(text As String) As Boolean
             Try
-                If server.running = False Then Return True : Exit Function
-                If server.playerList Is Nothing OrElse server.playerNameList Is Nothing Then Return False : Exit Function
-                Dim Plist As List(Of String) = server.playerNameList
+                If server.running = False Then Return True : Exit Function 'if server isn't running, get out of here
+                If server.playerList Is Nothing OrElse server.playerNameList Is Nothing Then Return False : Exit Function 'if playerlist isn't set to an object, exit
+                Dim Plist As List(Of String) = server.playerNameList ' get the current player list from the GUI
                 Dim olist As List(Of String) = ResolvePlayerList(text) 'real player list in server
 
-                If olist Is Nothing OrElse Plist Is Nothing Then Return False : Exit Function
+                If olist Is Nothing OrElse Plist Is Nothing Then Return False : Exit Function 'if something went wrong, exit
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking player lists...")
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Players online now:" & common.serialize(olist, ";"))
                 'Check 1: Duplicate Items
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (1/4) - players that are show multiple times")
 
-                If Plist.Count > 1 Then
+                If Plist.Count > 1 Then 'when more than one player is shown, we need to check if the same player is shown twice
                     For i As Byte = 0 To Plist.Count - 1
                         If i = Plist.Count Then Exit For
                         Dim Player As String = Plist(i)
@@ -560,9 +623,6 @@ Namespace MCInterop
                     livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Skipped duplicate player check, there are less than 2 players shown.", "ServerOutputHandler")
                 End If
 
-                'If Plist.Count = olist.Count Then
-                'livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Skipping steps 2 and 3, online player count matches listed player count", "ServerOutputHandler")
-                'Else
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (2/4) - Disconnected players are still shown", "ServerOutputHandler")
                 'Check 2: Disconnected players are still shown.
                 If Plist.Count > 0 Then
@@ -604,11 +664,10 @@ Namespace MCInterop
                         End If
                     Next
                 End If
-                'End If
 
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (4/4) - detected players aren't shown in playerlist")
                 'Check 4: Players that aren't shown
-                If olist IsNot Nothing Then RaiseEvent CheckUILists(olist)
+                If olist IsNot Nothing Then RaiseEvent CheckUILists(olist) 'this event will trigger the mainform to compare online players to shown players
 
                 'End of checks
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checked Lists succesfully")
@@ -660,6 +719,10 @@ Namespace MCInterop
 
     Public Module ServerActionsFilter
 
+        ''' <summary>
+        ''' Things a player could do
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Enum PlayerAction
             player_join
             player_leave
@@ -668,6 +731,13 @@ Namespace MCInterop
             ip_ban
         End Enum
 
+        ''' <summary>
+        ''' Parse the text for a specified action, retrieve the details
+        ''' </summary>
+        ''' <param name="action">The action we're parsing</param>
+        ''' <param name="text">The text (console output) of the action</param>
+        ''' <returns></returns>
+        ''' <remarks>We need to parse both different server versions and different servers (vanilla, bukkit, ...)!</remarks>
         Public Function AnalyzeAction(action As PlayerAction, text As String) As Object 'analyze a player action. Note: the kind of action (join,leave,...) should be determined first
             Try
                 text = RemoveTimeStamp(text) 'Remove any date or timestamps in front, to lowercase
@@ -808,6 +878,11 @@ Namespace MCInterop
 
     End Module
 
+    ''' <summary>
+    ''' These classes will be returned along with the event
+    ''' </summary>
+    ''' <remarks></remarks>
+#Region "EventClasses"
     Public Class PlayerJoin
         Public player As Player, message As String
 
@@ -904,4 +979,5 @@ Namespace MCInterop
             CommandSender = sender
         End Sub
     End Class
+#End Region
 End Namespace

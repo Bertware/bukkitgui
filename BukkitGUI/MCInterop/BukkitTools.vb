@@ -48,12 +48,22 @@ Namespace MCInterop
             End Get
         End Property
 
+        ''' <summary>
+        ''' Do we have the data already?
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public ReadOnly Property Fetched As Boolean
             Get
                 Return (_lrb IsNot Nothing AndAlso _lbeta IsNot Nothing AndAlso _ldev IsNot Nothing)
             End Get
         End Property
 
+        ''' <summary>
+        ''' Fetch versions on another thread
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Sub FetchLatestVersionsAsync()
             Dim t As New Thread(AddressOf FetchLatestVersions)
             t.IsBackground = True
@@ -61,6 +71,10 @@ Namespace MCInterop
             t.Start()
         End Sub
 
+        ''' <summary>
+        ''' Fetch and store the bukkit versions
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Sub FetchLatestVersions()
             _lrb = dlb.getlatest(BukkitVersionType.rb)
             livebug.write(loggingLevel.Fine, "BukkitTools", "Fetched latest recommended bukkit version (" & _lrb.build & ")")
@@ -71,6 +85,13 @@ Namespace MCInterop
             RaiseEvent BukkitVersionFetchComplete()
         End Sub
 
+        ''' <summary>
+        ''' download bukkit
+        ''' </summary>
+        ''' <param name="v">file to download, as dlb item</param>
+        ''' <param name="target">target location, where the file will be stored. This can overwrite an existing file</param>
+        ''' <returns></returns>
+        ''' <remarks>See also: dlb class</remarks>
         Public Function Download(v As dlb.BukkitVersionType, target As String) As DialogResult
             If server.running Then
                 Dim d As New ServerStopDialog
@@ -83,6 +104,13 @@ Namespace MCInterop
             Return fd.ShowDialog()
         End Function
 
+        ''' <summary>
+        ''' Download a custom build number
+        ''' </summary>
+        ''' <param name="build"></param>
+        ''' <param name="target"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function DownloadCustom(build As UInt16, target As String) As DialogResult
             If server.running Then
                 Dim d As New ServerStopDialog
@@ -95,6 +123,13 @@ Namespace MCInterop
             Return fd.ShowDialog()
         End Function
 
+        ''' <summary>
+        ''' Run java to get the current bukkit versions
+        ''' </summary>
+        ''' <param name="java">java path</param>
+        ''' <param name="bukkitpath">bukkit path</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function GetCurrentBukkitVersion(java As javaVersion, bukkitpath As String) As BukkitVersionDetails
             '"C:/Program Files/java/jre7/bin/java.exe" -Xincgc -Xmx32M -jar "Craftbukkit.jar" -v
             'git-Bukkit-1.2.5-R4.0-b2222jnks
@@ -133,7 +168,12 @@ Namespace MCInterop
             End Try
 
         End Function
-
+        ''' <summary>
+        ''' parse a version string (jenkins etc)
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Function ParseVersionString(text As String) As Integer
             Dim pattern As String = "(#\d\d\d\d|#\d\d\d|b\d\d\d\djnks|b\d\d\djnks)"
             Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
@@ -141,12 +181,24 @@ Namespace MCInterop
             If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else Return CInt(match.Value.Trim(chars))
         End Function
 
+        ''' <summary>
+        ''' parse a bukkit version (console output)
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Function ParseVersionStringBukkitVer(text As String) As String
             Dim pattern As String = "(\d.\d.\d|\d.\d)(\-R\d|)"
             Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
             If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else Return match.Value
         End Function
 
+        ''' <summary>
+        ''' parse an MC version. Can be in the same version string as the bukkit version
+        ''' </summary>
+        ''' <param name="text"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Function ParseVersionStringMCVer(text As String) As String
             Dim pattern As String = "MC: (\d.\d.\d|\d.\d)"
             Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
