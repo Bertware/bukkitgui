@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8C47C28E-A298-4148-B490-83D845248CAF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Net.Bertware.BukkitGUI.My.MyApplication</StartupObject>
+    <RootNamespace>Net.Bertware.BukkitGUI</RootNamespace>
+    <AssemblyName>BukkitGUI</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>BukkitGUI.xml</DocumentationFile>
+    <NoWarn>41999,42016</NoWarn>
+    <Optimize>false</Optimize>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>BukkitGUI.xml</DocumentationFile>
+    <NoWarn>41999,42016</NoWarn>
+    <PreBuildEvent>"D:\Users\Bert\Documents\Visual Studio 2010\Projects\BukkitGUI\BukkitGUI\build translator\bin\Release\designertranslator.exe" -"$(ProjectDir)BukkitGUI.vbproj"</PreBuildEvent>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PreBuildEvent>"D:\Users\Bert\Documents\Visual Studio 2010\Projects\BukkitGUI\BukkitGUI\build translator\bin\Release\designertranslator.exe" -"$(ProjectDir)BukkitGUI.vbproj"
+	"$(ProjectDir)Tools\SVNRevToAssemblyInfo.exe" dir "$(SolutionDir)" file "$(ProjectDir)My Project\AssemblyInfo.vb"</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>img\GUI icon 64.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>D8145082843A5E6A8C7EF0AC02311FA317FD4D3A</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>bertware.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Debug\</OutputPath>
+    <NoWarn>41999,42016</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <NoWarn>41999,42016</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FontCombo, Version=1.0.4610.37923, Culture=neutral, PublicKeyToken=9c9e5ac8d47563bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\FontCombo.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>dll\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Jayrock.Json">
+      <HintPath>dll\Jayrock.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="JSONAPI">
+      <HintPath>dll\JSONAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="JsonExSerializer">
+      <HintPath>dll\JsonExSerializer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Net.Bertware.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c9e5ac8d47563bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\Net.Bertware.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Net.Bertware.Get">
+      <HintPath>dll\Net.Bertware.Get.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Net.Bertware.Utilities.NetVersionDetector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c9e5ac8d47563bd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\Net.Bertware.Utilities.NetVersionDetector.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Net.Bertware.Utilities.WMI">
+      <HintPath>dll\Net.Bertware.Utilities.WMI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Deployment">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Design">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Management">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="YamlUtility">
+      <HintPath>dll\YamlUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="forms\OutputBrowser.Designer.vb">
+      <DependentUpon>OutputBrowser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\OutputBrowser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\PortForwarder.Designer.vb">
+      <DependentUpon>PortForwarder.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\PortForwarder.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SoundNotificator.vb" />
+    <Compile Include="Utilities\AdvancedOptions.vb" />
+    <Compile Include="Utilities\BackupManager.vb" />
+    <Compile Include="MCInterop\BukGetAPI.vb" />
+    <Compile Include="Core\common.vb" />
+    <Compile Include="Utilities\compression.vb" />
+    <Compile Include="Core\config.vb" />
+    <Compile Include="Utilities\ErrorManager.vb" />
+    <Compile Include="Utilities\EventArgs.vb" />
+    <Compile Include="Core\filelocation.vb" />
+    <Compile Include="Core\dlb.vb" />
+    <Compile Include="MCInterop\BukkitTools.vb" />
+    <Compile Include="forms\BackupDialog.Designer.vb">
+      <DependentUpon>BackupDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\BackupDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\ErrorDiagnose.Designer.vb">
+      <DependentUpon>ErrorDiagnose.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\ErrorDiagnose.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FeedBackDialog.Designer.vb">
+      <DependentUpon>FeedBackDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FeedBackDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FileDownloader.Designer.vb">
+      <DependentUpon>FileDownloader.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FileDownloader.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\InstalledPluginDialog.Designer.vb">
+      <DependentUpon>InstalledPluginDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\InstalledPluginDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\BukgetPluginDialog.designer.vb">
+      <DependentUpon>BukgetPluginDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\BukgetPluginDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\LanguageInstaller.Designer.vb">
+      <DependentUpon>LanguageInstaller.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\LanguageInstaller.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\LicenseAcceptDialog.Designer.vb">
+      <DependentUpon>LicenseAcceptDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\LicenseAcceptDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\PluginUpdater.Designer.vb">
+      <DependentUpon>PluginUpdater.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\PluginUpdater.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\ServerSettingDialog.Designer.vb">
+      <DependentUpon>ServerSettingDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\ServerSettingDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\TaskDialog.Designer.vb">
+      <DependentUpon>TaskDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\TaskDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MCInterop\ServerSettings.vb" />
+    <Compile Include="TaskManager.vb" />
+    <Compile Include="Utilities\LicenseManager.vb" />
+    <Compile Include="forms\ServerStopDialog.Designer.vb">
+      <DependentUpon>ServerStopDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\ServerStopDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MCInterop\InstalledPlugins.vb" />
+    <Compile Include="MCInterop\plugindescriptor.vb" />
+    <Compile Include="MCInterop\VanillaTools.vb" />
+    <Compile Include="threadsafe_pass_args.vb" />
+    <Compile Include="Utilities\javaAPI.vb" />
+    <Compile Include="MCInterop\player.vb" />
+    <Compile Include="MCInterop\RemoteJSONAPI.vb" />
+    <Compile Include="MCInterop\RemoteServerBase.vb" />
+    <Compile Include="MCInterop\server.vb" />
+    <Compile Include="Core\serverinteraction.vb" />
+    <Compile Include="forms\mainform.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\mainform.Designer.vb">
+      <DependentUpon>mainform.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\performance.vb" />
+    <Compile Include="forms\SplashScreen.Designer.vb">
+      <DependentUpon>SplashScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\SplashScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\fxml.vb" />
+    <Compile Include="Core\language.vb" />
+    <Compile Include="Core\livebug.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="MCInterop\serverOutputHandler.vb" />
+    <Compile Include="MCInterop\StartArgs.vb" />
+    <Compile Include="Utilities\UPnP.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="forms\BackupDialog.resx">
+      <DependentUpon>BackupDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\ErrorDiagnose.resx">
+      <DependentUpon>ErrorDiagnose.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FeedBackDialog.resx">
+      <DependentUpon>FeedBackDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FileDownloader.resx">
+      <DependentUpon>FileDownloader.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\InstalledPluginDialog.resx">
+      <DependentUpon>InstalledPluginDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\LanguageInstaller.resx">
+      <DependentUpon>LanguageInstaller.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\LicenseAcceptDialog.resx">
+      <DependentUpon>LicenseAcceptDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\mainform.resx">
+      <DependentUpon>mainform.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\BukgetPluginDialog.resx">
+      <DependentUpon>BukgetPluginDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\OutputBrowser.resx">
+      <DependentUpon>OutputBrowser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\PluginUpdater.resx">
+      <DependentUpon>PluginUpdater.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\PortForwarder.resx">
+      <DependentUpon>PortForwarder.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\ServerSettingDialog.resx">
+      <DependentUpon>ServerSettingDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\ServerStopDialog.resx">
+      <DependentUpon>ServerStopDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\SplashScreen.resx">
+      <DependentUpon>SplashScreen.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\TaskDialog.resx">
+      <DependentUpon>TaskDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="bertware.pfx" />
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="img\player_face.png" />
+    <EmbeddedResource Include="img\GUI icon.ico" />
+    <EmbeddedResource Include="img\GUI icon.png" />
+    <EmbeddedResource Include="img\bukkit_logo.png" />
+    <EmbeddedResource Include="img\vanilla_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="dll\Jayrock.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="dll\JSONAPI.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="img\menu_icons\accept.png" />
+    <EmbeddedResource Include="img\menu_icons\add.png" />
+    <EmbeddedResource Include="img\menu_icons\arrow_down.png" />
+    <EmbeddedResource Include="img\menu_icons\arrow_go.png" />
+    <EmbeddedResource Include="img\menu_icons\arrow_refresh.png" />
+    <EmbeddedResource Include="img\menu_icons\arrow_up.png" />
+    <EmbeddedResource Include="img\menu_icons\bin_closed.png" />
+    <EmbeddedResource Include="img\menu_icons\book.png" />
+    <EmbeddedResource Include="img\menu_icons\bullet_delete.png" />
+    <EmbeddedResource Include="img\menu_icons\bullet_disk.png" />
+    <EmbeddedResource Include="img\menu_icons\bullet_error.png" />
+    <EmbeddedResource Include="img\menu_icons\bullet_green.png" />
+    <EmbeddedResource Include="img\menu_icons\bullet_orange.png" />
+    <EmbeddedResource Include="img\menu_icons\bullet_red.png" />
+    <EmbeddedResource Include="img\menu_icons\cancel.png" />
+    <EmbeddedResource Include="img\menu_icons\chart_bar.png" />
+    <EmbeddedResource Include="img\menu_icons\control_play.png" />
+    <EmbeddedResource Include="img\menu_icons\control_stop.png" />
+    <EmbeddedResource Include="img\menu_icons\copy.png" />
+    <EmbeddedResource Include="img\menu_icons\drive-download.png" />
+    <EmbeddedResource Include="img\menu_icons\email.png" />
+    <EmbeddedResource Include="img\menu_icons\eraser-small.png" />
+    <EmbeddedResource Include="img\menu_icons\group.png" />
+    <EmbeddedResource Include="img\menu_icons\information.png" />
+    <EmbeddedResource Include="img\menu_icons\permission.ico" />
+    <EmbeddedResource Include="img\menu_icons\plugin.ico" />
+    <EmbeddedResource Include="img\menu_icons\plugin.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_error.ico" />
+    <EmbeddedResource Include="img\menu_icons\save.png" />
+    <EmbeddedResource Include="img\menu_icons\Scheduler.ico" />
+    <EmbeddedResource Include="img\menu_icons\settings.png" />
+    <EmbeddedResource Include="img\menu_icons\stop.png" />
+    <EmbeddedResource Include="img\menu_icons\user_ban.png" />
+    <EmbeddedResource Include="img\menu_icons\user_kick.png" />
+    <EmbeddedResource Include="img\menu_icons\warning.ico" />
+    <EmbeddedResource Include="img\menu_icons\wrench.png" />
+    <EmbeddedResource Include="img\menu_icons\www.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="dll\Substrate.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="dll\YamlUtility.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="dll\ICSharpCode.SharpZipLib.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="sound\connect.wav" />
+    <EmbeddedResource Include="sound\disconnect.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="img\menu_icons\plugin_add.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_delete.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_disabled.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_edit.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_error.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_go.png" />
+    <EmbeddedResource Include="img\menu_icons\plugin_link.png" />
+    <EmbeddedResource Include="img\menu_icons\table.png" />
+    <EmbeddedResource Include="img\menu_icons\table_add.png" />
+    <EmbeddedResource Include="img\menu_icons\table_delete.png" />
+    <EmbeddedResource Include="img\menu_icons\table_gear.png" />
+    <EmbeddedResource Include="img\menu_icons\table_go.png" />
+    <EmbeddedResource Include="img\menu_icons\update.png" />
+    <EmbeddedResource Include="img\menu_icons\flattr-badge-large.png" />
+    <EmbeddedResource Include="dll\JsonExSerializer.dll" />
+    <EmbeddedResource Include="img\GUI icon 16.ico" />
+    <EmbeddedResource Include="img\GUI icon 32.ico" />
+    <EmbeddedResource Include="dll\FontCombo.dll" />
+    <EmbeddedResource Include="dll\Net.Bertware.Utilities.WMI.dll" />
+    <EmbeddedResource Include="dll\Net.Bertware.Utilities.WMI.pdb" />
+    <EmbeddedResource Include="dll\Net.Bertware.Controls.dll" />
+    <EmbeddedResource Include="dll\Net.Bertware.Controls.pdb" />
+    <None Include="img\ad_ServerMiner.gif" />
+    <EmbeddedResource Include="dll\Net.Bertware.Utilities.NetVersionDetector.dll" />
+    <EmbeddedResource Include="dll\Net.Bertware.Utilities.NetVersionDetector.pdb" />
+    <EmbeddedResource Include="dll\YamlUtility.pdb" />
+    <EmbeddedResource Include="dll\Net.Bertware.Get.dll" />
+    <EmbeddedResource Include="dll\Net.Bertware.Get.pdb" />
+    <None Include="bin\Release\Interop.NATUPNPLib.dll" />
+    <EmbeddedResource Include="dll\Interop.NATUPNPLib.dll" />
+    <Content Include="dll\Net.Bertware.Get.xml" />
+    <Content Include="img\GUI icon 64.ico" />
+    <Content Include="img\menu_icons\clock.png" />
+    <Content Include="img\menu_icons\clock_add.png" />
+    <Content Include="img\menu_icons\clock_delete.png" />
+    <Content Include="img\menu_icons\clock_edit.png" />
+    <Content Include="img\menu_icons\clock_error.png" />
+    <EmbeddedResource Include="img\menu_icons\Drive-Backup-icon.ico" />
+    <EmbeddedResource Include="img\menu_icons\Drive-Backup-icon.png" />
+    <Content Include="img\menu_icons\database-export.png" />
+    <Content Include="img\menu_icons\database-import.png" />
+    <Content Include="img\menu_icons\document-export.png" />
+    <Content Include="img\menu_icons\document-import.png" />
+    <Content Include="img\menu_icons\drive-download.ico" />
+    <EmbeddedResource Include="img\menu_icons\edit.png" />
+    <Content Include="img\menu_icons\error.png" />
+    <Content Include="img\menu_icons\exclamation.png" />
+    <EmbeddedResource Include="img\menu_icons\paypal-donate-button.png" />
+    <EmbeddedResource Include="sound\severe.wav" />
+    <EmbeddedResource Include="sound\warning.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="NATUPNPLib">
+      <Guid>{1C565858-F302-471E-B409-F180AA4ABEC6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>False</Private>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if $(ConfigurationName) == Release (
+"$(SolutionDir)build translator\bin\Release\designertranslator.exe" -"$(ProjectDir)BukkitGUI.vbproj"
+)</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

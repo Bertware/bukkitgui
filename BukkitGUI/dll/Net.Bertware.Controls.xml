@@ -1,0 +1,143 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Net.Bertware.Controls
+</name>
+</assembly>
+<members>
+<member name="M:Net.Bertware.Controls.AdvancedTextBox.AddToHistory(System.String)">
+	<summary>
+ Add an entry to the history of this textbox
+ </summary>
+	<param name="text">The text to be added</param>
+	<returns>The total history</returns>
+	<remarks></remarks>
+</member><member name="M:Net.Bertware.Controls.TextBoxHistory.Add(System.String)">
+	<summary>
+ Add an entry
+ </summary>
+	<param name="text">The text content for this entry</param>
+	<remarks></remarks>
+</member><member name="M:Net.Bertware.Controls.TextBoxHistory.Read">
+	<summary>
+ Get the current history
+ </summary>
+	<returns>A list (of string) with the current history entries</returns>
+	<remarks></remarks>
+</member><member name="M:Net.Bertware.Controls.TextBoxHistory.LevelUp">
+	<summary>
+ Go up a level in the history
+ </summary>
+	<returns>The entry at this level</returns>
+	<remarks></remarks>
+</member><member name="M:Net.Bertware.Controls.TextBoxHistory.LevelDown">
+	<summary>
+ Go down a level in the history
+ </summary>
+	<returns>The entry at this level</returns>
+	<remarks></remarks>
+</member><member name="M:Net.Bertware.Controls.TextBoxHistory.GoToLevel(System.UInt16)">
+	<summary>
+ Go to the given level in the history
+ </summary>
+	<param name="i">The level to read</param>
+	<returns>The entry at this level</returns>
+	<remarks></remarks>
+</member><member name="P:Net.Bertware.Controls.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:Net.Bertware.Controls.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:Net.Bertware.Controls.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="T:Net.Bertware.Controls.AdvancedRichTextBox">
+	<summary>
+ Slightly modificated RichttextBox class. Adds for example colored output and autoscroll
+ </summary>
+	<remarks></remarks>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.Value">
+	<summary>
+ The value that is displayed on the progress bar.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.MaxValue">
+	<summary>
+ The maximum value for the Value property.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.MinValue">
+	<summary>
+ The minimum value for the Value property.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.BarThresholds">
+	<summary>
+ The minimum value for the Value property.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.MarqueeSpeed">
+	<summary>
+ The color of the glow.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.HighlightColor">
+	<summary>
+ The color of the highlights.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.BackgroundColor">
+	<summary>
+ The color of the background.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.Animate">
+	<summary>
+ Whether the glow is animated.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.GlowColor">
+	<summary>
+ The color of the glow.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.GlowTmrInterval">
+	<summary>
+ The color of the glow.
+ </summary>
+</member><member name="P:Net.Bertware.Controls.VistaProgressBar.GlowWhenFinished">
+	<summary>
+ Whether the glow is animated.
+ </summary>
+</member><member name="T:Net.Bertware.Controls.VistaProgressBar.ValueChangedHandler">
+ When the Value property is changed.
+
+</member><member name="E:Net.Bertware.Controls.VistaProgressBar.ValueChanged">
+ When the Value property is changed.
+
+</member><member name="T:Net.Bertware.Controls.VistaProgressBar.MinChangedHandler">
+ When the MinValue property is changed.
+
+</member><member name="E:Net.Bertware.Controls.VistaProgressBar.MinChanged">
+ When the MinValue property is changed.
+
+</member><member name="T:Net.Bertware.Controls.VistaProgressBar.MaxChangedHandler">
+ When the MaxValue property is changed.
+
+</member><member name="E:Net.Bertware.Controls.VistaProgressBar.MaxChanged">
+ When the MaxValue property is changed.
+
+</member><member name="F:Net.Bertware.Controls.Net.Bertware.Controls.A1Panel.A1Panel.components">
+	<summary>
+ Required designer variable.
+ </summary>
+</member><member name="M:Net.Bertware.Controls.Net.Bertware.Controls.A1Panel.A1Panel.Dispose(System.Boolean)">
+	<summary> 
+ Clean up any resources being used.
+ </summary>
+	<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+</member><member name="M:Net.Bertware.Controls.Net.Bertware.Controls.A1Panel.A1Panel.InitializeComponent">
+	<summary>
+ Required method for Designer support - do not modify
+ the contents of this method with the code editor.
+ </summary>
+</member>
+</members>
+</doc>
