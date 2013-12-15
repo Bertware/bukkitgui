@@ -53,18 +53,18 @@ compatibility
 =============
 operating systems
 ------------------
-Windows XP and higher. If it doesn't work, make shure if you have .net framework 3.5 Download link - .NET 3.5 including all previous versions.
-Linux and Mac aren't supported, however I'm planning a new project which will work on all operating systems. 
+Windows XP and higher. If it doesn't work, make shure if you have .net framework 3.5.
+Linux and Mac aren't supported.
 
 minecraft servers
 -----------------
 The following minecraft servers are supported:
 
-Bukkit build 800 and higher (lower isn't tested)
-RemoteToolKit
-Vanilla
-Tekkit
-MCPC (set server type to vanilla,generic java, or to bukkit with disabled "retrieve current version on server start")
-CraftBukkit
-Spigot
-Spout 
+*Bukkit build 800 and higher (lower isn't tested)
+*RemoteToolKit
+*Vanilla
+*Tekkit
+*MCPC (set server type to vanilla,generic java, or to bukkit with disabled "retrieve current version on server start")
+*CraftBukkit
+*Spigot
+*Spout 
