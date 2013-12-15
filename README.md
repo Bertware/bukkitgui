@@ -8,19 +8,19 @@ The bukkit GUI project - shortened BukkitGUI - is intended to provide server own
 Features
 =========
 
-*Coloured output, colours definable in settings
-*Detailed player list with context menu, quickly apply an action to a player
-*Advanced options to launch bukkit, update bukkit, auto update check for bukkit
-*Automate your server with the task manager
-*Highly precise memory and CPU measurement
-*Low on resources, performance can be adjusted in settings
-*Error logging, searching for the cause of errors, and if possible, solving of errors
-*Tray icon (with support to minimize to tray) and balloon tips
-*Sound when something happen can be activated
-*Rarely/Never breaks on Minecraft/bukkit update
-*Backups (multiple backup definitions possible)
-*Install, update, manage plugins from within the GUI 
-*port forwarding
+* Coloured output, colours definable in settings
+* Detailed player list with context menu, quickly apply an action to a player
+* Advanced options to launch bukkit, update bukkit, auto update check for bukkit
+* Automate your server with the task manager
+* Highly precise memory and CPU measurement
+* Low on resources, performance can be adjusted in settings
+* Error logging, searching for the cause of errors, and if possible, solving of errors
+* Tray icon (with support to minimize to tray) and balloon tips
+* Sound when something happen can be activated
+* Rarely/Never breaks on Minecraft/bukkit update
+* Backups (multiple backup definitions possible)
+* Install, update, manage plugins from within the GUI 
+* port forwarding
 
 Use
 ===
@@ -60,11 +60,11 @@ minecraft servers
 -----------------
 The following minecraft servers are supported:
 
-*Bukkit build 800 and higher (lower isn't tested)
-*RemoteToolKit
-*Vanilla
-*Tekkit
-*MCPC (set server type to vanilla,generic java, or to bukkit with disabled "retrieve current version on server start")
-*CraftBukkit
-*Spigot
-*Spout 
+* Bukkit build 800 and higher (lower isn't tested)
+* RemoteToolKit
+* Vanilla
+* Tekkit
+* MCPC (set server type to vanilla,generic java, or to bukkit with disabled "retrieve current version on server start")
+* CraftBukkit
+* Spigot
+* Spout 
