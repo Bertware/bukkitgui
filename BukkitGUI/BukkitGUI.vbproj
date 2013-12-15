@@ -497,6 +497,7 @@
     <EmbeddedResource Include="sound\disconnect.wav" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE.txt" />
     <EmbeddedResource Include="img\menu_icons\plugin_add.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_delete.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_disabled.png" />
