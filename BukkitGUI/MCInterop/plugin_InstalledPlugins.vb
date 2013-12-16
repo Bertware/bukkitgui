@@ -60,6 +60,8 @@ Namespace MCInterop
 
             'Create a list of simple plugin items to start
             CreateSimpleList()
+            If plugins Is Nothing OrElse plugins.Count < 1 Then Exit Sub 'exit here, we can't continue if there aren't plugins
+
 
             livebug.write(loggingLevel.Fine, "pluginmanager", "Loaded base list: " & plugins.Count & " plugins loaded", "pluginmanager")
 
@@ -83,26 +85,30 @@ Namespace MCInterop
 
             If pluginfiles Is Nothing OrElse pluginfiles.Length < 1 Then
                 livebug.write(loggingLevel.Warning, "pluginmanager", "Cancelled simple list creation: no plugins")
-                Exit Sub
+                plugins = New Dictionary(Of String, plugindescriptor) 'create dictionary
+
+                'no plugins, nothing to do here
+
+            Else
+
+                plugins = New Dictionary(Of String, plugindescriptor) 'create dictionary
+
+                For i As UInt16 = 0 To pluginfiles.Length - 1 'load all the plugins in the dictionary
+                    Try
+                        If pluginfiles(i).Extension = ".jar" Then
+                            Dim pld As New plugindescriptor
+                            pld.filename = pluginfiles(i).Name
+                            pld.name = pluginfiles(i).Name
+                            pld.FileCreationDate = IO.File.GetLastWriteTime(pluginfiles(i).Name)
+                            plugins.Add(pluginfiles(i).Name, pld)
+                        End If
+                    Catch ex As Exception
+                        If pluginfiles(i) IsNot Nothing Then livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list:" & pluginfiles(i).Name, ex.Message) Else livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list", ex.Message)
+                    End Try
+                Next
+
+                RaiseEvent InstalledPluginsLoaded_Base(plugins) 'we got the first list now
             End If
-
-            plugins = New Dictionary(Of String, plugindescriptor) 'create dictionary
-
-            For i As UInt16 = 0 To pluginfiles.Length - 1 'load all the plugins in the dictionary
-                Try
-                    If pluginfiles(i).Extension = ".jar" Then
-                        Dim pld As New plugindescriptor
-                        pld.filename = pluginfiles(i).Name
-                        pld.name = pluginfiles(i).Name
-                        pld.FileCreationDate = IO.File.GetLastWriteTime(pluginfiles(i).Name)
-                        plugins.Add(pluginfiles(i).Name, pld)
-                    End If
-                Catch ex As Exception
-                    If pluginfiles(i) IsNot Nothing Then livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list:" & pluginfiles(i).Name, ex.Message) Else livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list", ex.Message)
-                End Try
-            Next
-
-            RaiseEvent InstalledPluginsLoaded_Base(plugins) 'we got the first list now
         End Sub
 
         ''' <summary>

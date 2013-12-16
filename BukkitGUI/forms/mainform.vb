@@ -1822,6 +1822,16 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
             End If
         End Sub
 
+        ''' <summary>
+        ''' Open the portforwarding dialog
+        ''' </summary>
+        ''' <param name="sender"></param>
+        ''' <param name="e"></param>
+        ''' <remarks></remarks>
+        Private Sub BtnSuperStartPortForwarding_Click(sender As Object, e As EventArgs) Handles BtnSuperStartPortForwarding.Click
+            Dim pf As New PortForwarder
+            pf.Show()
+        End Sub
 #End Region
 
 #Region "Playerlist"
@@ -3514,23 +3524,10 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
         End Sub
 #End Region
 
-        Private Sub PBPaypalDonate_Click(sender As System.Object, e As System.EventArgs) Handles PBPaypalDonate.Click, LinkDonate.Click
-            Dim p As New Process
-            p.StartInfo.FileName = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R8XCX7YASJPP2"
-            p.Start()
-        End Sub
-
-        Private Sub PBFlattr_Click(sender As System.Object, e As System.EventArgs) Handles PBFlattr.Click
-            Dim p As New Process
-            p.StartInfo.FileName = "http://flattr.com/thing/728461/The-Bukkit-GUI-project"
-            p.Start()
-        End Sub
-
         Private Sub BtnFeedback_Click(sender As System.Object, e As System.EventArgs) Handles BtnFeedback.Click
             Dim fbd As New FeedBackDialog
             fbd.ShowDialog()
         End Sub
-
 
         Private Sub LblInfoComputerLocIP_LinkClicked(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LblInfoComputerLocIP.LinkClicked
             Try
@@ -3549,10 +3546,7 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
 
         End Sub
 
-        Private Sub BtnSuperStartPortForwarding_Click(sender As Object, e As EventArgs) Handles BtnSuperStartPortForwarding.Click
-            Dim pf As New PortForwarder
-            pf.Show()
-        End Sub
+
     End Class
 
 End Namespace
