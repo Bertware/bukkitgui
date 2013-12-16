@@ -1,13 +1,10 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.MCInterop
-Imports Net.Bertware.BukkitGUI.Utilities
-
-Imports System.IO
+﻿Imports Net.Bertware.BukkitGUI.MCInterop
+Imports Net.Bertware.BukkitGUI.Core
 Imports System.Xml
+Imports Net.Bertware.BukkitGUI.Utilities
 
 
 Namespace TaskManager
-
     Public Module TaskManager
         Public tasks As List(Of task)
 
@@ -21,7 +18,8 @@ Namespace TaskManager
         Const version As String = "1.0"
 
         Public Sub init()
-            If Not FileIO.FileSystem.FileExists(task_xml_path) Then common.Create_file(task_xml_path, "<tasks version=""" & version & """></tasks>")
+            If Not FileIO.FileSystem.FileExists(task_xml_path) Then _
+                common.Create_file(task_xml_path, "<tasks version=""" & version & """></tasks>")
             task_xml = New fxml(task_xml_path, "TaskManager", True)
             LoadAllTasks()
         End Sub
@@ -70,7 +68,8 @@ Namespace TaskManager
 
             livebug.write(loggingLevel.Fine, "TaskManager", "Loading task:" & t.name & " : action settings loaded")
 
-            If xml.GetAttribute("enabled") Is Nothing OrElse xml.GetAttribute("enabled") = "" Then xml.SetAttribute("enabled", "true") : task_xml.save()
+            If xml.GetAttribute("enabled") Is Nothing OrElse xml.GetAttribute("enabled") = "" Then _
+                xml.SetAttribute("enabled", "true") : task_xml.save()
             t.canEnable = True
             If doEnable = True Then t.IsEnabled = (xml.GetAttribute("enabled") = "true") 'will also enable if needed
 
@@ -122,7 +121,8 @@ Namespace TaskManager
         End Sub
 
         Public Sub disableTask(ByRef Task As task)
-            livebug.write(loggingLevel.Fine, "TaskManager", "Updating task (disable): " & Task.name & " - Will be replaced by its updated version")
+            livebug.write(loggingLevel.Fine, "TaskManager",
+                          "Updating task (disable): " & Task.name & " - Will be replaced by its updated version")
             Task.IsEnabled = False
             deleteTask(Task)
             addTask(Task, False)
@@ -130,7 +130,8 @@ Namespace TaskManager
         End Sub
 
         Public Sub enableTask(ByRef Task As task)
-            livebug.write(loggingLevel.Fine, "TaskManager", "Updating task (enable): " & Task.name & " - Will be replaced by its updated version")
+            livebug.write(loggingLevel.Fine, "TaskManager",
+                          "Updating task (enable): " & Task.name & " - Will be replaced by its updated version")
             deleteTask(Task)
             Task.IsEnabled = True
             addTask(Task, True)
@@ -138,7 +139,8 @@ Namespace TaskManager
         End Sub
 
         Public Sub saveTask(ByRef OldTask As task, ByRef NewTask As task)
-            livebug.write(loggingLevel.Fine, "TaskManager", "Updating task: " & OldTask.name & " - Will be replaced by its updated version")
+            livebug.write(loggingLevel.Fine, "TaskManager",
+                          "Updating task: " & OldTask.name & " - Will be replaced by its updated version")
             OldTask.disable()
             deleteTask(OldTask)
             addTask(NewTask, NewTask.canEnable)
@@ -186,7 +188,8 @@ Namespace TaskManager
             ofd.Filter = "Task manager file (*.task)|*.task"
             ofd.Multiselect = False
             ofd.Title = "Import tasks"
-            If ofd.ShowDialog() = Windows.Forms.DialogResult.Cancel Then livebug.write(loggingLevel.Fine, "TaskManager", "Import cancelled") : Exit Sub
+            If ofd.ShowDialog() = Windows.Forms.DialogResult.Cancel Then _
+                livebug.write(loggingLevel.Fine, "TaskManager", "Import cancelled") : Exit Sub
             Try
                 Dim impxml As New fxml(ofd.FileName, "TaskManager", True)
                 For Each element As XmlElement In impxml.GetElementsByName("task")
@@ -198,7 +201,8 @@ Namespace TaskManager
                 ReloadAllTasks()
             Catch ex As Exception
                 livebug.write(loggingLevel.Severe, "TaskManager", "Error while importing tasks", ex.Message)
-                MessageBox.Show(lr("Error while importing the task! Is this a valid file?"), lr("Import failed!"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show(lr("Error while importing the task! Is this a valid file?"), lr("Import failed!"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -211,17 +215,20 @@ Namespace TaskManager
             sfd.SupportMultiDottedExtensions = True
             sfd.DefaultExt = ".task"
             sfd.AddExtension = True
-            If sfd.ShowDialog = DialogResult.Cancel Then livebug.write(loggingLevel.Fine, "TaskManager", "Export cancelled") : Exit Sub
+            If sfd.ShowDialog = DialogResult.Cancel Then _
+                livebug.write(loggingLevel.Fine, "TaskManager", "Export cancelled") : Exit Sub
             Try
                 common.Create_file(sfd.FileName, "<tasks version=""" & version & """></tasks>")
                 Dim expxml As New fxml(sfd.FileName, "TaskManager", True)
-                Dim tmpnode As XmlElement = expxml.Document.ImportNode(task_xml.getElementByAttribute("task", "name", name), True)
+                Dim tmpnode As XmlElement = expxml.Document.ImportNode(
+                    task_xml.getElementByAttribute("task", "name", name), True)
                 expxml.Document.DocumentElement.AppendChild(tmpnode)
                 expxml.save()
                 livebug.write(loggingLevel.Fine, "TaskManager", "Export finished!")
             Catch ex As Exception
                 livebug.write(loggingLevel.Fine, "TaskManager", "Error while exporting task", ex.Message)
-                MessageBox.Show(lr("Error while exporting the task!"), lr("Export failed!"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show(lr("Error while exporting the task!"), lr("Export failed!"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -234,19 +241,22 @@ Namespace TaskManager
             sfd.DefaultExt = ".task"
             sfd.AddExtension = True
             sfd.SupportMultiDottedExtensions = True
-            If sfd.ShowDialog = DialogResult.Cancel Then livebug.write(loggingLevel.Fine, "TaskManager", "Export cancelled") : Exit Sub
+            If sfd.ShowDialog = DialogResult.Cancel Then _
+                livebug.write(loggingLevel.Fine, "TaskManager", "Export cancelled") : Exit Sub
             Try
                 common.Create_file(sfd.FileName, "<tasks version=""" & version & """></tasks>")
                 Dim expxml As New fxml(sfd.FileName, "TaskManager", True)
                 For Each name As String In names
-                    Dim tmpnode As XmlElement = expxml.Document.ImportNode(task_xml.getElementByAttribute("task", "name", name), True)
+                    Dim tmpnode As XmlElement = expxml.Document.ImportNode(
+                        task_xml.getElementByAttribute("task", "name", name), True)
                     expxml.Document.DocumentElement.AppendChild(tmpnode)
                 Next
                 expxml.save()
                 livebug.write(loggingLevel.Fine, "TaskManager", "Export finished!")
             Catch ex As Exception
                 livebug.write(loggingLevel.Severe, "TaskManager", "Error while exporting tasks", ex.Message)
-                MessageBox.Show(lr("Error while exporting the tasks!"), lr("Export failed!"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                MessageBox.Show(lr("Error while exporting the tasks!"), lr("Export failed!"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -303,6 +313,7 @@ Namespace TaskManager
         Private tmrHeartBeat As Timers.Timer, tmrHeartBeatResponse As Timers.Timer
 
         Private _IsEnabled As Boolean = False
+
         Public Property IsEnabled As Boolean
             Get
                 Return _IsEnabled
@@ -325,9 +336,14 @@ Namespace TaskManager
         End Sub
 
         Public Function enable() As Boolean
-            If Not canEnable Then livebug.write(loggingLevel.Fine, "TaskManager", "Can't enable task:" & name & " - canEnable false") : Return False : Exit Function
-            If _IsEnabled Then livebug.write(loggingLevel.Fine, "TaskManager", "Can't enable task:" & name & " - Already enabled") : Return False : Exit Function
-            livebug.write(loggingLevel.Fine, "TaskManager", "Enabling task:" & name & " - trigger:" & trigger_type.ToString, Me.name)
+            If Not canEnable Then _
+                livebug.write(loggingLevel.Fine, "TaskManager", "Can't enable task:" & name & " - canEnable false") : _
+                    Return False : Exit Function
+            If _IsEnabled Then _
+                livebug.write(loggingLevel.Fine, "TaskManager", "Can't enable task:" & name & " - Already enabled") : _
+                    Return False : Exit Function
+            livebug.write(loggingLevel.Fine, "TaskManager",
+                          "Enabling task:" & name & " - trigger:" & trigger_type.ToString, Me.name)
             Try
                 Select Case trigger_type
                     Case trigger.server_start
@@ -381,8 +397,10 @@ Namespace TaskManager
                         End If
                         tmrHeartBeatResponse = New Timers.Timer
                         tmrHeartBeatResponse.Interval = 10000
-                        AddHandler tmrHeartBeat.Elapsed, AddressOf tmrHeartBeatResponse.Start 'if heartbeat sent, start waiting for response
-                        AddHandler serverOutputHandler.ListUpdate, AddressOf tmrHeartBeatResponse.Stop 'if response received, stop timer
+                        AddHandler tmrHeartBeat.Elapsed, AddressOf tmrHeartBeatResponse.Start _
+                        'if heartbeat sent, start waiting for response
+                        AddHandler serverOutputHandler.ListUpdate, AddressOf tmrHeartBeatResponse.Stop _
+                        'if response received, stop timer
                         AddHandler tmrHeartBeatResponse.Elapsed, AddressOf Execute 'if timed out, execute
 
                     Case trigger.task_finished
@@ -401,7 +419,8 @@ Namespace TaskManager
         End Function
 
         Public Function disable() As Boolean
-            livebug.write(loggingLevel.Fine, "TaskManager", "Disabling task:" & name & " - trigger:" & trigger_type.ToString, Me.name)
+            livebug.write(loggingLevel.Fine, "TaskManager",
+                          "Disabling task:" & name & " - trigger:" & trigger_type.ToString, Me.name)
             Try
                 Select Case trigger_type
                     Case trigger.server_start
@@ -452,7 +471,8 @@ Namespace TaskManager
                         If tmrHeartBeatResponse IsNot Nothing Then
                             tmrHeartBeatResponse.Enabled = False
                             RemoveHandler tmrHeartBeatResponse.Elapsed, Nothing 'if timed out, execute
-                            RemoveHandler serverOutputHandler.ListUpdate, AddressOf tmrHeartBeatResponse.Stop 'if response received, stop timer
+                            RemoveHandler serverOutputHandler.ListUpdate, AddressOf tmrHeartBeatResponse.Stop _
+                            'if response received, stop timer
                         End If
 
                         tmrHeartBeatResponse = Nothing
@@ -474,7 +494,7 @@ Namespace TaskManager
             Return _IsEnabled
         End Function
 
-        Private Sub CheckTextMatch(text As String, t As MessageType)
+        Private Sub CheckTextMatch(text As String, t As serverOutputHandler.MessageType)
             If text.ToLower.Contains(Me.trigger_parameters.ToLower) Then
                 Execute()
             End If
@@ -486,7 +506,8 @@ Namespace TaskManager
             Else
                 Dim timeout As TimeSpan = parseTimeSpan(Me.trigger_parameters.Split("/")(1).Trim.Trim("/").Trim)
                 Dim tgname As String = Me.trigger_parameters.Split("/")(0).Trim.Trim("/").Trim()
-                If tgname = t.name Then Threading.Thread.Sleep(timeout) : Execute(ParseActionParameters(action_parameters))
+                If tgname = t.name Then _
+                    Threading.Thread.Sleep(timeout) : Execute(ParseActionParameters(action_parameters))
             End If
         End Sub
 
@@ -494,13 +515,16 @@ Namespace TaskManager
             If trigger_parameters.Contains(";") Then
                 For Each time As String In trigger_parameters.Split(";")
                     If time <> "" AndAlso time.Trim(":") <> "" Then
-                        If Math.Abs(parseTimeSpan(time.Trim(";")).Subtract(DateTime.Now.TimeOfDay).TotalMilliseconds) < (currtimeCeck_interval / 2) Then Execute() : Exit Sub
+                        If _
+                            Math.Abs(parseTimeSpan(time.Trim(";")).Subtract(DateTime.Now.TimeOfDay).TotalMilliseconds) <
+                            (currtimeCeck_interval/2) Then Execute() : Exit Sub
                     End If
                 Next
             Else
-                If Math.Abs(parseTimeSpan(trigger_parameters).Subtract(DateTime.Now.TimeOfDay).TotalMilliseconds) < (currtimeCeck_interval / 2) Then Execute()
+                If _
+                    Math.Abs(parseTimeSpan(trigger_parameters).Subtract(DateTime.Now.TimeOfDay).TotalMilliseconds) <
+                    (currtimeCeck_interval/2) Then Execute()
             End If
-
         End Sub
 
         Private Sub check_empty()
@@ -518,9 +542,12 @@ Namespace TaskManager
         End Sub
 
         Private Sub Execute(parameters As String)
-            If Not _IsEnabled Then livebug.write(loggingLevel.Fine, "TaskManager", "cancelled execution, task disabled", Me.name) : Exit Sub 'don't run if not enabled
+            If Not _IsEnabled Then _
+                livebug.write(loggingLevel.Fine, "TaskManager", "cancelled execution, task disabled", Me.name) : _
+                    Exit Sub 'don't run if not enabled
 
-            livebug.write(loggingLevel.Fine, "TaskManager", "Executing task:" & name & " - action:" & action_type.ToString, Me.name)
+            livebug.write(loggingLevel.Fine, "TaskManager",
+                          "Executing task:" & name & " - action:" & action_type.ToString, Me.name)
             livebug.write(loggingLevel.Fine, "TaskManager", "Arguments:" & parameters, Me.name)
             RaiseEvent triggered(Me)
             If parameters Is Nothing Then parameters = ""
@@ -536,49 +563,70 @@ Namespace TaskManager
                                 .Arguments = parameters.Split("---")(1).Trim.Trim("-").Trim
                             End If
                         End With
-                        livebug.write(loggingLevel.Fine, "TaskManager", "Starting process:" & p.StartInfo.FileName & " with arguments " & p.StartInfo.Arguments, Me.name)
+                        livebug.write(loggingLevel.Fine, "TaskManager",
+                                      "Starting process:" & p.StartInfo.FileName & " with arguments " &
+                                      p.StartInfo.Arguments, Me.name)
                         If FileIO.FileSystem.FileExists(p.StartInfo.FileName) = False Then
-                            livebug.write(loggingLevel.Warning, "TaskManager", "Process wasn't started, file doesn't exist", Me.name)
+                            livebug.write(loggingLevel.Warning, "TaskManager",
+                                          "Process wasn't started, file doesn't exist", Me.name)
                         Else
                             p.Start()
                         End If
 
                     Case action.shellexecute
                         Try
-                            Shell(parameters, AppWinStyle.Hide, True, -1)
+                            Shell(parameters, AppWinStyle.Hide, True, - 1)
                         Catch ex As Exception
-                            MessageBox.Show(lr("Task failed:") & name & vbCrLf & lr("Could not execute shell command:") & parameters & vbCrLf & lr("Is this a valid task?"), lr("Task failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                            livebug.write(loggingLevel.Warning, "TaskManager", "ShellExecute for task " & name & " failed, parameters: " & parameters, ex.Message)
+                            MessageBox.Show(
+                                lr("Task failed:") & name & vbCrLf & lr("Could not execute shell command:") & parameters &
+                                vbCrLf & lr("Is this a valid task?"), lr("Task failed"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
+                            livebug.write(loggingLevel.Warning, "TaskManager",
+                                          "ShellExecute for task " & name & " failed, parameters: " & parameters,
+                                          ex.Message)
                         End Try
                     Case action.command
 
                         If server.running Then
                             If parameters.Contains(";") Then
                                 Dim commands() As String = parameters.Split(";")
-                                livebug.write(loggingLevel.Fine, "TaskManager", "Preparing to send " & commands.Count & " commands", Me.name)
+                                livebug.write(loggingLevel.Fine, "TaskManager",
+                                              "Preparing to send " & commands.Count & " commands", Me.name)
                                 For Each cmd As String In commands
-                                    If server.SendCommand(cmd, True) Then livebug.write(loggingLevel.Fine, "TaskManager", "Command sent", Me.name) Else livebug.write(loggingLevel.Warning, "TaskManager", "Command sent, but not written to server", Me.name)
+                                    If server.SendCommand(cmd, True) Then _
+                                        livebug.write(loggingLevel.Fine, "TaskManager", "Command sent", Me.name) Else _
+                                        livebug.write(loggingLevel.Warning, "TaskManager",
+                                                      "Command sent, but not written to server", Me.name)
                                 Next
-                                livebug.write(loggingLevel.Fine, "TaskManager", commands.Count & " commands sent", Me.name)
+                                livebug.write(loggingLevel.Fine, "TaskManager", commands.Count & " commands sent",
+                                              Me.name)
                             Else
-                                If server.SendCommand(parameters, True) Then livebug.write(loggingLevel.Fine, "TaskManager", "Command sent", Me.name) Else livebug.write(loggingLevel.Warning, "TaskManager", "Command sent, but not written to server", Me.name)
+                                If server.SendCommand(parameters, True) Then _
+                                    livebug.write(loggingLevel.Fine, "TaskManager", "Command sent", Me.name) Else _
+                                    livebug.write(loggingLevel.Warning, "TaskManager",
+                                                  "Command sent, but not written to server", Me.name)
                             End If
                         Else
-                            livebug.write(loggingLevel.Warning, "TaskManager", "Command not sent: Server not running", Me.name)
+                            livebug.write(loggingLevel.Warning, "TaskManager", "Command not sent: Server not running",
+                                          Me.name)
                         End If
 
                     Case action.start_server
                         livebug.write(loggingLevel.Fine, "TaskManager", "Starting server by task", Me.name)
                         If server.running = False Then
                             Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
-                            If mf IsNot Nothing Then mf.start_server() Else livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                            If mf IsNot Nothing Then mf.start_server() Else _
+                                livebug.write(loggingLevel.Warning, "TaskManager",
+                                              "Mainform not found, cancelling execution.", Me.name)
                         End If
 
                     Case action.stop_server
                         livebug.write(loggingLevel.Fine, "TaskManager", "Stopping server by task", Me.name)
                         If running = True Then
                             Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
-                            If mf IsNot Nothing Then mf.stop_server() Else livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                            If mf IsNot Nothing Then mf.stop_server() Else _
+                                livebug.write(loggingLevel.Warning, "TaskManager",
+                                              "Mainform not found, cancelling execution.", Me.name)
                         End If
 
                     Case action.restart_server
@@ -587,10 +635,12 @@ Namespace TaskManager
                             Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
                             If mf IsNot Nothing Then
                                 mf.stop_server()
-                                Threading.Thread.Sleep(10000) 'workaround for starting server while old server hadn't stopped yet
+                                Threading.Thread.Sleep(10000) _
+                                'workaround for starting server while old server hadn't stopped yet
                                 mf.start_server()
                             Else
-                                livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                                livebug.write(loggingLevel.Warning, "TaskManager",
+                                              "Mainform not found, cancelling execution.", Me.name)
                             End If
                         End If
                     Case action.restart_server_brute
@@ -601,16 +651,24 @@ Namespace TaskManager
                             End If
                         End If
                         Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
-                        If mf IsNot Nothing Then mf.start_server() Else livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                        If mf IsNot Nothing Then mf.start_server() Else _
+                            livebug.write(loggingLevel.Warning, "TaskManager",
+                                          "Mainform not found, cancelling execution.", Me.name)
 
                     Case action.synchronize_list
                         livebug.write(loggingLevel.Fine, "TaskManager", "Sending automated list command", Me.name)
-                        If server.running Then server.SendCommand("list", True) Else livebug.write(loggingLevel.Warning, "TaskManager", "Sending automated list command failed, server not running", Me.name)
+                        If server.running Then server.SendCommand("list", True) Else _
+                            livebug.write(loggingLevel.Warning, "TaskManager",
+                                          "Sending automated list command failed, server not running", Me.name)
 
                     Case action.backup
                         livebug.write(loggingLevel.Fine, "TaskManager", "Creating backup", Me.name)
                         Dim bu = BackupManager.GetBackupByName(parameters)
-                        If bu IsNot Nothing Then bu.execute(False) Else MessageBox.Show(lr("The taskmanager couldn't execute this task:") & Me.name & vbCrLf & lr("Couldn't get the backup settings for backup scheme") & " " & Me.action_parameters, lr("Task failed!"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        If bu IsNot Nothing Then bu.execute(False) Else _
+                            MessageBox.Show(
+                                lr("The taskmanager couldn't execute this task:") & Me.name & vbCrLf &
+                                lr("Couldn't get the backup settings for backup scheme") & " " & Me.action_parameters,
+                                lr("Task failed!"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Case action.kickall
                         livebug.write(loggingLevel.Fine, "TaskManager", "Kicking all players", Me.name)
                         If server.playerList IsNot Nothing AndAlso server.playerList.Count > 0 Then
@@ -621,9 +679,13 @@ Namespace TaskManager
                     Case action.close_gui
                         Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
                         If running = True Then
-                            If mf IsNot Nothing Then mf.stop_server() Else livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                            If mf IsNot Nothing Then mf.stop_server() Else _
+                                livebug.write(loggingLevel.Warning, "TaskManager",
+                                              "Mainform not found, cancelling execution.", Me.name)
                         End If
-                        If mf IsNot Nothing Then mf.SafeFormClose() Else livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                        If mf IsNot Nothing Then mf.SafeFormClose() Else _
+                            livebug.write(loggingLevel.Warning, "TaskManager",
+                                          "Mainform not found, cancelling execution.", Me.name)
                 End Select
             Catch ex As Exception
                 livebug.write(loggingLevel.Severe, "TaskManager", "Severe error in task.execute!", ex.Message)
@@ -701,12 +763,18 @@ Namespace TaskManager
 
                 text = text.Replace("%server-running%", server.running.ToString.ToLower)
 
-                If playerList IsNot Nothing Then text = text.Replace("%players%", common.serialize(server.playerNameList, ",")) Else text = text.Replace("%players%", "INVALID")
-                If playerList IsNot Nothing Then text = text.Replace("%playercount%", server.playerList.Count) Else text = text.Replace("%players%", "0")
-                If playerList IsNot Nothing AndAlso playerList.Count > 0 Then text = text.Replace("%lastplayer%", server.playerList.Last.name) Else text = text.Replace("%lastplayer%", "INVALID")
+                If playerList IsNot Nothing Then _
+                    text = text.Replace("%players%", common.serialize(server.playerNameList, ",")) Else _
+                    text = text.Replace("%players%", "INVALID")
+                If playerList IsNot Nothing Then text = text.Replace("%playercount%", server.playerList.Count) Else _
+                    text = text.Replace("%players%", "0")
+                If playerList IsNot Nothing AndAlso playerList.Count > 0 Then _
+                    text = text.Replace("%lastplayer%", server.playerList.Last.name) Else _
+                    text = text.Replace("%lastplayer%", "INVALID")
                 livebug.write(loggingLevel.Fine, "TaskManager", "Parsed action parameters: " & text, Me.name)
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "TaskManager", "Severe error in ParseActionParameters! " & ex.Message, Me.name)
+                livebug.write(loggingLevel.Severe, "TaskManager", "Severe error in ParseActionParameters! " & ex.Message,
+                              Me.name)
             End Try
             Return text
         End Function
@@ -721,34 +789,44 @@ Namespace TaskManager
                 text = text.Replace("%join-time%", pj.player.time)
                 livebug.write(loggingLevel.Fine, "TaskManager", "Parsed action parameters (join): " & text, Me.name)
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "TaskManager", "Severe error in ParseActionParameters_playerjoin!", ex.Message)
+                livebug.write(loggingLevel.Severe, "TaskManager", "Severe error in ParseActionParameters_playerjoin!",
+                              ex.Message)
             End Try
             Return (text)
         End Function
 
-        Private Function ParseActionParameters_playerdisconnect(text As String, e As PlayerDisconnectEventArgs) As String
+        Private Function ParseActionParameters_playerdisconnect(text As String, e As PlayerDisconnectEventArgs) _
+            As String
             Try
                 livebug.write(loggingLevel.Fine, "TaskManager", "Parsing action parameters (disconnect) for " & text)
                 If e.player.name IsNot Nothing Then text = text.Replace("%leave-name%", e.player.name)
                 Select Case e.reason
                     Case PlayerDisconnectEventArgs.playerleavereason.leave
                         Dim d As PlayerLeave = e.details
-                        If d.reason IsNot Nothing Then text = text.Replace("%leave-reason%", "disconnected: " & d.reason) Else text = text.Replace("%leave-reason%", "disconnected")
+                        If d.reason IsNot Nothing Then _
+                            text = text.Replace("%leave-reason%", "disconnected: " & d.reason) Else _
+                            text = text.Replace("%leave-reason%", "disconnected")
                     Case PlayerDisconnectEventArgs.playerleavereason.kick
                         Dim d As PlayerKick = e.details
-                        If d.CommandSender IsNot Nothing Then text = text.Replace("%leave-reason%", "kicked by " & d.CommandSender) Else text = text.Replace("%leave-reason%", "kicked")
+                        If d.CommandSender IsNot Nothing Then _
+                            text = text.Replace("%leave-reason%", "kicked by " & d.CommandSender) Else _
+                            text = text.Replace("%leave-reason%", "kicked")
                     Case PlayerDisconnectEventArgs.playerleavereason.ban
                         Dim d As playerBan = e.details
-                        If d.CommandSender IsNot Nothing Then text = text.Replace("%leave-reason%", "banned by " & d.CommandSender) Else text = text.Replace("%leave-reason%", "banned")
+                        If d.CommandSender IsNot Nothing Then _
+                            text = text.Replace("%leave-reason%", "banned by " & d.CommandSender) Else _
+                            text = text.Replace("%leave-reason%", "banned")
                 End Select
                 livebug.write(loggingLevel.Fine, "TaskManager", "Parsed action parameters (disconnect): " & text)
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "TaskManager", "Severe error in ParseActionParameters_playerdisconnect!", ex.Message)
+                livebug.write(loggingLevel.Severe, "TaskManager",
+                              "Severe error in ParseActionParameters_playerdisconnect!", ex.Message)
             End Try
             Return (text)
         End Function
 
 #Region "IDisposable Support"
+
         Private disposedValue As Boolean ' To detect redundant calls
 
         ' IDisposable
@@ -777,8 +855,7 @@ Namespace TaskManager
             Dispose(True)
             GC.SuppressFinalize(Me)
         End Sub
+
 #End Region
-
     End Class
-
 End Namespace

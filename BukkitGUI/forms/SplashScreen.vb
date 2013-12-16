@@ -1,11 +1,8 @@
 ﻿'the splash screen loads the application, it initializes all modules.
-
 Imports System.Threading
-
+Imports Net.Bertware.BukkitGUI.MCInterop
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
-Imports Net.Bertware.BukkitGUI.MCInterop
-
 
 Public Class SplashScreen
     Dim ThdLoad As Thread
@@ -50,11 +47,15 @@ Public Class SplashScreen
 
         setload("Initializing file location", 0) 'set UI (text and progress %)
 
-        filelocation.init() 'initialize filelocation module, which determines wether files should be stored in appdata or local
+        filelocation.init() _
+        'initialize filelocation module, which determines wether files should be stored in appdata or local
 
-        If filelocation.location = filelocation.filelocation.global_files Then 'NO TRANSLATIONS! TRANSLATIONS AREN'T INITIALIZED YET
+        If filelocation.location = filelocation.filelocation.global_files Then _
+            'NO TRANSLATIONS! TRANSLATIONS AREN'T INITIALIZED YET
             If Process.GetProcessesByName("BukkitGUI").Length > 1 Then
-                MessageBox.Show("You cannot run multiple instances of the GUI while the files are saved in appdata. Change in ""Options and Settings"" and try again.", "Multiple GUI instances detected", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(
+                    "You cannot run multiple instances of the GUI while the files are saved in appdata. Change in ""Options and Settings"" and try again.",
+                    "Multiple GUI instances detected", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Process.GetCurrentProcess.Kill()
             End If
         End If
@@ -64,7 +65,8 @@ Public Class SplashScreen
 
         Try
             setload("Initializing livebug", 10) 'set UI (text and progress %)
-            livebug.init() 'initialize livebug module, needed for the GUI log and to report errors. must be first to initiate.
+            livebug.init() _
+            'initialize livebug module, needed for the GUI log and to report errors. must be first to initiate.
         Catch ex As Exception
             Trace.WriteLine("Livebug init error:" & ex.Message)
         End Try
@@ -74,20 +76,24 @@ Public Class SplashScreen
 
         'Don't log before livebug is initialized
         livebug.write(loggingLevel.Fine, "Splashscreen", "Initializing application") 'log to livebug
-        If Not Inet Then livebug.write(loggingLevel.Warning, "Splashscreen", "No network connection available. Skipping initialization for network dependent items.")
+        If Not Inet Then _
+            livebug.write(loggingLevel.Warning, "Splashscreen",
+                          "No network connection available. Skipping initialization for network dependent items.")
 
         InitCount = InitCount + 1 'maximum 3
         If InitCount > 5 Then Me.CloseForm() : Exit Sub
 
         setload("Initializing common items", 20) 'set UI (text and progress %)
-        common.Init() 'Initialize the module with common functions. This will also check if all folders are available, or createm if they don't exist.
+        common.Init() _
+        'Initialize the module with common functions. This will also check if all folders are available, or createm if they don't exist.
 
         InitCount = InitCount + 1 'maximum 4
         If InitCount > 5 Then Me.CloseForm() : Exit Sub
 
         setload("Initializing config", 40) 'set UI (text and progress %)
         Try
-            config.init() 'initialize the config module, needed to read settings from config.XML, Must be initiated after livebug, so other modules can initiate properly.
+            config.init() _
+            'initialize the config module, needed to read settings from config.XML, Must be initiated after livebug, so other modules can initiate properly.
         Catch ex As Exception
             livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Config")
         End Try
@@ -99,7 +105,9 @@ Public Class SplashScreen
 
         setload("running update check...", 30)
         Try
-            If Inet And config.readAsBool("auto_update", True, "options") Then Thread.Sleep(100) : Net.Bertware.Get.api.RunUpdateCheck(True, False) : Thread.Sleep(100) 'Make sure the requests are spread so the server doesn't block
+            If Inet And config.readAsBool("auto_update", True, "options") Then _
+                Thread.Sleep(100) : Net.Bertware.Get.api.RunUpdateCheck(True, False) : Thread.Sleep(100) _
+            'Make sure the requests are spread so the server doesn't block
         Catch ex As Exception
             livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Updater", ex.Message)
         End Try
@@ -109,7 +117,8 @@ Public Class SplashScreen
 
         setload("Initializing localization", 50) 'set UI (text and progress %)
         Try
-            If Not common.isRunningLight Then language.init() 'Initialize the localization module, this allows translations of the GUI.
+            If Not common.isRunningLight Then language.init() _
+            'Initialize the localization module, this allows translations of the GUI.
         Catch ex As Exception
             livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Language")
         End Try
@@ -143,7 +152,8 @@ Public Class SplashScreen
 
         setload("Initializing performance", 60) 'set UI (text and progress %)
         Try
-            If common.IsRunningOnMono = False AndAlso Not common.isRunningLight Then performance.init() 'Initialize the performance module, this allows CPU and RAM measurement.
+            If common.IsRunningOnMono = False AndAlso Not common.isRunningLight Then performance.init() _
+            'Initialize the performance module, this allows CPU and RAM measurement.
         Catch ex As Exception
             livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Performance")
         End Try
@@ -217,17 +227,17 @@ Public Class SplashScreen
         '======================= END OF INITIALIZATION ======================='
 
         CloseForm()
-        livebug.write(loggingLevel.Fine, "Splashscreen", "Application initialized, Closing splashscreen") 'log to livebug
+        livebug.write(loggingLevel.Fine, "Splashscreen", "Application initialized, Closing splashscreen") _
+        'log to livebug
 
         If IsRunningOnMono Then
             mainform.Show()
         End If
-
-
     End Sub
 
 
 #Region "Private Methods"
+
     Private Sub setload(text As String, progress As Byte) 'set both description and percent.
         livebug.write(loggingLevel.Fine, "Splashscreen", "Loading:" & text & "(" & progress & "%)")
         SetLoadAction(text)
@@ -266,6 +276,6 @@ Public Class SplashScreen
             Me.Close()
         End If
     End Sub
-#End Region
 
+#End Region
 End Class

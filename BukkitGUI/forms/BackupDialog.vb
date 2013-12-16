@@ -22,7 +22,8 @@ Public Class BackupDialog
     Private Sub BackupDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         If bs IsNot Nothing Then
             If bs.name IsNot Nothing Then TxtName.Text = bs.name
-            If bs.folders IsNot Nothing AndAlso bs.folders.Count > 0 Then TxtFolders.Text = Core.common.serialize(bs.folders, ";")
+            If bs.folders IsNot Nothing AndAlso bs.folders.Count > 0 Then _
+                TxtFolders.Text = Core.common.serialize(bs.folders, ";")
             If bs.destination IsNot Nothing Then TxtDestination.Text = bs.destination
             ChkCompression.Checked = bs.compression
         End If
@@ -46,29 +47,38 @@ Public Class BackupDialog
         Me.Close()
     End Sub
 
-    Private Sub BtnBrowseSourceFolders_Click(sender As System.Object, e As System.EventArgs) Handles BtnBrowseSourceFolders.Click
+    Private Sub BtnBrowseSourceFolders_Click(sender As System.Object, e As System.EventArgs) _
+        Handles BtnBrowseSourceFolders.Click
         Dim fb As New FolderBrowserDialog
         fb.Description = lr("Select folders to backup")
         If fb.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
         If TxtFolders.Text = "" Then TxtFolders.Text = fb.SelectedPath Else TxtFolders.Text += ";" & fb.SelectedPath
     End Sub
 
-    Private Sub BtnBrowseDestination_Click(sender As System.Object, e As System.EventArgs) Handles BtnBrowseDestination.Click
+    Private Sub BtnBrowseDestination_Click(sender As System.Object, e As System.EventArgs) _
+        Handles BtnBrowseDestination.Click
         Dim fb As New FolderBrowserDialog
         fb.Description = lr("Select folder to store backup")
         If fb.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
         TxtDestination.Text = fb.SelectedPath
     End Sub
 
-    Private Sub settings_validate() Handles TxtName.LostFocus, TxtDestination.LostFocus, TxtFolders.LostFocus, TxtName.TextChanged, TxtDestination.TextChanged, TxtFolders.TextChanged
+    Private Sub settings_validate() _
+        Handles TxtName.LostFocus, TxtDestination.LostFocus, TxtFolders.LostFocus, TxtName.TextChanged,
+                TxtDestination.TextChanged, TxtFolders.TextChanged
         BtnOk.Enabled = False
         If TxtName.Text = "" Then ErrProv.SetError(TxtName, lr("The name must be at least 1 character long")) : Exit Sub
         For Each character In TxtName.Text.ToCharArray
-            If Not (Char.IsLetterOrDigit(character) Or character = Char.Parse("_") Or character = Char.Parse("-")) Then ErrProv.SetError(TxtName, lr("You can only use the following characters: a-z ; 1-9 ; _ ; -")) : Exit Sub
+            If Not (Char.IsLetterOrDigit(character) Or character = Char.Parse("_") Or character = Char.Parse("-")) Then _
+                ErrProv.SetError(TxtName, lr("You can only use the following characters: a-z ; 1-9 ; _ ; -")) : Exit Sub
         Next
         ErrProv.SetError(TxtName, "")
-        If TxtFolders.Text = "" Then ErrProv.SetError(TxtFolders, lr("You need to specify at least 1 directory")) : Exit Sub Else ErrProv.SetError(TxtFolders, "")
-        If TxtDestination.Text = "" Then ErrProv.SetError(TxtDestination, lr("You need to specify the destination directory")) : Exit Sub Else ErrProv.SetError(TxtDestination, "")
+        If TxtFolders.Text = "" Then _
+            ErrProv.SetError(TxtFolders, lr("You need to specify at least 1 directory")) : Exit Sub Else _
+            ErrProv.SetError(TxtFolders, "")
+        If TxtDestination.Text = "" Then _
+            ErrProv.SetError(TxtDestination, lr("You need to specify the destination directory")) : Exit Sub Else _
+            ErrProv.SetError(TxtDestination, "")
 
         BtnOk.Enabled = True
     End Sub

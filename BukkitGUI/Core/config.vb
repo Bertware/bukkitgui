@@ -1,13 +1,11 @@
-﻿Imports System.Xml
+﻿
 
 'The config for the GUI
 'Most functions are already provided by fxml
 'Used to read/write to config
 
 
-
 Namespace Core
-
     ''' <summary>
     ''' Read/Write settings to config.xml
     ''' </summary>
@@ -33,14 +31,17 @@ Namespace Core
         Public Function init() As Boolean
             config_XML = common.Config_path & "/config.xml"
 
-            If Not FileIO.FileSystem.FileExists(config_XML) Then common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>")
-            If common.File_Empty(config_XML) Then common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>")
+            If Not FileIO.FileSystem.FileExists(config_XML) Then _
+                common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>")
+            If common.File_Empty(config_XML) Then _
+                common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>")
 
             cfile = New fxml(config_XML, "config") 'initialize file
 
             Select Case cfile.Verify_version("config", CURR_VER) 'check version
                 Case False
-                    common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>") 'config content will be added automaticly during use.
+                    common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>") _
+                    'config content will be added automaticly during use.
             End Select
             livebug.write(loggingLevel.Fine, "Config", "Config initialized")
 
@@ -55,15 +56,18 @@ Namespace Core
         ''' <param name="parent">The parent node for the setting</param>
         ''' <returns>The value as string</returns>
         ''' <remarks></remarks>
-        Public Function read(element As String, Optional ByVal defaultvalue As String = "", Optional ByVal parent As String = "") As String
+        Public Function read(element As String, Optional ByVal defaultvalue As String = "",
+                             Optional ByVal parent As String = "") As String
             Return cfile.read(element, defaultvalue, parent)
         End Function
 
-        Public Function readAsBool(element As String, Optional ByVal defaultvalue As Boolean = False, Optional ByVal parent As String = "") As Boolean
+        Public Function readAsBool(element As String, Optional ByVal defaultvalue As Boolean = False,
+                                   Optional ByVal parent As String = "") As Boolean
             If read(element, defaultvalue.ToString.ToLower, parent).ToLower = "true" Then Return True Else Return False
         End Function
 
-        Public Function readAttribute(element As String, attribute As String, Optional ByVal defaultvalue As String = "", Optional ByVal parent As String = "") As String
+        Public Function readAttribute(element As String, attribute As String, Optional ByVal defaultvalue As String = "",
+                                      Optional ByVal parent As String = "") As String
             Return cfile.readAttribute(element, attribute, defaultvalue, parent)
         End Function
 
@@ -75,18 +79,19 @@ Namespace Core
         ''' <param name="parent">The parent node for the setting</param>
         ''' <returns>The written XML element</returns>
         ''' <remarks></remarks>
-        Public Function write(element As String, value As String, Optional ByVal parent As String = "", Optional ByVal attributes As List(Of CXMLAttribute) = Nothing) As Xml.XmlElement
+        Public Function write(element As String, value As String, Optional ByVal parent As String = "",
+                              Optional ByVal attributes As List(Of CXMLAttribute) = Nothing) As Xml.XmlElement
             Return cfile.write(element, value, parent, attributes)
         End Function
 
-        Public Function writeAsBool(element As String, value As Boolean, Optional parent As String = "") As Xml.XmlElement
+        Public Function writeAsBool(element As String, value As Boolean, Optional parent As String = "") _
+            As Xml.XmlElement
             Return write(element, value.ToString.ToLower, parent)
         End Function
 
-        Public Function writeAttribute(element As String, attribute As String, value As String, Optional ByVal parent As String = "") As Boolean
+        Public Function writeAttribute(element As String, attribute As String, value As String,
+                                       Optional ByVal parent As String = "") As Boolean
             Return cfile.writeAttribute(element, attribute, value, parent)
         End Function
-
     End Module
-
 End Namespace

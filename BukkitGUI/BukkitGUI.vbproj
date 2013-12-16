@@ -125,10 +125,6 @@
       <HintPath>dll\JSONAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="JsonExSerializer">
-      <HintPath>dll\JsonExSerializer.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Net.Bertware.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c9e5ac8d47563bd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Net.Bertware.Controls.dll</HintPath>
@@ -150,19 +146,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Deployment">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Design">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Drawing">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Management">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Web">
@@ -177,9 +161,6 @@
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="YamlUtility">
       <HintPath>dll\YamlUtility.dll</HintPath>
       <Private>False</Private>
@@ -190,12 +171,10 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
-    <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="forms\OutputBrowser.Designer.vb">
@@ -210,6 +189,7 @@
     <Compile Include="forms\PortForwarder.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MCInterop\base_StartArgs.vb" />
     <Compile Include="MCInterop\plugin_PluginUpdater.vb" />
     <Compile Include="SoundNotificator.vb" />
     <Compile Include="Utilities\AdvancedOptions.vb" />
@@ -219,7 +199,6 @@
     <Compile Include="Utilities\compression.vb" />
     <Compile Include="Core\config.vb" />
     <Compile Include="Utilities\ErrorManager.vb" />
-    <Compile Include="Utilities\EventArgs.vb" />
     <Compile Include="Core\filelocation.vb" />
     <Compile Include="Core\dlb.vb" />
     <Compile Include="MCInterop\tools_BukkitTools.vb" />
@@ -291,6 +270,7 @@
     </Compile>
     <Compile Include="MCInterop\tools_ServerSettings.vb" />
     <Compile Include="TaskManager.vb" />
+    <Compile Include="Utilities\EventArgs.vb" />
     <Compile Include="Utilities\LicenseManager.vb" />
     <Compile Include="forms\ServerStopDialog.Designer.vb">
       <DependentUpon>ServerStopDialog.vb</DependentUpon>
@@ -341,7 +321,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="MCInterop\base_ServerOutputHandler.vb" />
-    <Compile Include="MCInterop\base_StartArgs.vb" />
     <Compile Include="Utilities\UPnP.vb" />
   </ItemGroup>
   <ItemGroup>

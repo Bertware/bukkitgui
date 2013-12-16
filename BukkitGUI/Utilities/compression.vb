@@ -1,9 +1,8 @@
 ﻿'Compression module, ported from beta
 'NEEDS REVIEW
-
 Imports System.IO
-Imports ICSharpCode.SharpZipLib.Zip
 Imports Net.Bertware.BukkitGUI.Core
+Imports ICSharpCode.SharpZipLib.Zip
 
 Namespace Utilities
     ''' <summary>
@@ -68,9 +67,8 @@ Namespace Utilities
                 Return True
             Catch ex As Exception
                 Return False
-                livebug.write(loggingLevel.Severe, "Compression", "Error while compressing files!", ex.Message)
+                livebug.write(livebug.loggingLevel.Severe, "Compression", "Error while compressing files!", ex.Message)
             End Try
-
         End Function
 
         ''' <summary>
@@ -104,7 +102,8 @@ Namespace Utilities
                         Dim myFile As New FileInfo(destinationDirectory & "/" & theEntry.Name)
 
                         ' Create directory
-                        If Not FileIO.FileSystem.DirectoryExists(myFile.DirectoryName) Then Directory.CreateDirectory(myFile.DirectoryName)
+                        If Not FileIO.FileSystem.DirectoryExists(myFile.DirectoryName) Then _
+                            Directory.CreateDirectory(myFile.DirectoryName)
 
                         ' Create end file
                         Dim fs As FileStream = New FileStream(myFile.FullName, FileMode.Create)
@@ -126,8 +125,6 @@ Namespace Utilities
                 Return False
                 livebug.write(loggingLevel.Severe, "Compression", "Error while decompressing files!", ex.Message)
             End Try
-
         End Function
-
     End Module
 End Namespace

@@ -2,7 +2,6 @@
 
 Namespace Utilities
     Public Module javaAPI
-
         Const default_x64_jre6x32 As String = "C:/Program Files (x86)/Java/jre6/bin/java.exe"
         Const default_x64_jre6x64 As String = "C:/Program Files/Java/jre6/bin/java.exe"
         Const default_x64_jre7x32 As String = "C:/Program Files (x86)/Java/jre7/bin/java.exe"
@@ -117,7 +116,8 @@ Namespace Utilities
             Dim ofd As New OpenFileDialog
             ofd.Filter = "*.exe|*.exe"
             ofd.Title = "Select Java exectutable"
-            If ofd.ShowDialog() = DialogResult.OK Then config.write("alternative_java", ofd.FileName, "java") : Return ofd.FileName Else Return Nothing
+            If ofd.ShowDialog() = DialogResult.OK Then _
+                config.write("alternative_java", ofd.FileName, "java") : Return ofd.FileName Else Return Nothing
         End Function
 
         ''' <summary>

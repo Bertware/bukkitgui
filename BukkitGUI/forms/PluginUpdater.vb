@@ -1,9 +1,8 @@
-﻿Imports System.Threading
-Imports Net.Bertware.BukkitGUI.Core
+﻿Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.MCInterop
+Imports System.Threading
 
 Public Class PluginUpdater
-
     ''' <summary>
     ''' The list of plugins to update
     ''' </summary>
@@ -15,6 +14,7 @@ Public Class PluginUpdater
     ''' </summary>
     ''' <remarks></remarks>
     Private dc As IDictionary(Of plugindescriptor, BukgetPlugin)
+
     Private _updated As Boolean = False
 
     ''' <summary>
@@ -35,7 +35,6 @@ Public Class PluginUpdater
         InitializeComponent()
         plugins = New List(Of plugindescriptor)
         ' Add any initialization after the InitializeComponent() call.
-
     End Sub
 
     Public Sub New(plugin As plugindescriptor)
@@ -45,7 +44,6 @@ Public Class PluginUpdater
         Me.plugins = New List(Of plugindescriptor)
         Me.plugins.Add(plugin)
         ' Add any initialization after the InitializeComponent() call.
-
     End Sub
 
 
@@ -58,7 +56,6 @@ Public Class PluginUpdater
             Me.plugins.Add(entry)
         Next
         ' Add any initialization after the InitializeComponent() call.
-
     End Sub
 
     Public Sub New(plugins() As plugindescriptor)
@@ -70,7 +67,6 @@ Public Class PluginUpdater
             Me.plugins.Add(entry)
         Next
         ' Add any initialization after the InitializeComponent() call.
-
     End Sub
 
     ''' <summary>
@@ -93,7 +89,6 @@ Public Class PluginUpdater
         Dim t As New Thread(AddressOf LoadAsync)
         t.IsBackground = True
         t.Start()
-
     End Sub
 
     ''' <summary>
@@ -110,15 +105,18 @@ Public Class PluginUpdater
                 Dim plugin As plugindescriptor = plugins(i)
                 If plugin IsNot Nothing AndAlso plugin.name IsNot Nothing Then
                     Me.SetStatus(lr("Loading plugin data:") & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
-                    livebug.write(loggingLevel.Fine, "PluginUpdater", "Loading plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
+                    livebug.write(loggingLevel.Fine, "PluginUpdater",
+                                  "Loading plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     If dc.ContainsKey(plugin) = False Then
                         dc.Add(plugin, BukGetAPI.GetPluginInfoByNamespace(plugin.main, False))
-                        livebug.write(loggingLevel.Fine, "PluginUpdater", "Added plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
+                        livebug.write(loggingLevel.Fine, "PluginUpdater",
+                                      "Added plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     Else
-                        livebug.write(loggingLevel.Fine, "PluginUpdater", "Discarded plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
+                        livebug.write(loggingLevel.Fine, "PluginUpdater",
+                                      "Discarded plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     End If
 
-                    Dim tmpp As Double = Math.Round(100 * ((i + 1) / plugins.Count))
+                    Dim tmpp As Double = Math.Round(100*((i + 1)/plugins.Count))
                     If tmpp > 100 Then tmpp = 100
                     Me.SetProgress(CByte(tmpp))
 
@@ -148,16 +146,24 @@ Public Class PluginUpdater
                     Try
                         Dim lvi As New ListViewItem
                         If entry.Value Is Nothing Then
-                            lvi = New ListViewItem({entry.Key.name, entry.Key.version, lr("No data available"), lr("No data available")})
+                            lvi =
+                                New ListViewItem(
+                                    {entry.Key.name, entry.Key.version, lr("No data available"), lr("No data available")})
                             lvi.BackColor = Color.LightGray
                             lvi.Tag = "FALSE"
                         Else
                             If entry.Value.versions Is Nothing OrElse entry.Value.versions.Count < 1 Then
-                                lvi = New ListViewItem({entry.Key.name, entry.Key.version, lr("No downloads available"), lr("No downloads available")})
+                                lvi =
+                                    New ListViewItem(
+                                        {entry.Key.name, entry.Key.version, lr("No downloads available"),
+                                         lr("No downloads available")})
                                 lvi.BackColor = Color.LightGray
                                 lvi.Tag = "FALSE"
                             Else
-                                lvi = New ListViewItem({entry.Key.name, entry.Key.version, entry.Value.versions(0).version, common.serialize(entry.Value.versions(0).builds, ",")})
+                                lvi =
+                                    New ListViewItem(
+                                        {entry.Key.name, entry.Key.version, entry.Value.versions(0).version,
+                                         common.serialize(entry.Value.versions(0).builds, ",")})
                                 lvi.Tag = "TRUE"
                                 If common.CheckVersion(entry.Key.version, entry.Value.versions(0).version) = 1 Then
                                     lvi.Checked = True
@@ -169,7 +175,8 @@ Public Class PluginUpdater
                         ALVPlugins.Items.Add(lvi)
                     Catch ex As Exception
                         If entry.Key IsNot Nothing AndAlso entry.Key.name IsNot Nothing Then
-                            livebug.write(loggingLevel.Warning, "PluginUpdater", "Couldn't load plugin:" & entry.Key.name, ex.Message)
+                            livebug.write(loggingLevel.Warning, "PluginUpdater",
+                                          "Couldn't load plugin:" & entry.Key.name, ex.Message)
                         Else
                             livebug.write(loggingLevel.Warning, "PluginUpdater", "Couldn't load plugin", ex.Message)
                         End If
@@ -232,37 +239,57 @@ Public Class PluginUpdater
                         For Each pair As KeyValuePair(Of plugindescriptor, BukgetPlugin) In dc
                             Try
                                 If pair.Key.name = item.SubItems(0).Text Then
-                                    If pair.Value Is Nothing OrElse pair.Value.versions Is Nothing OrElse pair.Value.versions(0) Is Nothing Then Exit For
-                                    If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then Me.SetStatus(lr("Updating plugin") & " " & pair.Key.name & " " & lr("to version") & " " & pair.Value.versions(0).version & " (" & (i) & "/" & ALVPlugins.CheckedItems.Count & ")")
+                                    If _
+                                        pair.Value Is Nothing OrElse pair.Value.versions Is Nothing OrElse
+                                        pair.Value.versions(0) Is Nothing Then Exit For
+                                    If _
+                                        Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso
+                                        Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then _
+                                        Me.SetStatus(
+                                            lr("Updating plugin") & " " & pair.Key.name & " " & lr("to version") & " " &
+                                            pair.Value.versions(0).version & " (" & (i) & "/" &
+                                            ALVPlugins.CheckedItems.Count & ")")
                                     livebug.write(loggingLevel.Fine, "PluginUpdater", "Updating plugin:" & pair.Key.name)
                                     UpdatePluginToVersion(pair.Key, pair.Value.versions(0), False)
                                     Exit For
                                 End If
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "PluginUpdater", "Exception in Update routine for " & pair.Key.name, ex.Message)
+                                livebug.write(loggingLevel.Warning, "PluginUpdater",
+                                              "Exception in Update routine for " & pair.Key.name, ex.Message)
                             End Try
                         Next
                     Else
-                        If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then Me.SetStatus(lr("Skipping plugin") & " " & item.SubItems(0).Text & " - " & lr("cannot update") & "(" & i + 1 & " / " & dc.Count & ")")
+                        If _
+                            Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso
+                            Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then _
+                            Me.SetStatus(
+                                lr("Skipping plugin") & " " & item.SubItems(0).Text & " - " & lr("cannot update") & "(" &
+                                i + 1 & " / " & dc.Count & ")")
                         livebug.write(loggingLevel.Fine, "PluginUpdater", "Skipping plugin:" & item.SubItems(0).Text)
                     End If
-                    Dim tmpp As Double = Math.Round(100 * ((i + 1) / dc.Count))
+                    Dim tmpp As Double = Math.Round(100*((i + 1)/dc.Count))
                     If tmpp > 100 Then tmpp = 100
                     Me.SetProgress(CByte(tmpp))
                     i = i + 1
                 Next
-                If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then Me.SetStatus(lr("Idle"))
-                If Me IsNot Nothing AndAlso BtnClose IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso Not (BtnClose.Disposing Or BtnClose.IsDisposed) Then BtnClose.Enabled = True
+                If _
+                    Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso
+                    Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then Me.SetStatus(lr("Idle"))
+                If _
+                    Me IsNot Nothing AndAlso BtnClose IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso
+                    Not (BtnClose.Disposing Or BtnClose.IsDisposed) Then BtnClose.Enabled = True
                 InstalledPluginManager.RefreshAllInstalledPluginsAsync()
                 If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) Then Me.Close()
             End If
         Catch ex As Exception
-            MessageBox.Show(lr("Something went wrong while updating. Please check if all plugins are updated."), lr("Something went wrong"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(lr("Something went wrong while updating. Please check if all plugins are updated."),
+                            lr("Something went wrong"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             livebug.write(loggingLevel.Warning, "PluginUpdater", "Severe exception in Update routine!", ex.Message)
         End Try
     End Sub
 
-    Private Sub ChkCheckAll_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChkCheckAll.CheckedChanged
+    Private Sub ChkCheckAll_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Handles ChkCheckAll.CheckedChanged
         If ChkCheckAll.Checked Then
             For Each item As ListViewItem In ALVPlugins.Items
                 item.Checked = True

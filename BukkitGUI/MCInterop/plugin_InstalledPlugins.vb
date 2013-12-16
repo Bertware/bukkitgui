@@ -1,8 +1,5 @@
 ﻿Imports System.IO
 Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.Utilities
-Imports Net.Bertware.BukkitGUI.MCInterop
-
 Imports System.Threading
 
 Namespace MCInterop
@@ -30,10 +27,8 @@ Namespace MCInterop
             t.IsBackground = True
             t.Name = "InstalledPlugins_init"
             t.Start()
-
         End Sub
 
-      
 
         Public Sub init()
             livebug.write(loggingLevel.Fine, "Pluginmanager", "Initializing / Loading")
@@ -44,10 +39,15 @@ Namespace MCInterop
                 Try
                     FileIO.FileSystem.CreateDirectory(plugin_dir)
                 Catch secex As UnauthorizedAccessException
-                    MessageBox.Show(lr("Access to to the following folder was denied.") & plugin_dir & vbCrLf & lr("Please run this app as administrator to ensure proper working"), lr("Access to folder denied"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    livebug.write(loggingLevel.Severe, "pluginmanager", "Could not create folder due to insufficient rights: " & plugin_dir, secex.Message)
+                    MessageBox.Show(
+                        lr("Access to to the following folder was denied.") & plugin_dir & vbCrLf &
+                        lr("Please run this app as administrator to ensure proper working"),
+                        lr("Access to folder denied"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    livebug.write(loggingLevel.Severe, "pluginmanager",
+                                  "Could not create folder due to insufficient rights: " & plugin_dir, secex.Message)
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "pluginmanager", "Could not create folder: " & plugin_dir, ex.Message)
+                    livebug.write(loggingLevel.Severe, "pluginmanager", "Could not create folder: " & plugin_dir,
+                                  ex.Message)
                 End Try
 
             End If
@@ -60,10 +60,12 @@ Namespace MCInterop
 
             'Create a list of simple plugin items to start
             CreateSimpleList()
-            If plugins Is Nothing OrElse plugins.Count < 1 Then Exit Sub 'exit here, we can't continue if there aren't plugins
+            If plugins Is Nothing OrElse plugins.Count < 1 Then Exit Sub _
+            'exit here, we can't continue if there aren't plugins
 
 
-            livebug.write(loggingLevel.Fine, "pluginmanager", "Loaded base list: " & plugins.Count & " plugins loaded", "pluginmanager")
+            livebug.write(loggingLevel.Fine, "pluginmanager", "Loaded base list: " & plugins.Count & " plugins loaded",
+                          "pluginmanager")
 
             If plugins.Count > 0 Then 'if we found plugins, get the details (async!)
                 Dim t As New Thread(AddressOf CreateDetailledList)
@@ -71,11 +73,13 @@ Namespace MCInterop
                 t.Name = "InstalledPlugins_CreateDetailledList"
                 t.Start()
             Else
-                livebug.write(loggingLevel.Fine, "pluginmanager", "No plugins in base list, detailled list creation cancelled")
+                livebug.write(loggingLevel.Fine, "pluginmanager",
+                              "No plugins in base list, detailled list creation cancelled")
             End If
         End Sub
 
 #Region "listing"
+
         ''' <summary>
         ''' Create a simple list of the plugin in the plugin folder. Fast, but lacks details.
         ''' </summary>
@@ -103,7 +107,11 @@ Namespace MCInterop
                             plugins.Add(pluginfiles(i).Name, pld)
                         End If
                     Catch ex As Exception
-                        If pluginfiles(i) IsNot Nothing Then livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list:" & pluginfiles(i).Name, ex.Message) Else livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list", ex.Message)
+                        If pluginfiles(i) IsNot Nothing Then _
+                            livebug.write(loggingLevel.Warning, "InstalledPlugins",
+                                          "Couldn't add plugin to plugin list:" & pluginfiles(i).Name, ex.Message) Else _
+                            livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't add plugin to plugin list",
+                                          ex.Message)
                     End Try
                 Next
 
@@ -116,20 +124,27 @@ Namespace MCInterop
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub CreateDetailledList()
-            livebug.write(loggingLevel.Fine, "InstalledPlugins", "Loading full list", "Pluginmanager.InstalledPluginmanager.CreateDetailledList()")
+            livebug.write(loggingLevel.Fine, "InstalledPlugins", "Loading full list",
+                          "Pluginmanager.InstalledPluginmanager.CreateDetailledList()")
             If plugins Is Nothing OrElse plugins.Count = 0 Then Exit Sub
             Try
                 For i As UInt16 = 0 To plugins.Values.Count - 1
                     Try
 
-                        livebug.write(loggingLevel.Fine, "InstalledPlugins", "Loading plugin " & i + 1 & " of " & plugins.Count & " : " & plugins.Keys(i))
+                        livebug.write(loggingLevel.Fine, "InstalledPlugins",
+                                      "Loading plugin " & i + 1 & " of " & plugins.Count & " : " & plugins.Keys(i))
                         Dim pld As New plugindescriptor
                         pld = pld.loadplugin(plugins.Keys(i))
                         If pld IsNot Nothing Then plugins(pld.filename) = pld
-                        livebug.write(loggingLevel.Fine, "InstalledPlugins", "Loaded plugin " & i + 1 & " of " & plugins.Count & " : " & plugins.Keys(i))
+                        livebug.write(loggingLevel.Fine, "InstalledPlugins",
+                                      "Loaded plugin " & i + 1 & " of " & plugins.Count & " : " & plugins.Keys(i))
 
                     Catch ex As Exception
-                        If plugins.Keys(i) IsNot Nothing Then livebug.write(loggingLevel.Warning, "InstalledPlugins", "Plugin not loaded:" & plugins.Keys(i), ex.Message) Else livebug.write(loggingLevel.Warning, "InstalledPlugins", "Plugin not loaded: " & i, ex.Message)
+                        If plugins.Keys(i) IsNot Nothing Then _
+                            livebug.write(loggingLevel.Warning, "InstalledPlugins",
+                                          "Plugin not loaded:" & plugins.Keys(i), ex.Message) Else _
+                            livebug.write(loggingLevel.Warning, "InstalledPlugins", "Plugin not loaded: " & i,
+                                          ex.Message)
                     End Try
                 Next
             Catch ex As Exception
@@ -144,7 +159,9 @@ Namespace MCInterop
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub ClearPluginCache() 'see plugindescriptor for more cache code
-            If FileIO.FileSystem.DirectoryExists(common.Cache_path & "/plugins/") Then FileIO.FileSystem.DeleteDirectory(common.Cache_path & "/plugins/", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            If FileIO.FileSystem.DirectoryExists(common.Cache_path & "/plugins/") Then _
+                FileIO.FileSystem.DeleteDirectory(common.Cache_path & "/plugins/",
+                                                  FileIO.DeleteDirectoryOption.DeleteAllContents)
         End Sub
 
         ''' <summary>
@@ -170,9 +187,11 @@ Namespace MCInterop
             livebug.write(loggingLevel.Fine, "InstalledPlugins", "updated plugin information:" & path)
             RefreshAllInstalledPluginsAsync()
         End Sub
+
 #End Region
 
 #Region "actions"
+
         ''' <summary>
         ''' DEPRECATED
         ''' Searches for an installed plugin based on the name. ONLY to be used for checking console output. DO NOT use this in the plugin manager
@@ -181,7 +200,8 @@ Namespace MCInterop
         ''' <param name="softcheck"></param>
         ''' <returns></returns>
         ''' <remarks>DEPRECTATED, only for console parsing</remarks>
-        Public Function GetInstalledPluginByName(name As String, Optional ByVal softcheck As Boolean = False) As plugindescriptor
+        Public Function GetInstalledPluginByName(name As String, Optional ByVal softcheck As Boolean = False) _
+            As plugindescriptor
             Try
                 If name Is Nothing Or name = "" Then Return Nothing : Exit Function
                 If plugins Is Nothing OrElse plugins.Count < 1 Then Return Nothing : Exit Function
@@ -200,9 +220,11 @@ Namespace MCInterop
                 Return result
             Catch ex As Exception
                 If name Is Nothing Then
-                    livebug.write(loggingLevel.Severe, "InstalledPlugins", "Severe exception in GetPluginByName:" & ex.Message)
+                    livebug.write(loggingLevel.Severe, "InstalledPlugins",
+                                  "Severe exception in GetPluginByName:" & ex.Message)
                 Else
-                    livebug.write(loggingLevel.Severe, "InstalledPlugins", "Severe exception in GetPluginByName for " & name, ex.Message)
+                    livebug.write(loggingLevel.Severe, "InstalledPlugins",
+                                  "Severe exception in GetPluginByName for " & name, ex.Message)
                 End If
                 Return Nothing
             End Try
@@ -215,7 +237,8 @@ Namespace MCInterop
         ''' <param name="UpdateLists">refresh the installed plugins list afterwards</param>
         ''' <param name="ShowUI">Show the UI, or do this in the background</param>
         ''' <remarks></remarks>
-        Public Sub UpdatePluginToLatest(plugin As plugindescriptor, Optional ByVal UpdateLists As Boolean = True, Optional ByVal ShowUI As Boolean = False)
+        Public Sub UpdatePluginToLatest(plugin As plugindescriptor, Optional ByVal UpdateLists As Boolean = True,
+                                        Optional ByVal ShowUI As Boolean = False)
             InstallPluginByNamespace(plugin.main, plugin_dir.Trim("/") & "/" & plugin.filename, UpdateLists, ShowUI)
         End Sub
 
@@ -227,7 +250,9 @@ Namespace MCInterop
         ''' <param name="UpdateLists">refresh the installed plugins list afterwards</param>
         ''' <param name="ShowUI">Show the UI, or do this in the background</param>
         ''' <remarks></remarks>
-        Public Sub UpdatePluginToVersion(plugin As plugindescriptor, version As PluginVersion, Optional ByVal UpdateLists As Boolean = True, Optional ByVal ShowUI As Boolean = False)
+        Public Sub UpdatePluginToVersion(plugin As plugindescriptor, version As PluginVersion,
+                                         Optional ByVal UpdateLists As Boolean = True,
+                                         Optional ByVal ShowUI As Boolean = False)
             PluginInstaller.Install(version, plugin_dir.Trim("/") & "/" & plugin.filename, UpdateLists, ShowUI)
         End Sub
 
@@ -282,10 +307,16 @@ Namespace MCInterop
         Public Sub RemoveInstalledplugin(pld As plugindescriptor)
             If pld Is Nothing Then Exit Sub
             Try
-                If MessageBox.Show(lr("Delete this plugin?") & " " & pld.filename, lr("Delete plugin?"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.No Then Exit Sub
+                If _
+                    MessageBox.Show(lr("Delete this plugin?") & " " & pld.filename, lr("Delete plugin?"),
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.No _
+                    Then Exit Sub
 
                 If server.running Then
-                    If MessageBox.Show(lr("You need to stop the server in order to remove this plugin. Stop server?"), lr("Server stop required"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                    If _
+                        MessageBox.Show(lr("You need to stop the server in order to remove this plugin. Stop server?"),
+                                        lr("Server stop required"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) =
+                        DialogResult.Yes Then
                         ServerStopDialog.ShowDialog()
                     End If
                 End If
@@ -293,21 +324,30 @@ Namespace MCInterop
                 FileIO.FileSystem.DeleteFile(plugin_dir & "/" & pld.filename)
                 For Each Dir As String In FileIO.FileSystem.GetDirectories(plugin_dir)
                     If Dir.Contains(pld.name) Then
-                        If MessageBox.Show(lr("It seems that this folder was created by the plugin:") & vbCrLf & Dir & vbCrLf & lr("Remove this folder?"), lr("Remove folder?"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                        If _
+                            MessageBox.Show(
+                                lr("It seems that this folder was created by the plugin:") & vbCrLf & Dir & vbCrLf &
+                                lr("Remove this folder?"), lr("Remove folder?"), MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
                             FileIO.FileSystem.DeleteDirectory(Dir, FileIO.DeleteDirectoryOption.DeleteAllContents)
                         End If
                     End If
                 Next
 
-                If FileIO.FileSystem.DirectoryExists(common.Cache_path & "/plugins/" & pld.filename) Then FileIO.FileSystem.DeleteDirectory(common.Cache_path & "/plugins/" & pld.filename, FileIO.DeleteDirectoryOption.DeleteAllContents) 'delete cached data
+                If FileIO.FileSystem.DirectoryExists(common.Cache_path & "/plugins/" & pld.filename) Then _
+                    FileIO.FileSystem.DeleteDirectory(common.Cache_path & "/plugins/" & pld.filename,
+                                                      FileIO.DeleteDirectoryOption.DeleteAllContents) _
+                'delete cached data
 
                 plugins.Remove(pld.filename)
 
                 RaiseEvent InstalledPluginsLoaded_Full(plugins) 'refresh the UI, this plugin is removed
 
-                MessageBox.Show(lr("Plugin succesfully removed!"), lr("Succes!"), MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show(lr("Plugin succesfully removed!"), lr("Succes!"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Information)
             Catch ex As Exception
-                MessageBox.Show(lr("Plugin removal failed. There might be some files left undeleted"), lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(lr("Plugin removal failed. There might be some files left undeleted"), lr("Failed"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -322,8 +362,8 @@ Namespace MCInterop
                 livebug.write(loggingLevel.Warning, "InstalledPlugins", "Couldn't open plugins folder!", ex.Message)
             End Try
         End Sub
-#End Region
 
+#End Region
     End Module
 End Namespace
 

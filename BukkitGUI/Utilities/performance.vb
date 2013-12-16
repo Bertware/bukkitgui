@@ -2,10 +2,8 @@
 'After init, other threads will continue to sample.
 'Values can be read at any moment.
 '
-
-Imports System.Threading
-Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.MCInterop
+Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.Utilities
 
 Namespace Utilities
@@ -18,19 +16,19 @@ Namespace Utilities
         ''' The total CPU usage, in %
         ''' </summary>
         ''' <remarks></remarks>
-        Public total_cpu As Integer = -1
+        Public total_cpu As Integer = - 1
 
         ''' <summary>
         ''' The GUI CPU usage, in %
         ''' </summary>
         ''' <remarks></remarks>
-        Public gui_cpu As Integer = -1
+        Public gui_cpu As Integer = - 1
 
         ''' <summary>
         ''' The server CPU usage, in %
         ''' </summary>
         ''' <remarks></remarks>
-        Public server_cpu As Integer = -1
+        Public server_cpu As Integer = - 1
 
         '_mbytes: usage in MB
         'without suffix: %
@@ -45,7 +43,7 @@ Namespace Utilities
         ''' The total memory usage, in %
         ''' </summary>
         ''' <remarks></remarks>
-        Public total_mem As Integer = -1
+        Public total_mem As Integer = - 1
 
         ''' <summary>
         ''' The server memory usage, in MegaBytes
@@ -57,7 +55,7 @@ Namespace Utilities
         ''' The gui memory usage, in %
         ''' </summary>
         ''' <remarks></remarks>
-        Public gui_mem As Integer = -1
+        Public gui_mem As Integer = - 1
 
         ''' <summary>
         ''' The server memory usage, in MegaBytes
@@ -69,21 +67,21 @@ Namespace Utilities
         ''' The server memory usage, in %
         ''' </summary>
         ''' <remarks></remarks>
-        Public server_mem As Integer = -1
+        Public server_mem As Integer = - 1
 
         ''' <summary>
         ''' The total amount of RAM installed, in megabytes
         ''' </summary>
         ''' <remarks></remarks>
-        ReadOnly TotalMemoryMB As UInt64 = Math.Round(My.Computer.Info.TotalPhysicalMemory / 1048576)
+        ReadOnly TotalMemoryMB As UInt64 = Math.Round(My.Computer.Info.TotalPhysicalMemory/1048576)
 
         ''' <summary>
         ''' The amount of physical cores in the computer
         ''' </summary>
         ''' <remarks></remarks>
         ReadOnly cores As Byte = WMI.GetprocessorInfo(WMI.processorprop.NumberOfLogicalProcessors)
-        Private tmrMeasureCPU As Timers.Timer, tmrMeasureRAM As Timers.Timer
 
+        Private tmrMeasureCPU As Timers.Timer, tmrMeasureRAM As Timers.Timer
 
 
         ''' <summary>
@@ -91,7 +89,7 @@ Namespace Utilities
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub init()
-            livebug.write(loggingLevel.Fine, "performance", "Initializing...")
+            livebug.write(livebug.loggingLevel.Fine, "performance", "Initializing...")
 
             If common.IsRunningOnMono Then
                 livebug.write(loggingLevel.Fine, "performance", "Initialization cancelled: running mono...")
@@ -147,7 +145,10 @@ Namespace Utilities
             prev_time = New TimeSpan(0)
             curr_time = New TimeSpan(0)
 
-            If cores = 0 Then measure_cpu = False : livebug.write(loggingLevel.Warning, "performance", "Amount of cores unknown, CPU measurement disabled")
+            If cores = 0 Then _
+                measure_cpu = False : _
+                    livebug.write(loggingLevel.Warning, "performance",
+                                  "Amount of cores unknown, CPU measurement disabled")
 
             livebug.write(loggingLevel.Fine, "performance", "Performance initialized")
         End Sub
@@ -181,6 +182,7 @@ Namespace Utilities
 
         Dim dms As UInt64
         Dim fail As Byte
+
         ''' <summary>
         ''' Measure CPU values
         ''' </summary>
@@ -196,7 +198,7 @@ Namespace Utilities
                     Dim dt As UInt64 = (curr_time - prev_time).TotalMilliseconds
 
                     If curr_gui_ms > prev_gui_ms Then dms = (curr_gui_ms - prev_gui_ms)
-                    Dim gc As UInt64 = Math.Round((dms / dt) * 100 / cores)
+                    Dim gc As UInt64 = Math.Round((dms/dt)*100/cores)
                     If gc > 255 Then gc = 255
                     If dt <> 0 And gc < 256 Then gui_cpu = CByte(gc)
                     If gui_cpu > 100 Then gui_cpu = 100
@@ -206,7 +208,7 @@ Namespace Utilities
                         If curr_server_ms > prev_server_ms Then dms = (curr_server_ms - prev_server_ms)
 
                         Dim gs As UInt64 = 0
-                        If dt <> 0 Then gs = Math.Round((dms / dt) * 100 / cores)
+                        If dt <> 0 Then gs = Math.Round((dms/dt)*100/cores)
                         If gs > 255 Then gs = 255
 
                         If dt <> 0 Then server_cpu = CByte(gs)
@@ -233,23 +235,28 @@ Namespace Utilities
                     prev_time = New TimeSpan(0)
                     curr_time = New TimeSpan(0)
 
-                    livebug.write(loggingLevel.Warning, "performance", "Overflow in CPU measurement. Values resetted", ovf.Message) 'don't report this as an error. Holding the app too long will cause this too, nothing bad.
+                    livebug.write(loggingLevel.Warning, "performance", "Overflow in CPU measurement. Values resetted",
+                                  ovf.Message) _
+                    'don't report this as an error. Holding the app too long will cause this too, nothing bad.
 
                     fail = fail + 1
                     If fail = 16 Then
-                        livebug.write(loggingLevel.Warning, "performance", "Too many overflows, measurement disabled") 'don't report this as an error. Holding the app too long will cause this too, nothing bad.
+                        livebug.write(loggingLevel.Warning, "performance", "Too many overflows, measurement disabled") _
+                        'don't report this as an error. Holding the app too long will cause this too, nothing bad.
                         measure_cpu = False
-                        total_cpu = -1
-                        server_cpu = -1
-                        gui_cpu = -1
+                        total_cpu = - 1
+                        server_cpu = - 1
+                        gui_cpu = - 1
                         If tmrMeasureCPU IsNot Nothing Then tmrMeasureCPU.Enabled = False
                     End If
-                Catch ex As Exception 'If an exception is caught, log, and disable cpu logging (to prevent spam of errors)
-                    livebug.write(loggingLevel.Warning, "performance", "Could not get CPU value. CPU measurement disabled.", ex.Message)
+                Catch ex As Exception _
+                    'If an exception is caught, log, and disable cpu logging (to prevent spam of errors)
+                    livebug.write(loggingLevel.Warning, "performance",
+                                  "Could not get CPU value. CPU measurement disabled.", ex.Message)
                     measure_cpu = False
-                    total_cpu = -1
-                    server_cpu = -1
-                    gui_cpu = -1
+                    total_cpu = - 1
+                    server_cpu = - 1
+                    gui_cpu = - 1
                     If tmrMeasureCPU IsNot Nothing Then tmrMeasureCPU.Enabled = False
                 End Try
             End If
@@ -263,18 +270,19 @@ Namespace Utilities
             If measure_memory = False Then Exit Sub
             Try
                 total_mem_mbytes = TotalMemoryMB - common.ByteToMb(My.Computer.Info.AvailablePhysicalMemory)
-                total_mem = CByte((total_mem_mbytes / TotalMemoryMB) * 100)
+                total_mem = CByte((total_mem_mbytes/TotalMemoryMB)*100)
                 If total_mem > 100 Then total_mem = 100
                 If total_mem < 0 Then total_mem = 0
 
-                gui_mem_mbytes = common.ByteToMb(GetProcessMemory(Process.GetCurrentProcess.Id) / 2) 'divide by 2 to correct wrong numbers.
-                gui_mem = CByte((gui_mem_mbytes / TotalMemoryMB) * 100)
+                gui_mem_mbytes = common.ByteToMb(GetProcessMemory(Process.GetCurrentProcess.Id)/2) _
+                'divide by 2 to correct wrong numbers.
+                gui_mem = CByte((gui_mem_mbytes/TotalMemoryMB)*100)
                 If gui_mem > 100 Then gui_mem = 100
                 If gui_mem < 0 Then gui_mem = 0
 
                 If server.running AndAlso server.host IsNot Nothing Then
                     server_mem_mbytes = common.ByteToMb(GetProcessMemory(server.host.Id))
-                    server_mem = CByte((server_mem_mbytes / TotalMemoryMB) * 100)
+                    server_mem = CByte((server_mem_mbytes/TotalMemoryMB)*100)
                     If server_mem > 100 Then server_mem = 100
                     If server_mem < 0 Then server_mem = 0
                 Else
@@ -282,15 +290,17 @@ Namespace Utilities
                     server_mem_mbytes = 0
                 End If
 
-            Catch ex As Exception 'If an exception is caught, log, and disable memory logging (to prevent spam of errors)
-                livebug.write(loggingLevel.Warning, "performance", "Could not get memory value. Memory measurement disabled.", ex.Message)
+            Catch ex As Exception _
+                'If an exception is caught, log, and disable memory logging (to prevent spam of errors)
+                livebug.write(loggingLevel.Warning, "performance",
+                              "Could not get memory value. Memory measurement disabled.", ex.Message)
                 measure_memory = False
 
-                server_mem = -1
+                server_mem = - 1
                 server_mem_mbytes = 0
-                gui_mem = -1
+                gui_mem = - 1
                 gui_mem_mbytes = 0
-                total_mem = -1
+                total_mem = - 1
                 total_mem_mbytes = 0
 
                 If tmrMeasureRAM IsNot Nothing Then tmrMeasureRAM.Enabled = False

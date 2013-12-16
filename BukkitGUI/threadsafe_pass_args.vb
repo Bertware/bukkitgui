@@ -1,9 +1,9 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.MCInterop
+﻿
 
 'This file contains classes to pass items to a sub that executes thread safe
 'As these routines can only accept one item, multiple parameters are bundled here
 '
+Imports Net.Bertware.BukkitGUI.MCInterop
 
 
 Public Class thds_pass_servermessage
@@ -31,10 +31,9 @@ Public Class thds_pass_servermessage
 End Class
 
 Public Class thds_pass_lookup
-    Public text As String, type As MessageType
+    Public text As String, type As serverOutputHandler.MessageType
 
     Public Sub New()
-
     End Sub
 
     Public Sub New(text As String, type As MessageType)

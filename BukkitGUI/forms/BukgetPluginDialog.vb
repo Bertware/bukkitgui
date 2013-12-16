@@ -4,13 +4,13 @@ Imports Net.Bertware.BukkitGUI.MCInterop
 Public Class BukgetPluginDialog
     Public Plugin As BukgetPlugin
     Public file As String = ""
+
     Public Sub New()
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-
     End Sub
 
     Public Sub New(plugin As BukgetPlugin)
@@ -42,15 +42,19 @@ Public Class BukgetPluginDialog
 
     Private Sub PluginDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         If Plugin Is Nothing Then
-            livebug.write(loggingLevel.Warning, "BukGetPluginDialog", "Load of plugin data failed! No plugin defined.")
-            MessageBox.Show(lr("No data for this plugin available"), lr("no data available"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+            livebug.write(livebug.loggingLevel.Warning, "BukGetPluginDialog",
+                          "Load of plugin data failed! No plugin defined.")
+            MessageBox.Show(lr("No data for this plugin available"), lr("no data available"), MessageBoxButtons.OK,
+                            MessageBoxIcon.Error)
             Me.Close()
         Else
             Try
                 loadplugin()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "BukGetPluginDialog", "Visualisation of plugin data failed!", ex.Message)
-                MessageBox.Show(lr("Could not load plugin data for this plugin"), lr("Could not load plugin"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                livebug.write(loggingLevel.Warning, "BukGetPluginDialog", "Visualisation of plugin data failed!",
+                              ex.Message)
+                MessageBox.Show(lr("Could not load plugin data for this plugin"), lr("Could not load plugin"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Me.Close()
             End Try
         End If
@@ -65,17 +69,22 @@ Public Class BukgetPluginDialog
             If Plugin.slug IsNot Nothing AndAlso Plugin.slug <> "" Then lblName.Text = lr("Name:") & " " & Plugin.slug
         End If
 
-        If Plugin.Description IsNot Nothing AndAlso Plugin.name <> "" Then lblDescription.Text = lr("Description:") & " " & Plugin.Description
+        If Plugin.Description IsNot Nothing AndAlso Plugin.name <> "" Then _
+            lblDescription.Text = lr("Description:") & " " & Plugin.Description
         lblStatus.Text = lr("Status:") & " " & Plugin.status.ToString
         If Plugin.BukkitDevLink IsNot Nothing Then ALlblWebsite.Text = lr("Website:") & " " & Plugin.BukkitDevLink
 
         If Plugin.Author IsNot Nothing Then lblAuthors.Text = lr("Authors:") & " " & common.serialize(Plugin.Author)
 
-        If Plugin.Category IsNot Nothing Then lblcategories.Text = lr("Categories:") & " " & serialize(Plugin.Category).ToString.Replace("_", " ")
+        If Plugin.Category IsNot Nothing Then _
+            lblcategories.Text = lr("Categories:") & " " & serialize(Plugin.Category).ToString.Replace("_", " ")
 
         For Each Version As PluginVersion In Plugin.versions
             Dim str(5) As String
-            str(0) = Version.ReleaseDate.Year.ToString & "/" & Version.ReleaseDate.Month.ToString.PadLeft(2, "0") & "/" & Version.ReleaseDate.Day.ToString.PadLeft(2, "0") & " - " & Version.ReleaseDate.Hour.ToString.PadLeft(2, "0") & ":" & Version.ReleaseDate.Minute.ToString.PadLeft(2, "0")
+            str(0) = Version.ReleaseDate.Year.ToString & "/" & Version.ReleaseDate.Month.ToString.PadLeft(2, "0") & "/" &
+                     Version.ReleaseDate.Day.ToString.PadLeft(2, "0") & " - " &
+                     Version.ReleaseDate.Hour.ToString.PadLeft(2, "0") & ":" &
+                     Version.ReleaseDate.Minute.ToString.PadLeft(2, "0")
             str(1) = Version.version.ToString
             str(2) = Version.filename
             str(3) = ""
@@ -103,5 +112,4 @@ Public Class BukgetPluginDialog
         End If
         Me.Close()
     End Sub
-
 End Class

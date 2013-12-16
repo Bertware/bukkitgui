@@ -1,11 +1,10 @@
-﻿Imports System.Xml
+﻿
 
 
 Imports System.IO
 
 Namespace Core
     Module language
-
         'Language module
         'This module provides functionallity to translate the program.
         'Language is provided in XML format 
@@ -56,17 +55,23 @@ Namespace Core
             Try
                 Dim localization_file As String = config.read("language", def_english)
 
-                If Not FileIO.FileSystem.FileExists(localization_file) Then common.Create_file(localization_file, "<language version=""" & CURR_VER & """></language>")
-                If common.File_Empty(localization_file) Then common.Create_file(localization_file, "<language version=""" & CURR_VER & """></language>")
+                If Not FileIO.FileSystem.FileExists(localization_file) Then _
+                    common.Create_file(localization_file, "<language version=""" & CURR_VER & """></language>")
+                If common.File_Empty(localization_file) Then _
+                    common.Create_file(localization_file, "<language version=""" & CURR_VER & """></language>")
 
-                lxml = New fxml(localization_file, "language") 'initialize fxml, path is given so file is available instantly
+                lxml = New fxml(localization_file, "language") _
+                'initialize fxml, path is given so file is available instantly
                 enabled = True
             Catch memex As System.OutOfMemoryException
-                livebug.write(loggingLevel.Warning, "language", "Language initialization failed (OutOfMemory) - " & memex.Message)
+                livebug.write(loggingLevel.Warning, "language",
+                              "Language initialization failed (OutOfMemory) - " & memex.Message)
             Catch pex As Security.SecurityException
-                livebug.write(loggingLevel.Warning, "language", "Language initialization failed (SecurityException) - " & pex.Message)
+                livebug.write(loggingLevel.Warning, "language",
+                              "Language initialization failed (SecurityException) - " & pex.Message)
             Catch ioex As IO.IOException
-                livebug.write(loggingLevel.Warning, "language", "Language initialization failed (IOException) - " & ioex.Message)
+                livebug.write(loggingLevel.Warning, "language",
+                              "Language initialization failed (IOException) - " & ioex.Message)
             Catch ex As Exception
                 livebug.write(loggingLevel.Severe, "language", "Language initialization failed", ex.Message)
             End Try
@@ -78,7 +83,8 @@ Namespace Core
         ''' <param name="original">the original (english) text</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function lr(original As String) As String 'Language Replace - replace an english string with the translation
+        Public Function lr(original As String) As String _
+            'Language Replace - replace an english string with the translation
             Try
                 If enabled = False Then Return original : Exit Function
                 If failed Then Return original : Exit Function
@@ -103,7 +109,9 @@ Namespace Core
                     Return original 'no translation available, so keep the original language
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "language", "Could not get translation for original text:" & original & vbCrLf & "Error: " & ex.Message)
+                livebug.write(loggingLevel.Warning, "language",
+                              "Could not get translation for original text:" & original & vbCrLf & "Error: " &
+                              ex.Message)
                 fails = fails + 1
                 If fails = 8 Then
                     livebug.write(loggingLevel.Severe, "language", "Language Failed! Original values will be returned")
@@ -121,6 +129,5 @@ Namespace Core
             Dim fi As FileInfo = FileIO.FileSystem.GetFileInfo(languagePath)
             Return fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length)
         End Function
-
     End Module
 End Namespace

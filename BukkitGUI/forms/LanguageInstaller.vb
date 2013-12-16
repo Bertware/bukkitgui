@@ -1,9 +1,8 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
-Imports System.Threading
+﻿Imports System.Threading
+Imports Net.Bertware.BukkitGUI.Core
 
 
 Public Class LanguageInstaller
-
     Private languages As List(Of Translation)
     Private Event LanguagesLoaded()
 
@@ -71,7 +70,10 @@ Public Class LanguageInstaller
 
         livebug.write(loggingLevel.Fine, "LanguageInstaller", "Downloading language: " & t.url)
 
-        Dim fd As New FileDownloader(t.url, common.Localization_path & "/" & t.language & ".xml", lr("Installing language:") & " " & t.language)
+        Dim _
+            fd As _
+                New FileDownloader(t.url, common.Localization_path & "/" & t.language & ".xml",
+                                   lr("Installing language:") & " " & t.language)
         fd.ShowDialog()
 
         Me.DialogResult = Windows.Forms.DialogResult.OK
@@ -82,10 +84,8 @@ Public Class LanguageInstaller
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
         Me.Close()
     End Sub
-
 End Class
 
 Class Translation
     Public language As String, translator As String, version As String, url As String, comment As String
-
 End Class

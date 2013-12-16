@@ -1,6 +1,5 @@
 ﻿Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.MCInterop
-Imports Net.Bertware.BukkitGUI.MCInterop.InstalledPluginManager
 
 Public Class InstalledPluginDialog
     Public plugin As plugindescriptor
@@ -27,7 +26,10 @@ Public Class InstalledPluginDialog
         lblNamespace.Text = lr("Main namespace:") & " " & plugin.main
 
         For Each Command As pluginCommand In plugin.commands
-            Dim lvi As New ListViewItem({Command.name, Command.description, Command.usage, common.serialize(Command.aliases)})
+            Dim _
+                lvi As _
+                    New ListViewItem(
+                        {Command.name, Command.description, Command.usage, common.serialize(Command.aliases)})
             ALVCommands.Items.Add(lvi)
         Next
 

@@ -1,5 +1,4 @@
 ﻿Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.MCInterop.serverOutputHandler
 Imports Net.Bertware.BukkitGUI.MCInterop
 
 Namespace Utilities
@@ -16,6 +15,7 @@ Namespace Utilities
         End Property
 
         Dim _hidewarn As Boolean, _hideerr As Boolean, _hidetrc As Boolean
+
         Public Property Hide_Warnings As Boolean
             Get
                 Return _hidewarn
@@ -79,55 +79,71 @@ Namespace Utilities
         Public Function GetLVI(e As ServerError) As ListViewItem
             Dim imageid As Integer = 0
             If e.type = MessageType.severe Or e.type = MessageType.javastacktrace Then imageid = 1
-            Dim lvi As New ListViewItem({e.id.ToString.PadLeft(3, "0"), e.type.ToString, Date.Now.ToLongTimeString, e.text})
+            Dim _
+                lvi As _
+                    New ListViewItem({e.id.ToString.PadLeft(3, "0"), e.type.ToString, Date.Now.ToLongTimeString, e.text})
             lvi.ImageIndex = imageid
             lvi.ForeColor = serverOutputHandler.getMessageColor(e.type)
             Return lvi
         End Function
-
     End Module
 
     Module ErrorAnalyzer
         Public Function GetCause(text As String) As ErrorCause
-            If text.Contains("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!") Or _
-                 text.Contains("The server will make no attempt to authenticate usernames. Beware.") Or _
-                 text.Contains("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.") Or _
-                 text.Contains("To change this, set ""online-mode"" to ""true"" in the server.properties file.") Then
+            If text.Contains("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!") Or
+               text.Contains("The server will make no attempt to authenticate usernames. Beware.") Or
+               text.Contains(
+                   "While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.") Or
+               text.Contains("To change this, set ""online-mode"" to ""true"" in the server.properties file.") Then
                 Return New ErrorCause_setting("online-mode", "True", text)
 
-            ElseIf text.Contains("**** FAILED TO BIND TO PORT!") Or _
-                 text.Contains("The exception was: java.net.BindException: Address already in use: JVM_Bind") Or _
-                 text.Contains("Perhaps a server is already running on that port?") Then
-                Return New ErrorCause_Other("Another program is using this port. Maybe there is still another java process running?", text)
+            ElseIf text.Contains("**** FAILED TO BIND TO PORT!") Or
+                   text.Contains("The exception was: java.net.BindException: Address already in use: JVM_Bind") Or
+                   text.Contains("Perhaps a server is already running on that port?") Then
+                Return _
+                    New ErrorCause_Other(
+                        "Another program is using this port. Maybe there is still another java process running?", text)
 
             ElseIf text.Contains("Error occurred while enabling") And text.Contains("(Is it up to date?)") Then
                 Dim name As String = text.Substring(text.IndexOf("enabling") + 5).Trim.Split(" ")(1)
                 If name Is Nothing Then name = "unkown"
-                Return New ErrorCause_Plugin(GetInstalledPluginByName(name, True), "Outdated plugin" & ": " & name, text)
+                Return _
+                    New ErrorCause_Plugin(GetInstalledPluginByName(name, True), "Outdated plugin" & ": " & name, text)
 
             ElseIf text.Contains("Could not load") And text.Contains("in folder") Then
                 Dim name As String = text.Substring(text.IndexOf("plugins/") + 8).Split("'")(0)
                 If name Is Nothing Then name = "unkown"
                 Return New ErrorCause_Plugin(GetPluginByFileName(name), "Caused by plugin" & ": " & name, text)
 
-            ElseIf text.Contains("at") And text.Contains(".") And text.Contains("java:") And text.Contains("(") And text.Contains(")") _
+            ElseIf _
+                text.Contains("at") And text.Contains(".") And text.Contains("java:") And text.Contains("(") And
+                text.Contains(")") _
                 And Not text.Contains("org.bukkit") And Not text.Contains("net.minecraft") Then
                 Dim plg As plugindescriptor = GetInstalledPluginByNamespace(text)
-                If plg IsNot Nothing Then Return New ErrorCause_Plugin(plg, "Unspecified plugin problem in plugin " & plg.name, text) Else Return New ErrorCause_Plugin(plg, "Unspecified plugin problem, plugin unkown", text)
+                If plg IsNot Nothing Then _
+                    Return New ErrorCause_Plugin(plg, "Unspecified plugin problem in plugin " & plg.name, text) Else _
+                    Return New ErrorCause_Plugin(plg, "Unspecified plugin problem, plugin unkown", text)
 
-            ElseIf text.Contains("at") And text.Contains(".") And (text.Contains("java:") Or text.Contains("SourceFile:")) And text.Contains("(") And text.Contains(")") _
+            ElseIf _
+                text.Contains("at") And text.Contains(".") And (text.Contains("java:") Or text.Contains("SourceFile:")) And
+                text.Contains("(") And text.Contains(")") _
                 And (text.Contains("org.bukkit") Or text.Contains("net.minecraft")) Then
-                Return New ErrorCause_Other("Unspecified error. Please check all other errors before worrying about this.", text)
-            ElseIf text.Split("[") IsNot Nothing AndAlso text.Split("[").Length > 1 AndAlso text.Split("]") IsNot Nothing AndAlso text.Split("]").Length > 1 Then
+                Return _
+                    New ErrorCause_Other("Unspecified error. Please check all other errors before worrying about this.",
+                                         text)
+            ElseIf _
+                text.Split("[") IsNot Nothing AndAlso text.Split("[").Length > 1 AndAlso text.Split("]") IsNot Nothing AndAlso
+                text.Split("]").Length > 1 Then
                 Dim name As String = text
                 name = name.Trim.Trim("[").Split("]")(0).Trim("]").Trim("[").Trim
                 Dim plg As plugindescriptor = GetInstalledPluginByName(name, True)
-                If plg IsNot Nothing Then Return New ErrorCause_Plugin(plg, "Error caused and handled by plugin " & plg.name, text) Else Return New ErrorCause_Plugin(plg, "Error caused and handled by unkown plugin", text)
+                If plg IsNot Nothing Then _
+                    Return New ErrorCause_Plugin(plg, "Error caused and handled by plugin " & plg.name, text) Else _
+                    Return New ErrorCause_Plugin(plg, "Error caused and handled by unkown plugin", text)
 
             Else
                 Return New ErrorCause_Other("Unkown cause", text)
             End If
-
         End Function
     End Module
 
@@ -174,7 +190,6 @@ Namespace Utilities
             Me.description = description
             Me.text = txt
         End Sub
-
     End Class
 
     Public Class ErrorCause_setting

@@ -1,5 +1,4 @@
 ﻿Public Class OutputBrowser
-
     Dim txtreference As Bertware.Controls.AdvancedRichTextBox
 
     Public Sub New(ByRef textbox As Bertware.Controls.AdvancedRichTextBox)

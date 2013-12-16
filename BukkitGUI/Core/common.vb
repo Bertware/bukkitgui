@@ -1,5 +1,5 @@
-﻿Imports System.Reflection
-Imports System.IO
+﻿Imports System.IO
+Imports System.Reflection
 Imports Net.Bertware.BukkitGUI.Utilities
 
 
@@ -9,7 +9,6 @@ Namespace Core
     ''' </summary>
     ''' <remarks></remarks>
     Module common
-
         Public Const Server_encoding = "utf-8" 'ISO-8859-1
         Public Const HKCU_SOFTWARE = "Software\Bertware\BukkitGUI\"
         'path for configuration etc. are stored here
@@ -19,15 +18,21 @@ Namespace Core
 
 
         'GENERAL NEEDED VARIABLES =========================================================================================================
-        Public ReadOnly Local_path As String = Path.Combine(My.Application.Info.DirectoryPath, "BukkitGUI") 'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings
-        Public ReadOnly Appdata_path As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Bertware/BukkitGUI") 'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings
+        Public ReadOnly Local_path As String = Path.Combine(My.Application.Info.DirectoryPath, "BukkitGUI") _
+        'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings
+        Public ReadOnly _
+            Appdata_path As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                                  "Bertware/BukkitGUI") _
+        'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings
 
-        Public Base_path As String = Appdata_path 'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings. Default is appdata.
+        Public Base_path As String = Appdata_path _
+        'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings. Default is appdata.
 
         Public Cache_path As String = Path.Combine(Base_path, "Cache") 'contains cached data
         Public Logging_path As String = Path.Combine(Base_path, "Logging") 'contains logs
         Public Tmp_path As String = Path.Combine(Base_path, "Tmp") 'Contains temporary data, like updates
-        Public Config_path As String = Path.Combine(Base_path, "Config") 'Contains config, server configs, backup configs, schedules
+        Public Config_path As String = Path.Combine(Base_path, "Config") _
+        'Contains config, server configs, backup configs, schedules
         Public Server_root As String = My.Application.Info.DirectoryPath
         Public isRunningLight As Boolean = False
 
@@ -76,23 +81,31 @@ Namespace Core
             Cache_path = Path.Combine(Base_path, "Cache") 'contains cached data
             Localization_path = Path.Combine(Base_path, "Localization") 'Contains language files
 
-            For Each folder In {Logging_path, Tmp_path, Config_path, Localization_path, Cache_path} 'Check if all paths are available. If a folder doesn't exist, create it.
+            For Each folder In {Logging_path, Tmp_path, Config_path, Localization_path, Cache_path} _
+                'Check if all paths are available. If a folder doesn't exist, create it.
                 Try
                     If Not FileIO.FileSystem.DirectoryExists(folder) Then
                         livebug.write(loggingLevel.Fine, "Common", "Folder doesn't exist, creating: " & folder)
                         FileIO.FileSystem.CreateDirectory(folder)
                     End If
                 Catch pex As Security.SecurityException
-                    livebug.write(loggingLevel.Warning, "Common", "Couldn't check or create folder because of security exception: " & folder, pex.Message)
-                    MessageBox.Show("This folder can't be accessed! Try running as administrator. The GUI might behave wrong if this folder can't be loaded or used.", "Can't access folder!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    livebug.write(loggingLevel.Warning, "Common",
+                                  "Couldn't check or create folder because of security exception: " & folder,
+                                  pex.Message)
+                    MessageBox.Show(
+                        "This folder can't be accessed! Try running as administrator. The GUI might behave wrong if this folder can't be loaded or used.",
+                        "Can't access folder!", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Catch ioex As IO.IOException
-                    livebug.write(loggingLevel.Warning, "Common", "Couldn't check or create folder because of IO exception: " & folder, ioex.Message)
-                    MessageBox.Show("This folder can't be accessed! Try running as administrator. The GUI might behave wrong if this folder can't be loaded or used.", "Can't access folder!", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    livebug.write(loggingLevel.Warning, "Common",
+                                  "Couldn't check or create folder because of IO exception: " & folder, ioex.Message)
+                    MessageBox.Show(
+                        "This folder can't be accessed! Try running as administrator. The GUI might behave wrong if this folder can't be loaded or used.",
+                        "Can't access folder!", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "Common", "Could not check or create folder: " & folder, ex.Message)
+                    livebug.write(loggingLevel.Severe, "Common", "Could not check or create folder: " & folder,
+                                  ex.Message)
                 End Try
             Next
-
         End Sub
 
         ''' <summary>
@@ -117,11 +130,15 @@ Namespace Core
                 newversion = System.Text.RegularExpressions.Regex.Replace(newversion, "[a-zA-z]*\s*", "")
 
                 For Each C As Char In oldversion.ToCharArray
-                    If (Char.IsPunctuation(C) = False And Char.IsNumber(C) = False) Then livebug.write(loggingLevel.Warning, "Common", "Invalid version supplied!", "oldversion:" & oldversion) : Return 1 : Exit Function
+                    If (Char.IsPunctuation(C) = False And Char.IsNumber(C) = False) Then _
+                        livebug.write(loggingLevel.Warning, "Common", "Invalid version supplied!",
+                                      "oldversion:" & oldversion) : Return 1 : Exit Function
                 Next
 
                 For Each C As Char In newversion.ToCharArray
-                    If (Char.IsPunctuation(C) = False And Char.IsNumber(C) = False) Then livebug.write(loggingLevel.Warning, "Common", "Invalid version supplied!", "newversion:" & newversion) : Return 1 : Exit Function
+                    If (Char.IsPunctuation(C) = False And Char.IsNumber(C) = False) Then _
+                        livebug.write(loggingLevel.Warning, "Common", "Invalid version supplied!",
+                                      "newversion:" & newversion) : Return 1 : Exit Function
                 Next
 
                 If Not oldversion.Contains(".") Then oldversion += ".0.0.0"
@@ -161,31 +178,45 @@ Namespace Core
         ''' <param name="path">The path to the file that should be created.</param>
         ''' <param name="content">The content for the created file.</param>
         ''' <returns>Returns the filepath if succesfull</returns>
-        Public Function Create_file(path As String, content As String, Optional ByVal disable_logging As Boolean = False) As Boolean
+        Public Function Create_file(path As String, content As String, Optional ByVal disable_logging As Boolean = False) _
+            As Boolean
             Try
-                If Not disable_logging Then livebug.write(loggingLevel.Fine, "Common", "File doesn't exist, creating... " & path)
+                If Not disable_logging Then _
+                    livebug.write(loggingLevel.Fine, "Common", "File doesn't exist, creating... " & path)
                 Dim fi As New FileInfo(path)
-                If Not FileIO.FileSystem.DirectoryExists(fi.Directory.FullName) Then FileIO.FileSystem.CreateDirectory(fi.Directory.FullName)
+                If Not FileIO.FileSystem.DirectoryExists(fi.Directory.FullName) Then _
+                    FileIO.FileSystem.CreateDirectory(fi.Directory.FullName)
 
                 Dim fs = File.Create(path)
-                If Not disable_logging Then livebug.write(loggingLevel.Fine, "Common", "Writing default content to file... " & path)
+                If Not disable_logging Then _
+                    livebug.write(loggingLevel.Fine, "Common", "Writing default content to file... " & path)
                 Dim sw As New StreamWriter(fs)
                 sw.Write(content)
                 sw.Close()
                 If Not disable_logging Then livebug.write(loggingLevel.Fine, "Common", "File created: " & path)
                 Return True
             Catch pex As Security.SecurityException
-                livebug.write(loggingLevel.Warning, "Common", "Couldn't create file because of security exception: " & path, pex.Message)
+                livebug.write(loggingLevel.Warning, "Common",
+                              "Couldn't create file because of security exception: " & path, pex.Message)
                 Return False
             Catch ioex As IO.IOException
-                livebug.write(loggingLevel.Warning, "Common", "Couldn't create file because of IO exception: " & path, ioex.Message)
+                livebug.write(loggingLevel.Warning, "Common", "Couldn't create file because of IO exception: " & path,
+                              ioex.Message)
                 Return False
             Catch uac As UnauthorizedAccessException
-                If Not disable_logging Then livebug.write(loggingLevel.Warning, "Common", "Couldn't create file because of access exception: " & path, uac.Message)
-                MessageBox.Show(lr("This file couldn't be created:" & path & ". Probably you don't have the required permissions. Try running as administrator"), lr("Couldn't create file"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If Not disable_logging Then _
+                    livebug.write(loggingLevel.Warning, "Common",
+                                  "Couldn't create file because of access exception: " & path, uac.Message)
+                MessageBox.Show(
+                    lr(
+                        "This file couldn't be created:" & path &
+                        ". Probably you don't have the required permissions. Try running as administrator"),
+                    lr("Couldn't create file"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
             Catch ex As Exception
-                If Not disable_logging Then livebug.write(loggingLevel.Severe, "Common", "Couldn't create file, generic exception!" & path, ex.Message)
+                If Not disable_logging Then _
+                    livebug.write(loggingLevel.Severe, "Common", "Couldn't create file, generic exception!" & path,
+                                  ex.Message)
                 Return False
             End Try
         End Function
@@ -323,7 +354,8 @@ Namespace Core
         ''' <param name="destination">the destination for the file, file name included.</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function SafeFileCopy(location As String, destination As String, Optional ByVal overwrite As Boolean = False) As String
+        Public Function SafeFileCopy(location As String, destination As String,
+                                     Optional ByVal overwrite As Boolean = False) As String
             Dim fi As New FileInfo(location)
             Dim nfi As New FileInfo(destination)
             If Not nfi.Directory.Exists Then nfi.Directory.Create()
@@ -340,7 +372,9 @@ Namespace Core
         '       This code is responsible for loading embedded dlls, and logging uncatched errors. Working, must always be loaded.
         '=================================================================================================================================================
         WithEvents Adom As AppDomain = AppDomain.CurrentDomain
-        Public Function LoadDLL(sender As Object, args As ResolveEventArgs) As System.Reflection.Assembly Handles Adom.AssemblyResolve 'Load embedded DLLs
+
+        Public Function LoadDLL(sender As Object, args As ResolveEventArgs) As System.Reflection.Assembly _
+            Handles Adom.AssemblyResolve 'Load embedded DLLs
             ' livebug.write(loggingLevel.Fine, "Common", "DLL requested:" & args.Name)
 
             Dim resourceName As [String] = "Net.Bertware.BukkitGUI." & New AssemblyName(args.Name).Name & ".dll"
@@ -352,7 +386,8 @@ Namespace Core
             End Using
         End Function
 
-        Public Sub exhandle(sender As Object, e As System.UnhandledExceptionEventArgs) Handles Adom.UnhandledException 'Catch unhandled exceptions, and log them. Also ask user to report them.
+        Public Sub exhandle(sender As Object, e As System.UnhandledExceptionEventArgs) Handles Adom.UnhandledException _
+            'Catch unhandled exceptions, and log them. Also ask user to report them.
             livebug.WriteUnhandledError(e)
         End Sub
 
@@ -376,7 +411,8 @@ Namespace Core
         End Function
 
         Public Sub Reset()
-            If FileIO.FileSystem.DirectoryExists(Base_path) Then FileIO.FileSystem.DeleteDirectory(Base_path, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            If FileIO.FileSystem.DirectoryExists(Base_path) Then _
+                FileIO.FileSystem.DeleteDirectory(Base_path, FileIO.DeleteDirectoryOption.DeleteAllContents)
         End Sub
 
         ''' <summary>
@@ -396,10 +432,10 @@ Namespace Core
                 Dim fi As FileInfo = New FileInfo(FilePath)
                 Return fi.Length
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "common", "GetFileSize(): Couldn't get filesize: " & ex.Message, FilePath)
+                livebug.write(loggingLevel.Warning, "common", "GetFileSize(): Couldn't get filesize: " & ex.Message,
+                              FilePath)
                 Return False
             End Try
-
         End Function
 
         Function GetFolderSize(ByVal DirPath As String, Optional IncludeSubFolders As Boolean = True) As UInt64
@@ -436,7 +472,8 @@ Namespace Core
             Try
                 Dim Drv As New DriveInfo(DriveLetter)
                 If Drv.IsReady Then
-                    Return Drv.AvailableFreeSpace : Exit Function
+                    Return Drv.AvailableFreeSpace
+                    Exit Function
                 End If
                 Return 0
             Catch ex As Exception
@@ -450,7 +487,8 @@ Namespace Core
             Return bc.ConvertAsRound(size, ByteConverter.size.size_byte, ByteConverter.size.size_mbyte)
         End Function
 
-        Public Function ConvertByte(size As UInt64, targettype As ByteConverter.size, Optional ByVal decimals As Byte = 2) As UInt64
+        Public Function ConvertByte(size As UInt64, targettype As ByteConverter.size,
+                                    Optional ByVal decimals As Byte = 2) As UInt64
             Dim bc As New ByteConverter
             Return bc.ConvertAsRound(size, ByteConverter.size.size_byte, targettype)
         End Function
@@ -460,8 +498,6 @@ Namespace Core
                 Return Type.GetType("Mono.Runtime") IsNot Nothing
             End Get
         End Property
-
-
     End Module
 
     Public Class ByteConverter
@@ -474,12 +510,12 @@ Namespace Core
         End Enum
 
         Public Function ConvertAsDecimal(fromSize As UInt64, fromType As size, ToType As size) As Decimal
-            Return (fromSize * (CType(fromType, UInt64) / CType(ToType, UInt64)))
+            Return (fromSize*(CType(fromType, UInt64)/CType(ToType, UInt64)))
         End Function
 
-        Public Function ConvertAsRound(fromSize As UInt64, fromType As size, ToType As size, Optional ByVal decimals As Byte = 2) As UInt64
-            Return Math.Round((fromSize * (CType(fromType, UInt64) / CType(ToType, UInt64))), decimals)
+        Public Function ConvertAsRound(fromSize As UInt64, fromType As size, ToType As size,
+                                       Optional ByVal decimals As Byte = 2) As UInt64
+            Return Math.Round((fromSize*(CType(fromType, UInt64)/CType(ToType, UInt64))), decimals)
         End Function
     End Class
-
 End Namespace

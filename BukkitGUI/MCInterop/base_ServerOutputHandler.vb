@@ -1,21 +1,18 @@
-﻿Imports System.Threading
+﻿
 
 'Module with text to handle the server output (Text won't be displayed using this module, but players will be added/removed, errors will be sorted,...)
-
-
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
 Imports System.Text.RegularExpressions
 
-Namespace MCInterop
 
+Namespace MCInterop
     ''' <summary>
     ''' This module raises events when a certain type of server output passes, and provides functions to handle server output.
     ''' The function Lookup will parse output, raise the needed events, these events will result in player joins etc.
     ''' </summary>
     ''' <remarks></remarks>
     Public Module serverOutputHandler
-
         ''' <summary>
         ''' This event is raised when a player joins. Also raised when a player is added on list synchronization
         ''' </summary>
@@ -34,11 +31,6 @@ Namespace MCInterop
         ''' <remarks></remarks>
         Public Event ListUpdate()
 
-        ''' <summary>
-        ''' This event is raised when the server reloaded
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Event Reload()
 
         ''' <summary>
         ''' This event is raised when text was received by the server
@@ -52,11 +44,13 @@ Namespace MCInterop
         ''' </summary>
         ''' <remarks></remarks>
         Public Event SevereReceived(ByVal e As ErrorReceivedEventArgs)
+
         ''' <summary>
         ''' This event is raised when a message with a [warning] tag is detected.
         ''' </summary>
         ''' <remarks></remarks>
         Public Event WarningReceived(ByVal e As ErrorReceivedEventArgs)
+
         ''' <summary>
         ''' This event is raised when a stack trace is detected.
         ''' </summary>
@@ -71,6 +65,7 @@ Namespace MCInterop
         Public Event CheckUILists(onlineplayers As List(Of String))
 
         Dim _utf8comp As Boolean = False
+
         Public Property UTF8Compatibility As Boolean
             Get
                 Return _utf8comp
@@ -150,6 +145,7 @@ Namespace MCInterop
                 config.writeAsBool("time", value, "output")
             End Set
         End Property
+
 #Region "Colors"
         'private variables with default colors
         Dim _clrPlayerEvent As Color = Color.DarkGreen
@@ -170,6 +166,7 @@ Namespace MCInterop
                 config.write("player_event", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
+
         Public Property clrSevere As Color
             Get
                 Return _clrSevere
@@ -179,6 +176,7 @@ Namespace MCInterop
                 config.write("severe", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
+
         Public Property clrWarning As Color
             Get
                 Return _clrWarning
@@ -188,6 +186,7 @@ Namespace MCInterop
                 config.write("warning", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
+
         Public Property clrInfo As Color
             Get
                 Return _clrInfo
@@ -207,6 +206,7 @@ Namespace MCInterop
                 config.write("unknown", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
+
 #End Region
 
         ''' <summary>
@@ -214,12 +214,17 @@ Namespace MCInterop
         ''' </summary>
         ''' <param name="text">the text that should be parsed</param>
         ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
-        Public Sub Lookup(text As String)  'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
+        Public Sub Lookup(text As String) _
+            'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
             Try
                 Dim t As MessageType = getMessageType(text)
                 Lookup(text, t)
             Catch global_ex As Exception
-                If text IsNot Nothing Then livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Exception at LookUp (text)! Parameter:" & text, global_ex.Message) Else livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Exception at LookUp! Text is null!", global_ex.Message)
+                If text IsNot Nothing Then _
+                    livebug.write(loggingLevel.Severe, "ServerOutputHandler",
+                                  "Exception at LookUp (text)! Parameter:" & text, global_ex.Message) Else _
+                    livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Exception at LookUp! Text is null!",
+                                  global_ex.Message)
             End Try
         End Sub
 
@@ -228,7 +233,8 @@ Namespace MCInterop
         ''' </summary>
         ''' <param name="passargs">the text and type that should be parsed</param>
         ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
-        Public Sub LookupAsync(PassArgs As thds_pass_lookup)  'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
+        Public Sub LookupAsync(PassArgs As thds_pass_lookup) _
+            'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
             Lookup(PassArgs.text, PassArgs.type)
         End Sub
 
@@ -237,7 +243,8 @@ Namespace MCInterop
         ''' </summary>
         ''' <param name="text">the text that should be parsed</param>
         ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
-        Public Sub Lookup(text As String, type As MessageType)  'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
+        Public Sub Lookup(text As String, type As MessageType) _
+            'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
             If text Is Nothing Then Exit Sub
             Try
                 RaiseEvent TextReceived(text, type)
@@ -249,22 +256,34 @@ Namespace MCInterop
                         RaiseEvent SevereReceived(New ErrorReceivedEventArgs(text, MessageType.severe))
                     Case MessageType.playerjoin 'player joining
                         Dim pj As PlayerJoin = AnalyzeAction(PlayerAction.player_join, text)
-                        RaiseEvent PlayerJoin(New PlayerJoinEventArgs(PlayerJoinEventArgs.playerjoinreason.join, text, pj))
+                        RaiseEvent _
+                            PlayerJoin(New PlayerJoinEventArgs(PlayerJoinEventArgs.playerjoinreason.join, text, pj))
                     Case MessageType.playerleave 'player leaving
                         Dim pl As PlayerLeave = AnalyzeAction(PlayerAction.player_leave, text)
-                        RaiseEvent PlayerDisconnect(New PlayerDisconnectEventArgs(pl.player, PlayerDisconnectEventArgs.playerleavereason.leave, text, pl))
+                        RaiseEvent _
+                            PlayerDisconnect(New PlayerDisconnectEventArgs(pl.player,
+                                                                           PlayerDisconnectEventArgs.playerleavereason.
+                                                                              leave, text, pl))
                     Case MessageType.playerkick 'player being kicked
                         Dim pk As PlayerKick = AnalyzeAction(PlayerAction.player_kick, text)
-                        RaiseEvent PlayerDisconnect(New PlayerDisconnectEventArgs(pk.player, PlayerDisconnectEventArgs.playerleavereason.kick, text, pk))
+                        RaiseEvent _
+                            PlayerDisconnect(New PlayerDisconnectEventArgs(pk.player,
+                                                                           PlayerDisconnectEventArgs.playerleavereason.
+                                                                              kick, text, pk))
                     Case MessageType.playerban 'player being banned
                         Dim pb As playerBan = AnalyzeAction(PlayerAction.player_ban, text)
-                        RaiseEvent PlayerDisconnect(New PlayerDisconnectEventArgs(pb.player, PlayerDisconnectEventArgs.playerleavereason.ban, text, pb))
+                        RaiseEvent _
+                            PlayerDisconnect(New PlayerDisconnectEventArgs(pb.player,
+                                                                           PlayerDisconnectEventArgs.playerleavereason.
+                                                                              ban, text, pb))
                     Case MessageType.ipban 'ip being banned
 
                     Case MessageType.listcount 'List command output
-                        livebug.write(loggingLevel.Fine, "ServerOutputHandler", "List count recognized, will update player list")
+                        livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                                      "List count recognized, will update player list")
                     Case MessageType.list 'List command output
-                        livebug.write(loggingLevel.Fine, "ServerOutputHandler", "List command output recognized, will update player list")
+                        livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                                      "List command output recognized, will update player list")
                         RaiseEvent ListUpdate()
                         HandleList(text)
                     Case MessageType.javastacktrace 'java stack trace e.g. "at net.minecraft....(java:12)"
@@ -272,7 +291,11 @@ Namespace MCInterop
                     Case MessageType.unknown 'unknown type, does not match any of the above
                 End Select
             Catch global_ex As Exception
-                If text IsNot Nothing Then livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at LookUp (text,type)! Parameter:" & text, global_ex.Message) Else livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at LookUp! Text is null!", global_ex.Message)
+                If text IsNot Nothing Then _
+                    livebug.write(loggingLevel.Severe, "ServerOutputHandler",
+                                  "Severe exception at LookUp (text,type)! Parameter:" & text, global_ex.Message) Else _
+                    livebug.write(loggingLevel.Severe, "ServerOutputHandler",
+                                  "Severe exception at LookUp! Text is null!", global_ex.Message)
             End Try
         End Sub
 
@@ -349,7 +372,7 @@ Namespace MCInterop
         ''' <remarks>These characters are (in most cases) coused by the use of --nojline</remarks>
         Public Function FixJLine(text As String) As String
             Debug.WriteLine("FixJLine input: " & text)
-            '  Dim pattern As String = "\x1B\[(\d\d|\d)m"
+            ' Dim pattern As String = "\x1B\[(\d\d|\d)m"
             If _utf8comp = False Then
                 text = System.Text.ASCIIEncoding.ASCII.GetString(System.Text.Encoding.ASCII.GetBytes(text))
             End If
@@ -364,11 +387,11 @@ Namespace MCInterop
             text = System.Text.RegularExpressions.Regex.Replace(text, pattern, "")
 
             pattern = "\x1B\[\d{1,2}(\;\d{1,2}|){1,2}m"
-            Return System.Text.RegularExpressions.Regex.Replace(text, pattern, "")           ' [0;33;22m etc
-
+            Return System.Text.RegularExpressions.Regex.Replace(text, pattern, "") ' [0;33;22m etc
         End Function
 
         Dim AcceptList As Boolean = True
+
         ''' <summary>
         ''' Get the message type for a given text
         ''' </summary>
@@ -386,7 +409,8 @@ Namespace MCInterop
 
                 If text Is Nothing Then Return MessageType.unknown : Exit Function
 
-                text = Regex.Replace(text, "\s{0,1}\[minecraft[^\]]*\]", "", RegexOptions.IgnoreCase) '[minecraft], [minecraft-server] will also be filtered out, 
+                text = Regex.Replace(text, "\s{0,1}\[minecraft[^\]]*\]", "", RegexOptions.IgnoreCase) _
+                '[minecraft], [minecraft-server] will also be filtered out,
                 '
                 'All text will be handled as lowercase, starting with the [info/warning/severe] tag (if present)
                 '
@@ -394,72 +418,104 @@ Namespace MCInterop
                 If Regex.IsMatch(text, "^" & warntag, RegexOptions.IgnoreCase) Then 'Detect warning
                     Return MessageType.warning
 
-                ElseIf Regex.IsMatch(text, "^" & severetag) Or Regex.IsMatch(text, "^\[stderr\]") Or Regex.IsMatch(text, "^\[info\]\s{0,1}\[stderr\]", RegexOptions.IgnoreCase) Then 'Detect severe
+                ElseIf _
+                    Regex.IsMatch(text, "^" & severetag) Or Regex.IsMatch(text, "^\[stderr\]") Or
+                    Regex.IsMatch(text, "^\[info\]\s{0,1}\[stderr\]", RegexOptions.IgnoreCase) Then 'Detect severe
                     Return MessageType.severe
 
-                ElseIf Regex.IsMatch(text, "^" & infotag & "\s{0,1}\w{1,16}\[/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{3,5}|)\] logged in with entity id", RegexOptions.IgnoreCase) Then 'Detect playerjoin
+                ElseIf _
+                    Regex.IsMatch(text,
+                                  "^" & infotag &
+                                  "\s{0,1}\w{1,16}\[/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{3,5}|)\] logged in with entity id",
+                                  RegexOptions.IgnoreCase) Then 'Detect playerjoin
                     '[INFO] Bertware[/127.0.0.1:58189] logged in with entity id 27 at ([world] -1001.0479985318618, 2.0, 1409.300000011921)
                     '[INFO] Bertware[/127.0.0.1:58260] logged in with entity id 0 at (-1001.0479985318618, 2.0, 1409.300000011921)
                     Return MessageType.playerjoin
 
-                ElseIf Regex.IsMatch(text, "^" & infotag & " \w{1,16} lost connection", RegexOptions.IgnoreCase) Or Regex.IsMatch(text, "^\[info\] \w{1,16} left the game.", RegexOptions.IgnoreCase) Then  'Detect playerleave
+                ElseIf _
+                    Regex.IsMatch(text, "^" & infotag & " \w{1,16} lost connection", RegexOptions.IgnoreCase) Or
+                    Regex.IsMatch(text, "^\[info\] \w{1,16} left the game.", RegexOptions.IgnoreCase) Then _
+                    'Detect playerleave
                     '[INFO] Bertware lost connection: disconnect.endOfStream
                     Return MessageType.playerleave
 
-                ElseIf Regex.IsMatch(text, "^" & infotag & "( )player( )(\w{1,16})( )kicked( )(\w{1,16})( )for", RegexOptions.IgnoreCase) _
+                ElseIf _
+                    Regex.IsMatch(text, "^" & infotag & "( )player( )(\w{1,16})( )kicked( )(\w{1,16})( )for",
+                                  RegexOptions.IgnoreCase) _
                     Or Regex.IsMatch(text, "^" & infotag & " (\w){1,16}: kicking \w{1,16}", RegexOptions.IgnoreCase) _
                     Or Regex.IsMatch(text, "^" & infotag & " kicked \w{1,16} from the game", RegexOptions.IgnoreCase) _
-                    Or Regex.IsMatch(text, "^" & infotag & " (\w){1,16}: kicked player (\w){1,16}. with reason:", RegexOptions.IgnoreCase) Then  'Detect playerkick
+                    Or
+                    Regex.IsMatch(text, "^" & infotag & " (\w){1,16}: kicked player (\w){1,16}. with reason:",
+                                  RegexOptions.IgnoreCase) Then 'Detect playerkick
                     'Player Console kicked Bertware for Kicked from server..
                     '14:42:36 [INFO] CONSOLE: Kicking bertware
                     '[INFO] Kicked Bertware from the game: 'zomaar'
                     '2013-06-20 19:11:35 [INFO] CONSOLE: Kicked player Bertware. With reason:
 
 
-                    If Regex.IsMatch(text, "^" & infotag & " (\w){1,16}: kicked player (\w){1,16}. with reason:", RegexOptions.IgnoreCase) Then AcceptList = False 'Next will be the ban reason
+                    If _
+                        Regex.IsMatch(text, "^" & infotag & " (\w){1,16}: kicked player (\w){1,16}. with reason:",
+                                      RegexOptions.IgnoreCase) Then AcceptList = False 'Next will be the ban reason
                     Return MessageType.playerkick
 
-                ElseIf Regex.IsMatch(text, "^" & infotag & " {0,1}(\w{1,16}: |)banned ip address \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", RegexOptions.IgnoreCase) Then 'Detect ipban
+                ElseIf _
+                    Regex.IsMatch(text,
+                                  "^" & infotag &
+                                  " {0,1}(\w{1,16}: |)banned ip address \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
+                                  RegexOptions.IgnoreCase) Then 'Detect ipban
                     'CONSOLE: Banned IP Address 127.1.1.1
                     '[INFO] Banned IP address 127.1.1.1
                     Return MessageType.ipban
 
-                ElseIf Regex.IsMatch(text, "^" & infotag & " {0,1}(\w{1,16}: |)banned player address \w{1,16}", RegexOptions.IgnoreCase) Then 'detect player ban
+                ElseIf _
+                    Regex.IsMatch(text, "^" & infotag & " {0,1}(\w{1,16}: |)banned player address \w{1,16}",
+                                  RegexOptions.IgnoreCase) Then 'detect player ban
                     '[INFO] Banned player bertware
                     'CONSOLE: Banned player bertware
                     Return MessageType.playerban
 
-                ElseIf Regex.IsMatch(text, "^" & infotag & " connected players:", RegexOptions.IgnoreCase) Then 'Detect list
+                ElseIf Regex.IsMatch(text, "^" & infotag & " connected players:", RegexOptions.IgnoreCase) Then _
+                    'Detect list
                     '[info] connected players: bertware, ...
                     Return MessageType.list
-                ElseIf Regex.IsMatch(text, "there are (.*) players online", RegexOptions.IgnoreCase) AndAlso Regex.IsMatch(text, "\d{1,3}/\d{1,3}") Then
+                ElseIf _
+                    Regex.IsMatch(text, "there are (.*) players online", RegexOptions.IgnoreCase) AndAlso
+                    Regex.IsMatch(text, "\d{1,3}/\d{1,3}") Then
                     Return MessageType.listcount
 
                     'Note: numbers etc are stripped, so "27 achievements" becomes "achievements"
                     'Therefore, this has to be filtered out
                 ElseIf (Regex.IsMatch(text, "^(" & infotag & " |)\w{2,16}(, |$)" _
-                                      & "((.{1,16})\w{2,16}(, |$))*$") Or Regex.IsMatch(text, "^(" & infotag & " |)( |)$")) And Not (text = "recipes" Or text = "achievements") Then
+                                            & "((.{1,16})\w{2,16}(, |$))*$") Or
+                        Regex.IsMatch(text, "^(" & infotag & " |)( |)$")) And
+                       Not (text = "recipes" Or text = "achievements") Then
                     'First player can't have a tag!
-                    '[info] Bertware, other, 
+                    '[info] Bertware, other,
                     If AcceptList = False Then AcceptList = True : Return MessageType.info 'next list will be accepted
                     Return MessageType.list
 
-                ElseIf Regex.IsMatch(text, "^" & infotag) Or (text.Contains("aliasing material") And text.Contains("name:")) Then 'Detect info, with support for mods
+                ElseIf _
+                    Regex.IsMatch(text, "^" & infotag) Or
+                    (text.Contains("aliasing material") And text.Contains("name:")) Then _
+                    'Detect info, with support for mods
                     Return MessageType.info
 
-                ElseIf text.Contains(".java:") Or text.Contains("(unknown source)") Or text.Contains("(native method)") Or text.Contains("(sourcefile:") Or _
-                        text.Contains("java.lang.") Or text.Contains("java.util") Then 'Detect java error stacktrace
+                ElseIf _
+                    text.Contains(".java:") Or text.Contains("(unknown source)") Or text.Contains("(native method)") Or
+                    text.Contains("(sourcefile:") Or
+                    text.Contains("java.lang.") Or text.Contains("java.util") Then 'Detect java error stacktrace
                     Return MessageType.javastacktrace
                 Else
                     Return MessageType.info 'Even if it's unknown, we'll mark it as info.
                     ' If text.Length > 0 AndAlso Regex.IsMatch(text, "\d{0,4} {0,1}\w{4,24}") Then
-                    '   Return MessageType.info
+                    ' Return MessageType.info
                     'Else
-                    '   Return MessageType.unknown
+                    ' Return MessageType.unknown
                     'End If
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at GetMessageType!", ex.Message)
+                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at GetMessageType!",
+                              ex.Message)
                 Return MessageType.unknown
             End Try
         End Function
@@ -541,7 +597,8 @@ Namespace MCInterop
                         Return clrUnknown
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at getMessageColor! (text as String)", ex.Message)
+                livebug.write(loggingLevel.Severe, "ServerOutputHandler",
+                              "Severe exception at getMessageColor! (text as String)", ex.Message)
                 Return Color.Black
             End Try
         End Function
@@ -579,7 +636,8 @@ Namespace MCInterop
                         Return clrUnknown
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at getMessageColor! (type as MessageType)", ex.Message)
+                livebug.write(loggingLevel.Severe, "ServerOutputHandler",
+                              "Severe exception at getMessageColor! (type as MessageType)", ex.Message)
                 Return Color.Black
             End Try
         End Function
@@ -593,37 +651,50 @@ Namespace MCInterop
         Public Function HandleList(text As String) As Boolean
             Try
                 If server.running = False Then Return True : Exit Function 'if server isn't running, get out of here
-                If server.playerList Is Nothing OrElse server.playerNameList Is Nothing Then Return False : Exit Function 'if playerlist isn't set to an object, exit
+                If server.playerList Is Nothing OrElse server.playerNameList Is Nothing Then _
+                    Return False : Exit Function 'if playerlist isn't set to an object, exit
                 Dim Plist As List(Of String) = server.playerNameList ' get the current player list from the GUI
                 Dim olist As List(Of String) = ResolvePlayerList(text) 'real player list in server
 
-                If olist Is Nothing OrElse Plist Is Nothing Then Return False : Exit Function 'if something went wrong, exit
+                If olist Is Nothing OrElse Plist Is Nothing Then Return False : Exit Function _
+                'if something went wrong, exit
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking player lists...")
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Players online now:" & common.serialize(olist, ";"))
+                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                              "Players online now:" & common.serialize(olist, ";"))
                 'Check 1: Duplicate Items
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (1/4) - players that are show multiple times")
+                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                              "Checking lists (1/4) - players that are show multiple times")
 
-                If Plist.Count > 1 Then 'when more than one player is shown, we need to check if the same player is shown twice
+                If Plist.Count > 1 Then _
+                    'when more than one player is shown, we need to check if the same player is shown twice
                     For i As Byte = 0 To Plist.Count - 1
                         If i = Plist.Count Then Exit For
                         Dim Player As String = Plist(i)
                         If Player IsNot Nothing Then
-                            While Plist.IndexOf(Player) <> Plist.LastIndexOf(Player)  'if first and last occurence are different: 2 or more items. While loop, to make sure all incorrect occurences are removed
-                                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Removing player " & Player & " - shown more than 1 time")
+                            While Plist.IndexOf(Player) <> Plist.LastIndexOf(Player) _
+                                'if first and last occurence are different: 2 or more items. While loop, to make sure all incorrect occurences are removed
+                                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                                              "Removing player " & Player & " - shown more than 1 time")
                                 Plist.RemoveAt(Plist.LastIndexOf(Player))
                                 'IMPORTANT:
                                 '
                                 'player new simpleplayer(player) should be removed
-                                RaiseEvent PlayerDisconnect(New PlayerDisconnectEventArgs(New SimplePlayer(Player), PlayerDisconnectEventArgs.playerleavereason.listupdate, ""))
+                                RaiseEvent _
+                                    PlayerDisconnect(New PlayerDisconnectEventArgs(New SimplePlayer(Player),
+                                                                                   PlayerDisconnectEventArgs.
+                                                                                      playerleavereason.listupdate, ""))
 
                             End While
                         End If
                     Next
                 Else
-                    livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Skipped duplicate player check, there are less than 2 players shown.", "ServerOutputHandler")
+                    livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                                  "Skipped duplicate player check, there are less than 2 players shown.",
+                                  "ServerOutputHandler")
                 End If
 
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (2/4) - Disconnected players are still shown", "ServerOutputHandler")
+                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                              "Checking lists (2/4) - Disconnected players are still shown", "ServerOutputHandler")
                 'Check 2: Disconnected players are still shown.
                 If Plist.Count > 0 Then
                     For i As Byte = 0 To Plist.Count - 1
@@ -633,22 +704,29 @@ Namespace MCInterop
                             'IMPORTANT:
                             '
                             'player new simpleplayer(player) should be removed
-                            livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Removing player " & Player & " - still shown while disconnected", "ServerOutputHandler")
-                            RaiseEvent PlayerDisconnect(New PlayerDisconnectEventArgs(New SimplePlayer(Player), PlayerDisconnectEventArgs.playerleavereason.listupdate, ""))
+                            livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                                          "Removing player " & Player & " - still shown while disconnected",
+                                          "ServerOutputHandler")
+                            RaiseEvent _
+                                PlayerDisconnect(New PlayerDisconnectEventArgs(New SimplePlayer(Player),
+                                                                               PlayerDisconnectEventArgs.
+                                                                                  playerleavereason.listupdate, ""))
 
                         End If
                     Next
                 End If
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (3/4) - Online players aren't shown")
+                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                              "Checking lists (3/4) - Online players aren't shown")
                 'Check 3: Players that aren't shown
                 If olist.Count > 0 Then
                     For i As Byte = 0 To olist.Count - 1
                         If i = olist.Count Then Exit For
                         Dim onlinePlayer As String = olist(i)
 
-                        If Plist.Contains(onlinePlayer.Trim) = False Or Plist.IndexOf(onlinePlayer.Trim) = -1 Then
+                        If Plist.Contains(onlinePlayer.Trim) = False Or Plist.IndexOf(onlinePlayer.Trim) = - 1 Then
 
-                            livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Player not shown: " & onlinePlayer & " - Adding now...")
+                            livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                                          "Player not shown: " & onlinePlayer & " - Adding now...")
                             'Routine to set all details. Ip will be set to unknown. Same routine as used in the player join detection
                             Dim pl As Player = Player.FromSimplePlayer(New SimplePlayer(onlinePlayer, "Unknown"))
                             If pl IsNot Nothing Then
@@ -658,21 +736,25 @@ Namespace MCInterop
                             'IMPORTANT:
                             '
                             'player pl should be added
-                            RaiseEvent PlayerJoin(New PlayerJoinEventArgs(PlayerJoinEventArgs.playerjoinreason.listupdate, ""))
+                            RaiseEvent _
+                                PlayerJoin(New PlayerJoinEventArgs(PlayerJoinEventArgs.playerjoinreason.listupdate, ""))
                             'other player details, like face and location should be downloaded on other thread, and the GUI should be updated later.
 
                         End If
                     Next
                 End If
 
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking lists (4/4) - detected players aren't shown in playerlist")
+                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
+                              "Checking lists (4/4) - detected players aren't shown in playerlist")
                 'Check 4: Players that aren't shown
-                If olist IsNot Nothing Then RaiseEvent CheckUILists(olist) 'this event will trigger the mainform to compare online players to shown players
+                If olist IsNot Nothing Then RaiseEvent CheckUILists(olist) _
+                'this event will trigger the mainform to compare online players to shown players
 
                 'End of checks
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checked Lists succesfully")
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerOutputHandler", "ERROR: could not complete list update", ex.Message)
+                livebug.write(loggingLevel.Warning, "ServerOutputHandler", "ERROR: could not complete list update",
+                              ex.Message)
             End Try
             livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Finalized list check")
             Return True
@@ -684,11 +766,13 @@ Namespace MCInterop
         ''' <param name="text">The text to resolve, output of /list</param>
         ''' <returns>The list of all online players ATM</returns>
         ''' <remarks></remarks>
-        ''' 
-        Private Function ResolvePlayerList(text As String) As List(Of String) 'resolve server player list output to list of playernames
+        '''
+        Private Function ResolvePlayerList(text As String) As List(Of String) _
+            'resolve server player list output to list of playernames
             If text Is Nothing Then Return Nothing : Exit Function
             If Regex.IsMatch(text, "^\d{1,4}(-|:|\s|/)") Then text = RemoveTimeStamp(text)
-            text = Regex.Replace(text, "\s{0,1}\[Minecraft[^\]]*\]", "") '[minecraft], [minecraft-server] will also be filtered out, 
+            text = Regex.Replace(text, "\s{0,1}\[Minecraft[^\]]*\]", "") _
+            '[minecraft], [minecraft-server] will also be filtered out,
             text = Regex.Replace(text, "\[[\w\d]*\]", "") 'Remove prefixes like [Admin]
             text = Regex.Replace(text, "[\w\s]*(\s|):", "") 'remove "connected players:"
             Dim names As New List(Of String)
@@ -708,7 +792,8 @@ Namespace MCInterop
                 Return text
             Catch ex As Exception
                 Return text
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Something went wrong while handling rewriting the date - text:" & text, ex.Message)
+                livebug.write(loggingLevel.Severe, "ServerOutputHandler",
+                              "Something went wrong while handling rewriting the date - text:" & text, ex.Message)
             End Try
         End Function
     End Module
@@ -718,7 +803,6 @@ Namespace MCInterop
     'Code to get player names and info from server messages
 
     Public Module ServerActionsFilter
-
         ''' <summary>
         ''' Things a player could do
         ''' </summary>
@@ -738,12 +822,14 @@ Namespace MCInterop
         ''' <param name="text">The text (console output) of the action</param>
         ''' <returns></returns>
         ''' <remarks>We need to parse both different server versions and different servers (vanilla, bukkit, ...)!</remarks>
-        Public Function AnalyzeAction(action As PlayerAction, text As String) As Object 'analyze a player action. Note: the kind of action (join,leave,...) should be determined first
+        Public Function AnalyzeAction(action As PlayerAction, text As String) As Object _
+            'analyze a player action. Note: the kind of action (join,leave,...) should be determined first
             Try
                 text = RemoveTimeStamp(text) 'Remove any date or timestamps in front, to lowercase
                 text = text.Replace("[INFO]", "")
                 text = Regex.Replace(text, "\[[\w\d]*\]", "") 'Remove prefixes like [Admin]
-                text = Regex.Replace(text, "\s{0,1}\[Minecraft[^\]]*\]", "") '[minecraft], [minecraft-server] will also be filtered out, 
+                text = Regex.Replace(text, "\s{0,1}\[Minecraft[^\]]*\]", "") _
+                '[minecraft], [minecraft-server] will also be filtered out,
                 Dim match As System.Text.RegularExpressions.Match
                 Dim trimarray As Char() = {"[", "]", "(", ")", " ", "."}
 
@@ -751,19 +837,23 @@ Namespace MCInterop
                     Case PlayerAction.player_join
                         'bot[/127.0.0.1:61159] logged in with entity id 289 at ([world] 30.5, 61.0, 399.5)
                         'bertware [/127.0.0.1:51417] logged in with entity id 401 at ([world] 309.713105541731, 63.0, 309.018407580967)
-                        'domin8err logged in with entity id 3014 at (-223.54209738248414, 45.0, -50.65845467659237) 
+                        'domin8err logged in with entity id 3014 at (-223.54209738248414, 45.0, -50.65845467659237)
                         Dim pj As New PlayerJoin
-                       
+
                         'Filter for player joins (Player name and IP address)
                         '[INFO] bertware [/127.0.0.1:51417] logged in with entity id 401 at ([world] 309.713105541731, 63.0, 309.018407580967)
 
                         Try
-                            match = System.Text.RegularExpressions.Regex.Match(text, "\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3}")
-                            If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pj.player.IP = match.Value Else pj.player.IP = "unknown"
+                            match = System.Text.RegularExpressions.Regex.Match(text,
+                                                                               "\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3}")
+                            If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pj.player.IP = match.Value _
+                                Else pj.player.IP = "unknown"
                             match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}\s{0,1}")
-                            If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pj.player.name = match.Value.Trim(trimarray) Else pj.player.name = "unknown"
+                            If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
+                                pj.player.name = match.Value.Trim(trimarray) Else pj.player.name = "unknown"
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get login player name/ip for text " & text, ex.Message)
+                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                          "Could not get login player name/ip for text " & text, ex.Message)
                         End Try
 
                         pj.message = text
@@ -781,15 +871,19 @@ Namespace MCInterop
                         Try
                             pl.player = New SimplePlayer()
                             match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}\s{0,1}")
-                            If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pl.player.name = match.Value.Trim(trimarray) Else pl.player.name = "unknown"
+                            If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
+                                pl.player.name = match.Value.Trim(trimarray) Else pl.player.name = "unknown"
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get disconnected player for text " & text, ex.Message)
+                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                          "Could not get disconnected player for text " & text, ex.Message)
                         End Try
 
                         Try
-                            If text.Contains(":") Then pl.reason = text.Split(":")(1).Trim Else pl.reason = "unknown" 'get additional details 
+                            If text.Contains(":") Then pl.reason = text.Split(":")(1).Trim Else pl.reason = "unknown" _
+                            'get additional details
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get disconnected reason for text " & text, ex.Message)
+                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                          "Could not get disconnected reason for text " & text, ex.Message)
                         End Try
 
                         Return pl
@@ -804,8 +898,9 @@ Namespace MCInterop
                         Dim pk As New PlayerKick
 
                         Try
-                          
-                            If Regex.IsMatch(text, "Kicked \w{1,16} from the game") Then '[INFO] Kicked Bertware from the game: 'zomaar'
+
+                            If Regex.IsMatch(text, "Kicked \w{1,16} from the game") Then _
+                                '[INFO] Kicked Bertware from the game: 'zomaar'
 
                                 pk.CommandSender = "unknown"
 
@@ -816,23 +911,30 @@ Namespace MCInterop
                                     pk.player.name = "unknown"
                                 End If
 
-                            ElseIf Regex.IsMatch(text, "\w{1,16}: Kicking \w{1,16}") Then '14:42:36 [INFO] CONSOLE: Kicking bertware
+                            ElseIf Regex.IsMatch(text, "\w{1,16}: Kicking \w{1,16}") Then _
+                                '14:42:36 [INFO] CONSOLE: Kicking bertware
                                 match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}")
-                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pk.CommandSender = match.Value.Trim(trimarray) Else pk.CommandSender = "unknown"
+                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
+                                    pk.CommandSender = match.Value.Trim(trimarray) Else pk.CommandSender = "unknown"
 
                                 match = System.Text.RegularExpressions.Regex.Match(text, "\w{1,16}\s{0,1}$")
-                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pk.player.name = match.Value.Trim(trimarray) Else pk.player.name = "unknown"
+                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
+                                    pk.player.name = match.Value.Trim(trimarray) Else pk.player.name = "unknown"
 
-                            ElseIf Regex.IsMatch(text, "\w{1,16}: Kicked player \w{1,16}") Then '2013-06-20 19:11:35 [INFO] CONSOLE: Kicked player Bertware. With reason:
+                            ElseIf Regex.IsMatch(text, "\w{1,16}: Kicked player \w{1,16}") Then _
+                                '2013-06-20 19:11:35 [INFO] CONSOLE: Kicked player Bertware. With reason:
                                 match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}")
-                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pk.CommandSender = match.Value.Trim(trimarray) Else pk.CommandSender = "unknown"
+                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
+                                    pk.CommandSender = match.Value.Trim(trimarray) Else pk.CommandSender = "unknown"
 
                                 match = System.Text.RegularExpressions.Regex.Match(text, "\w{1,16}\.")
-                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pk.player.name = match.Value.Trim(trimarray) Else pk.player.name = "unknown"
+                                If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
+                                    pk.player.name = match.Value.Trim(trimarray) Else pk.player.name = "unknown"
                             End If
 
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get kick information for text " & text, ex.Message)
+                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                          "Could not get kick information for text " & text, ex.Message)
                         End Try
 
                         Return pk
@@ -845,14 +947,16 @@ Namespace MCInterop
                                 pb.player = New SimplePlayer(text.Split("]")(1).Trim.Split(" ")(2)) 'get player
                                 pb.CommandSender = text.Split("]")(1).Split(":")(0).Trim 'get additional details
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get player ban information for text " & text, ex.Message)
+                                livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                              "Could not get player ban information for text " & text, ex.Message)
                             End Try
                         ElseIf text.Contains("Banned player") Then
                             Try
                                 pb.player = New SimplePlayer(text.Split("]")(1).Trim.Split(" ")(3)) 'get player
                                 pb.CommandSender = text.Split("]")(1).Split(":")(0).Trim 'get additional details
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get player ban information for text " & text, ex.Message)
+                                livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                              "Could not get player ban information for text " & text, ex.Message)
                             End Try
                         End If
 
@@ -864,18 +968,19 @@ Namespace MCInterop
                             ib.IP = text.Split("]")(1).Split(":")(1).Trim.Split(" ")(2).Trim 'get details
                             ib.CommandSender = text.Split("]")(1).Split(":")(0).Trim 'get details
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler", "Could not get player ban information for text " & text, ex.Message)
+                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
+                                          "Could not get player ban information for text " & text, ex.Message)
                         End Try
                         Return ib
                     Case Else
                         Return Nothing
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at AnalyzeAction!", ex.Message)
+                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at AnalyzeAction!",
+                              ex.Message)
                 Return Nothing
             End Try
         End Function
-
     End Module
 
     ''' <summary>
@@ -883,7 +988,7 @@ Namespace MCInterop
     ''' </summary>
     ''' <remarks></remarks>
 #Region "EventClasses"
-    Public Class PlayerJoin
+        Public Class PlayerJoin
         Public player As Player, message As String
 
         Public Sub New()
@@ -900,7 +1005,6 @@ Namespace MCInterop
             Me.player = player
             Me.message = ""
         End Sub
-
     End Class
 
     Public Class PlayerLeave
@@ -920,7 +1024,6 @@ Namespace MCInterop
             player = Splayer
             reason = DisconnectReason
         End Sub
-
     End Class
 
     Public Class PlayerKick
@@ -979,5 +1082,6 @@ Namespace MCInterop
             CommandSender = sender
         End Sub
     End Class
+
 #End Region
 End Namespace

@@ -1,5 +1,6 @@
 ﻿Public Class ServerSettingDialog
     Public setting As String, value As String
+
     Public Property NameReadOnly As Boolean
         Get
             Return TxtSetting.ReadOnly
@@ -31,5 +32,4 @@
             Me.Close()
         End If
     End Sub
-
 End Class

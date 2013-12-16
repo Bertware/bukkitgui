@@ -2,18 +2,11 @@
 'wrapper around XmlDcoument, for easy and safe read/write of elements and attributes.
 'Support for reading from parent node.
 'Logging can be disabled, to prevent errors when livebug uses this class to write it's log.
-
 Imports System.Xml
-Imports System.IO
-Imports Microsoft.VisualBasic.FileIO.FileSystem
-
-Imports Net.Bertware.BukkitGUI.Core
-
 Imports System.Threading
 
 Namespace Core
     Public Class fxml
-
         Public Document As XmlDocument = Nothing
         Public Path As String
         Public Owner As String = "undefined" 'For logging puposes
@@ -22,6 +15,7 @@ Namespace Core
 
         Dim wfails As Integer = 0
         Const MAX_FAIL_WRITE As Byte = 8
+
         ''' <summary>
         ''' Create a new instance, but loading of xml content is still needed
         ''' </summary>
@@ -38,7 +32,8 @@ Namespace Core
         ''' <param name="owner">The owner, for logging purposes</param>
         ''' <param name="log">If this class should log status or errors. Should only be "false" for livebug</param>
         ''' <remarks>After this routine all functions are ready to use</remarks>
-        Public Sub New(filepath As String, owner As String, Optional ByVal log As Boolean = True) 'also loads file. No_log feature needed for livebug
+        Public Sub New(filepath As String, owner As String, Optional ByVal log As Boolean = True) _
+            'also loads file. No_log feature needed for livebug
             Document = New XmlDocument
             Me.Owner = owner
             Me.log = log
@@ -58,9 +53,12 @@ Namespace Core
                 Document.Load(path)
             Catch ex As Exception
                 If Owner <> "language" Then
-                    MessageBox.Show(lr("The following xml file could not be loaded. Please check for errors") & ": " & path, lr("Invalid XML file"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(
+                        lr("The following xml file could not be loaded. Please check for errors") & ": " & path,
+                        lr("Invalid XML file"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Else
-                    MessageBox.Show("The following xml file could not be loaded. Please check for errors: " & path, "Invalid XML file", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show("The following xml file could not be loaded. Please check for errors: " & path,
+                                    "Invalid XML file", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
             End Try
 
@@ -79,7 +77,9 @@ Namespace Core
             If xml = "" Then Return Nothing : Exit Function
             Document = Nothing
             Try
-                If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Loading XML file from contents: " & xml.Trim(vbCrLf).Trim(vbCr).Trim(vbLf))
+                If Log Then _
+                    livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                  "Loading XML file from contents: " & xml.Trim(vbCrLf).Trim(vbCr).Trim(vbLf))
                 Document = New XmlDocument
                 Document.LoadXml(xml)
                 If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "XML file loaded from contents")
@@ -97,7 +97,8 @@ Namespace Core
         ''' <param name="required_version">the required version. file must be equal or newer.</param>
         ''' <returns>Returns false if outdated</returns>
         ''' <remarks>The attributed should be named "version"</remarks>
-        Public Function Verify_version(element_name As String, required_version As String) As Boolean 'returns false if XML file is outdated. True if XML file is OK
+        Public Function Verify_version(element_name As String, required_version As String) As Boolean _
+            'returns false if XML file is outdated. True if XML file is OK
             Dim e As XmlElement = Document.GetElementsByTagName(element_name)(0)
             If e Is Nothing Then Return True : Exit Function
             Dim ver As String = e.GetAttribute("version") 'Checks the version attribute
@@ -117,7 +118,8 @@ Namespace Core
         ''' <param name="defaultvalue">default value, will be saved if the element doesn't exist</param>
         ''' <param name="parent">The parent node. Will be created if not existing</param>
         ''' <returns>-Returns the inner text of the element. returns an empty string if an error occured</returns>
-        Public Function read(element As String, Optional ByVal defaultvalue As String = "", Optional ByVal parent As String = "") As String
+        Public Function read(element As String, Optional ByVal defaultvalue As String = "",
+                             Optional ByVal parent As String = "") As String
             parent = parent.ToLower
             element = element.ToLower
             If parent <> "" Then CheckParent(parent, True)
@@ -126,13 +128,17 @@ Namespace Core
                 Dim node As XmlNode = Nothing
                 Try
                     If parent = "" Then
-                        If Document.GetElementsByTagName(element).Count > 0 Then node = Document.GetElementsByTagName(element)(0)
+                        If Document.GetElementsByTagName(element).Count > 0 Then _
+                            node = Document.GetElementsByTagName(element)(0)
                     Else
                         CheckParent(parent)
-                        If Document.GetElementsByTagName(parent)(0).Item(element) IsNot Nothing Then node = Document.GetElementsByTagName(parent)(0).Item(element)
+                        If Document.GetElementsByTagName(parent)(0).Item(element) IsNot Nothing Then _
+                            node = Document.GetElementsByTagName(parent)(0).Item(element)
                     End If
                 Catch ex As Exception
-                    If Log Then livebug.write(loggingLevel.Severe, "fxml - " & Owner, "Error while reading setting, element or parent doesn't exist?" & ex.Message)
+                    If Log Then _
+                        livebug.write(loggingLevel.Severe, "fxml - " & Owner,
+                                      "Error while reading setting, element or parent doesn't exist?" & ex.Message)
                 End Try
 
                 If node Is Nothing Then 'If element doesn't exist, create
@@ -144,7 +150,9 @@ Namespace Core
                         node.AppendChild(newNode)
                         If DirectSave Then save() 'save
                         node = Document.GetElementsByTagName(element)(0)
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Added not existing setting (Parent not provided)")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Added not existing setting (Parent not provided)")
                     Else
                         Dim newNode As System.Xml.XmlElement
                         node = Document.GetElementsByTagName(parent)(0)
@@ -153,23 +161,33 @@ Namespace Core
                         node.AppendChild(newNode)
                         If DirectSave Then save() 'save
                         node = Document.GetElementsByTagName(parent)(0).Item(element)
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Added not existing setting (Parent provided)")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Added not existing setting (Parent provided)")
                     End If
                 End If
 
                 If node IsNot Nothing Then
                     If element.Contains("pass") Or element.Contains("salt") Then
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Requested XML element: " & element & " - Value: ********")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Requested XML element: " & element & " - Value: ********")
                     Else
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Requested XML element: " & element & " - Value: " & node.InnerText)
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Requested XML element: " & element & " - Value: " & node.InnerText)
                     End If
                     Return node.InnerText
                 Else
-                    If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML element could not be read: " & element)
+                    If Log Then _
+                        livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                      "Requested XML element could not be read: " & element)
                     Return ""
                 End If
             Catch genex As Exception
-                If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML element could not be read due to error: " & element, genex.Message)
+                If Log Then _
+                    livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                  "Requested XML element could not be read due to error: " & element, genex.Message)
                 Return ""
             End Try
         End Function
@@ -181,7 +199,8 @@ Namespace Core
         ''' <param name="defaultvalue">default value, will be saved if the element doesn't exist</param>
         ''' <param name="parent">The parent node. Will be created if not existing</param>
         ''' <returns>-Returns the boolean value rrepresenting the inner text of the element. returns a false if an error occured</returns>
-        Public Function readAsBool(element As String, Optional ByVal defaultvalue As Boolean = False, Optional ByVal parent As String = "") As Boolean
+        Public Function readAsBool(element As String, Optional ByVal defaultvalue As Boolean = False,
+                                   Optional ByVal parent As String = "") As Boolean
             If read(element, defaultvalue, parent).ToLower = "true" Then Return True Else Return False
         End Function
 
@@ -193,7 +212,8 @@ Namespace Core
         ''' <param name="defaultvalue">default value, will be saved if the element doesn't exist</param>
         ''' <param name="parent">The parent node. Will be created if not existing</param>
         ''' <returns>Returns the value from the attribute</returns>
-        Public Function readAttribute(element As String, attribute As String, Optional ByVal defaultvalue As String = "", Optional ByVal parent As String = "") As String
+        Public Function readAttribute(element As String, attribute As String, Optional ByVal defaultvalue As String = "",
+                                      Optional ByVal parent As String = "") As String
             attribute = attribute.ToLower
             parent = parent.ToLower
             element = element.ToLower
@@ -204,13 +224,17 @@ Namespace Core
                 Dim node As XmlElement = Nothing
                 Try
                     If parent = "" Then
-                        If Document.GetElementsByTagName(element).Count > 0 Then node = Document.GetElementsByTagName(element)(0)
+                        If Document.GetElementsByTagName(element).Count > 0 Then _
+                            node = Document.GetElementsByTagName(element)(0)
                     Else
                         CheckParent(parent)
-                        If Document.GetElementsByTagName(parent)(0).Item(element) IsNot Nothing Then node = Document.GetElementsByTagName(parent)(0).Item(element)
+                        If Document.GetElementsByTagName(parent)(0).Item(element) IsNot Nothing Then _
+                            node = Document.GetElementsByTagName(parent)(0).Item(element)
                     End If
                 Catch ex As Exception
-                    If Log Then livebug.write(loggingLevel.Severe, "fxml - " & Owner, "Error while reading attribute, element or parent doesn't exist?", ex.Message)
+                    If Log Then _
+                        livebug.write(loggingLevel.Severe, "fxml - " & Owner,
+                                      "Error while reading attribute, element or parent doesn't exist?", ex.Message)
                 End Try
 
                 If node Is Nothing Then 'If element doesn't exist, create
@@ -222,7 +246,9 @@ Namespace Core
                         node.AppendChild(newNode)
                         If DirectSave Then save() 'save
                         node = Document.GetElementsByTagName(element)(0)
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Added not existing setting (Parent not provided)")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Added not existing setting (Parent not provided)")
                     Else
                         Dim newNode As System.Xml.XmlElement
                         node = Document.GetElementsByTagName(parent)(0)
@@ -231,7 +257,9 @@ Namespace Core
                         node.AppendChild(newNode)
                         If DirectSave Then save() 'save
                         node = Document.GetElementsByTagName(parent)(0).Item(element)
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Added not existing setting (Parent provided)")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Added not existing setting (Parent provided)")
                     End If
                 End If
 
@@ -245,14 +273,23 @@ Namespace Core
                 End If
 
                 If res IsNot Nothing Then
-                    If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Requested XML attribute: " & element & " - Attribute: " & attribute & " - Value: " & res)
+                    If Log Then _
+                        livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                      "Requested XML attribute: " & element & " - Attribute: " & attribute &
+                                      " - Value: " & res)
                     Return res
                 Else
-                    If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML attribute could not be read (res is null): " & element & " - Attribute: " & attribute)
+                    If Log Then _
+                        livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                      "Requested XML attribute could not be read (res is null): " & element &
+                                      " - Attribute: " & attribute)
                     Return ""
                 End If
             Catch genex As Exception
-                If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML attribute could not be read due to error: " & element & " - Attribute: " & attribute, genex.Message)
+                If Log Then _
+                    livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                  "Requested XML attribute could not be read due to error: " & element &
+                                  " - Attribute: " & attribute, genex.Message)
                 Return ""
             End Try
         End Function
@@ -265,7 +302,8 @@ Namespace Core
         ''' <param name="value">the value to check</param>
         ''' <returns>the found element, nothing if nothing found</returns>
         ''' <remarks></remarks>
-        Public Function getElementByAttribute(elementname As String, attribute As String, value As String) As XmlElement  'Get the element containing that containts an attribute with the provided value
+        Public Function getElementByAttribute(elementname As String, attribute As String, value As String) As XmlElement _
+            'Get the element containing that containts an attribute with the provided value
             elementname = elementname.ToLower
             attribute = attribute.ToLower 'value can contain uppercase, as uppercase might be needed for multi-language.
             Dim res As XmlElement = Nothing
@@ -287,7 +325,9 @@ Namespace Core
         ''' <param name="duplicate_names">If duplicate named elements are allowed</param>
         ''' <returns>Returns the xml element</returns>
         ''' <remarks>creates items if they don't exist.</remarks>
-        Public Function write(element As String, value As String, Optional ByVal parent As String = "", Optional ByVal attributes As List(Of CXMLAttribute) = Nothing, Optional duplicate_names As Boolean = False) As XmlElement
+        Public Function write(element As String, value As String, Optional ByVal parent As String = "",
+                              Optional ByVal attributes As List(Of CXMLAttribute) = Nothing,
+                              Optional duplicate_names As Boolean = False) As XmlElement
             If wfails >= MAX_FAIL_WRITE Then Return Nothing : Exit Function
             parent = parent.ToLower
             element = element.ToLower
@@ -296,7 +336,11 @@ Namespace Core
 
             Try
                 If parent = "" Then
-                    If (Document.GetElementsByTagName(element) IsNot Nothing AndAlso Document.GetElementsByTagName(element).Count > 0 AndAlso Document.GetElementsByTagName(element)(0) IsNot Nothing AndAlso duplicate_names = False) Then 'If exists
+                    If _
+                        (Document.GetElementsByTagName(element) IsNot Nothing AndAlso
+                         Document.GetElementsByTagName(element).Count > 0 AndAlso
+                         Document.GetElementsByTagName(element)(0) IsNot Nothing AndAlso duplicate_names = False) Then _
+                        'If exists
                         node = Document.GetElementsByTagName(element)(0)
                         node.InnerText = value
                         If attributes IsNot Nothing AndAlso attributes.Count > 0 Then
@@ -321,12 +365,22 @@ Namespace Core
                 Else
                     CheckParent(parent)
 
-                    If (Document.GetElementsByTagName(parent) IsNot Nothing AndAlso Document.GetElementsByTagName(parent).Count > 0 AndAlso Document.GetElementsByTagName(parent)(0) IsNot Nothing _
-                        AndAlso CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element) IsNot Nothing _
-                        AndAlso CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element).Count > 0 _
-                        AndAlso CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element)(0) IsNot Nothing AndAlso duplicate_names = False) Then 'If exists (both parent and node)
+                    If _
+                        (Document.GetElementsByTagName(parent) IsNot Nothing AndAlso
+                         Document.GetElementsByTagName(parent).Count > 0 AndAlso
+                         Document.GetElementsByTagName(parent)(0) IsNot Nothing _
+                         AndAlso
+                         CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element) IsNot _
+                         Nothing _
+                         AndAlso
+                         CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element).Count >
+                         0 _
+                         AndAlso
+                         CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element)(0) IsNot _
+                         Nothing AndAlso duplicate_names = False) Then 'If exists (both parent and node)
 
-                        node = CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element)(0)
+                        node =
+                            CType(Document.GetElementsByTagName(parent)(0), XmlElement).GetElementsByTagName(element)(0)
                         node.InnerText = value
                         If attributes IsNot Nothing AndAlso attributes.Count > 0 Then
                             For i As Integer = 0 To attributes.Count - 1
@@ -352,19 +406,27 @@ Namespace Core
                 If node IsNot Nothing Then
                     If log Then
                         If element.Contains("pass") Or element.Contains("salt") Then
-                            If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Saved XML element: " & element & " - Value: ********")
+                            If Log Then _
+                                livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                              "Saved XML element: " & element & " - Value: ********")
                         Else
-                            If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Saved XML element: " & element & " - Value: " & node.InnerText)
+                            If Log Then _
+                                livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                              "Saved XML element: " & element & " - Value: " & node.InnerText)
                         End If
                     End If
 
                     Return node
                 Else
-                    If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML element could not be written (node is null): " & element)
+                    If Log Then _
+                        livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                      "Requested XML element could not be written (node is null): " & element)
                     Return Nothing
                 End If
             Catch genex As Exception
-                If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML element could not be written due to error: " & element, genex.Message)
+                If Log Then _
+                    livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                  "Requested XML element could not be written due to error: " & element, genex.Message)
                 wfails += 1
                 Return Nothing
             End Try
@@ -391,7 +453,8 @@ Namespace Core
         ''' <param name="parent">the parent of the element</param>
         ''' <returns>True if succeed</returns>
         ''' <remarks>Will create the parent/element/attribute if it doesn't exist.</remarks>
-        Public Function writeAttribute(element As String, attribute As String, value As String, Optional ByVal parent As String = "") As Boolean
+        Public Function writeAttribute(element As String, attribute As String, value As String,
+                                       Optional ByVal parent As String = "") As Boolean
             If wfails >= MAX_FAIL_WRITE Then Return False : Exit Function
             attribute = attribute.ToLower
             parent = parent.ToLower
@@ -400,13 +463,17 @@ Namespace Core
                 Dim node As XmlElement = Nothing
                 Try
                     If parent = "" Then
-                        If Document.GetElementsByTagName(element).Count > 0 Then node = Document.GetElementsByTagName(element)(0)
+                        If Document.GetElementsByTagName(element).Count > 0 Then _
+                            node = Document.GetElementsByTagName(element)(0)
                     Else
                         CheckParent(parent)
-                        If Document.GetElementsByTagName(parent)(0).Item(element) IsNot Nothing Then node = Document.GetElementsByTagName(parent)(0).Item(element)
+                        If Document.GetElementsByTagName(parent)(0).Item(element) IsNot Nothing Then _
+                            node = Document.GetElementsByTagName(parent)(0).Item(element)
                     End If
                 Catch ex As Exception
-                    If Log Then livebug.write(loggingLevel.Severe, "fxml - " & Owner, "Error while reading attribute, element or parent doesn't exist?", ex.Message)
+                    If Log Then _
+                        livebug.write(loggingLevel.Severe, "fxml - " & Owner,
+                                      "Error while reading attribute, element or parent doesn't exist?", ex.Message)
                 End Try
 
                 If node Is Nothing Then 'If element doesn't exist, create
@@ -418,7 +485,9 @@ Namespace Core
                         node.AppendChild(newNode)
                         If DirectSave Then save() 'save
                         node = Document.GetElementsByTagName(element)(0)
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Added not existing setting (Parent not provided)")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Added not existing setting (Parent not provided)")
                     Else
                         Dim newNode As System.Xml.XmlElement
                         node = Document.GetElementsByTagName(parent)(0)
@@ -427,17 +496,25 @@ Namespace Core
                         node.AppendChild(newNode)
                         If DirectSave Then save() 'save
                         node = Document.GetElementsByTagName(parent)(0).Item(element)
-                        If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Added not existing setting (Parent provided)")
+                        If Log Then _
+                            livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                          "Added not existing setting (Parent provided)")
                     End If
                 End If
 
                 node.SetAttribute(attribute, value)
 
-                If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Saved XML attribute: " & element & " - Attribute: " & attribute & " - Value: " & node.InnerText)
+                If Log Then _
+                    livebug.write(loggingLevel.Fine, "fxml - " & Owner,
+                                  "Saved XML attribute: " & element & " - Attribute: " & attribute & " - Value: " &
+                                  node.InnerText)
                 Return True
 
             Catch genex As Exception
-                If Log Then livebug.write(loggingLevel.Warning, "fxml - " & Owner, "Requested XML attribute could not be written due to error: " & element & " - Attribute: " & attribute, genex.Message)
+                If Log Then _
+                    livebug.write(loggingLevel.Warning, "fxml - " & Owner,
+                                  "Requested XML attribute could not be written due to error: " & element &
+                                  " - Attribute: " & attribute, genex.Message)
                 wfails += 1
                 Return False
             End Try
@@ -450,9 +527,13 @@ Namespace Core
         ''' <param name="create">if the node should be created if it doesn't exist</param>
         ''' <returns>True if the node exists or is created</returns>
         ''' <remarks></remarks>
-        Function CheckParent(parent As String, Optional create As Boolean = True) As Boolean 'Check if a (parent) element exists in the current document
+        Function CheckParent(parent As String, Optional create As Boolean = True) As Boolean _
+            'Check if a (parent) element exists in the current document
             parent = parent.ToLower
-            If Document.GetElementsByTagName(parent.ToLower) Is Nothing OrElse Document.GetElementsByTagName(parent.ToLower)(0) Is Nothing OrElse Document.GetElementsByTagName(parent.ToLower).Count < 1 Then 'if nothing create
+            If _
+                Document.GetElementsByTagName(parent.ToLower) Is Nothing OrElse
+                Document.GetElementsByTagName(parent.ToLower)(0) Is Nothing OrElse
+                Document.GetElementsByTagName(parent.ToLower).Count < 1 Then 'if nothing create
                 If create Then CreateParent(parent) Else Return False 'if create = true, create the parent node.
             End If
             Return True
@@ -485,7 +566,10 @@ Namespace Core
             Try
                 Return Document.GetElementsByTagName(element)(0)
             Catch ex As Exception
-                If Log Then livebug.write(loggingLevel.Severe, "fxml - " & Owner, "An exception occured while getting an xml element based on the name: element:" & element, ex.Message)
+                If Log Then _
+                    livebug.write(loggingLevel.Severe, "fxml - " & Owner,
+                                  "An exception occured while getting an xml element based on the name: element:" &
+                                  element, ex.Message)
                 Return Nothing
             End Try
         End Function
@@ -494,7 +578,10 @@ Namespace Core
             Try
                 Return Document.GetElementsByTagName(element.ToLower)
             Catch ex As Exception
-                If Log Then livebug.write(loggingLevel.Severe, "fxml - " & Owner, "An exception occured while getting xmlnodelist based on element name: element:" & element, ex.Message)
+                If Log Then _
+                    livebug.write(loggingLevel.Severe, "fxml - " & Owner,
+                                  "An exception occured while getting xmlnodelist based on element name: element:" &
+                                  element, ex.Message)
                 Return Nothing
             End Try
         End Function
@@ -502,10 +589,13 @@ Namespace Core
         Public Function RemoveElement(name As String) As Boolean
             Dim element As XmlElement = Nothing
 
-            If Document.GetElementsByTagName(name) IsNot Nothing AndAlso Document.GetElementsByTagName(name).Count > 0 AndAlso Document.GetElementsByTagName(name)(0) IsNot Nothing Then
+            If _
+                Document.GetElementsByTagName(name) IsNot Nothing AndAlso Document.GetElementsByTagName(name).Count > 0 AndAlso
+                Document.GetElementsByTagName(name)(0) IsNot Nothing Then
                 element = Document.GetElementsByTagName(name)(0)
             Else
-                If Log Then livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Cannot remove item, doesn't exist:" & name)
+                If Log Then _
+                    livebug.write(loggingLevel.Fine, "fxml - " & Owner, "Cannot remove item, doesn't exist:" & name)
                 Return False
                 Exit Function
             End If
@@ -542,7 +632,6 @@ Namespace Core
             End If
             Return True
         End Function
-
     End Class
 
     Public Class CXMLAttribute
