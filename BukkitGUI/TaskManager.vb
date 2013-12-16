@@ -585,9 +585,14 @@ Namespace TaskManager
                         livebug.write(loggingLevel.Fine, "TaskManager", "Restarting server by task", Me.name)
                         If running = True Then
                             Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
-                            If mf IsNot Nothing Then mf.restart_server() Else livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                            If mf IsNot Nothing Then
+                                mf.stop_server()
+                                Threading.Thread.Sleep(10000) 'workaround for starting server while old server hadn't stopped yet
+                                mf.start_server()
+                            Else
+                                livebug.write(loggingLevel.Warning, "TaskManager", "Mainform not found, cancelling execution.", Me.name)
+                            End If
                         End If
-
                     Case action.restart_server_brute
                         livebug.write(loggingLevel.Fine, "TaskManager", "Restarting server brute!", Me.name)
                         If server.running Then
