@@ -218,12 +218,12 @@ Namespace MCInterop
                     .StandardErrorEncoding = System.Text.Encoding.UTF8
                     .StandardOutputEncoding = System.Text.Encoding.UTF8
                     .UseShellExecute = False
-                    .WorkingDirectory = common.Server_root
+                    .WorkingDirectory = Common.ServerRoot
                 End With
                 livebug.write(loggingLevel.Fine, "Server", "Starting process")
                 If p.StartInfo.FileName IsNot Nothing Then p.Start() Else _
-                    MessageBox.Show(lr("Could not start the process - no executable given"),
-                                    lr("Could not start server"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(Lr("Could not start the process - no executable given"),
+                                    Lr("Could not start server"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 livebug.write(loggingLevel.Fine, "Server", "Process started")
                 _host = p
                 ServerStart_Common()
@@ -232,23 +232,23 @@ Namespace MCInterop
                 If p IsNot Nothing AndAlso p.Id > 0 Then Return (p.Id) Else Return 0
             Catch winex As System.ComponentModel.Win32Exception
                 MessageBox.Show(
-                    lr(
+                    Lr(
                         "The server could not be started. It seems like you don't have permissions to access needed files. Try running the GUI as administator"),
-                    lr("File I/O error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Lr("File I/O error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 livebug.write(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & winex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
             Catch ioex As IO.IOException
                 MessageBox.Show(
-                    lr(
+                    Lr(
                         "The server could not be started. It seems like you don't have permissions to access needed files. Try running the GUI as administator"),
-                    lr("File I/O error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Lr("File I/O error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 livebug.write(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & ioex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
             Catch pex As Security.SecurityException
                 MessageBox.Show(
-                    lr(
+                    Lr(
                         "The server could not be started. It seems like you don't have permissions to do this. Try running the GUI as administator"),
-                    lr("Insufficient rights"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Lr("Insufficient rights"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 livebug.write(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & pex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
             Catch ex As Exception
@@ -270,9 +270,9 @@ Namespace MCInterop
 
                 If Not FileIO.FileSystem.FileExists(Esa.executable) Then
                     MessageBox.Show(
-                        lr(
+                        Lr(
                             "The program couldn't find this executable: " & Esa.executable & vbCrLf &
-                            "Server start cancelled"), lr("File not found"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            "Server start cancelled"), Lr("File not found"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                     livebug.write(loggingLevel.Warning, "Server",
                                   "File not found, server start cancelled:" & Esa.executable)
                     Return 0
@@ -291,11 +291,11 @@ Namespace MCInterop
                     .RedirectStandardError = True
                     .RedirectStandardInput = True
                     .RedirectStandardOutput = True
-                    System.Console.InputEncoding = System.Text.Encoding.GetEncoding(common.Server_encoding)
-                    .StandardErrorEncoding = System.Text.Encoding.GetEncoding(common.Server_encoding)
-                    .StandardOutputEncoding = System.Text.Encoding.GetEncoding(common.Server_encoding)
+                    System.Console.InputEncoding = System.Text.Encoding.GetEncoding(Common.ServerEncoding)
+                    .StandardErrorEncoding = System.Text.Encoding.GetEncoding(Common.ServerEncoding)
+                    .StandardOutputEncoding = System.Text.Encoding.GetEncoding(Common.ServerEncoding)
                     .UseShellExecute = False
-                    .WorkingDirectory = common.Server_root
+                    .WorkingDirectory = Common.ServerRoot
                 End With
                 livebug.write(loggingLevel.Fine, "Server", "Starting process")
                 p.Start()
@@ -407,15 +407,15 @@ Namespace MCInterop
                             csw = _host.StandardInput
 
                         Dim buffer() As Byte =
-                                System.Text.Encoding.GetEncoding(common.Server_encoding).GetBytes(command & vbCr)
+                                System.Text.Encoding.GetEncoding(Common.ServerEncoding).GetBytes(command & vbCr)
                         csw.BaseStream.Write(buffer, 0, buffer.Length)
                         csw.BaseStream.Flush()
 
                         Return True
                     Else
                         If Not suspressErrors Then _
-                            MessageBox.Show(lr("The server should be running before you can send commands."),
-                                            lr("Could not send command"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            MessageBox.Show(Lr("The server should be running before you can send commands."),
+                                            Lr("Could not send command"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Return False
                     End If
                 Else
@@ -425,8 +425,8 @@ Namespace MCInterop
             Catch ex As Exception
                 If Not suspressErrors Then _
                     MessageBox.Show(
-                        lr("The command could not be sent due to an error. See the log file for more information"),
-                        lr("Could not send command"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Lr("The command could not be sent due to an error. See the log file for more information"),
+                        Lr("Could not send command"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 livebug.write(loggingLevel.Severe, "Server", "Could not send command """ & command & """ exception",
                               ex.Message)
                 Return False

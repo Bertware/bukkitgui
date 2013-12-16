@@ -20,7 +20,7 @@ Namespace Core
             Critical
         End Enum
 
-        Public log_file As String = common.Logging_path & "/BukkitGUI.log"
+        Public log_file As String = common.LoggingPath & "/BukkitGUI.log"
         Dim tls As TextWriterTraceListener
         Dim fs As Stream
         Dim sw As StreamWriter
@@ -31,11 +31,11 @@ Namespace Core
         ''' </summary>
         ''' <remarks>This routine should be executed first.</remarks>
         Public Sub init()
-            log_file = common.Logging_path & "/BukkitGUI.log"
+            log_file = common.LoggingPath & "/BukkitGUI.log"
             'this module is initialized before the common module. So the folder needs to be created if not present
             Try
-                If Not FileIO.FileSystem.DirectoryExists(common.Logging_path) Then _
-                    FileIO.FileSystem.CreateDirectory(common.Logging_path)
+                If Not FileIO.FileSystem.DirectoryExists(common.LoggingPath) Then _
+                    FileIO.FileSystem.CreateDirectory(common.LoggingPath)
 
                 fs = New FileStream(log_file, FileMode.Create)
                 sw = New StreamWriter(fs)

@@ -8,9 +8,9 @@ Namespace Core
     ''' This module features commonly used routines, and also manages the folders used by the program
     ''' </summary>
     ''' <remarks></remarks>
-    Module common
-        Public Const Server_encoding = "utf-8" 'ISO-8859-1
-        Public Const HKCU_SOFTWARE = "Software\Bertware\BukkitGUI\"
+    Module Common
+        Public Const ServerEncoding = "utf-8" 'ISO-8859-1
+        Public Const RegistryHkcuSoftware = "Software\Bertware\BukkitGUI\"
         'path for configuration etc. are stored here
         'note:
         'Before usage in a module, the local copy of the string value should be updated in the init routine, as the location might be changed to local
@@ -18,27 +18,27 @@ Namespace Core
 
 
         'GENERAL NEEDED VARIABLES =========================================================================================================
-        Public ReadOnly Local_path As String = Path.Combine(My.Application.Info.DirectoryPath, "BukkitGUI") _
+        Public ReadOnly LocalPath As String = Path.Combine(My.Application.Info.DirectoryPath, "BukkitGUI") _
         'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings
-        Public ReadOnly _
-            Appdata_path As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        Public ReadOnly AppdataPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                                   "Bertware/BukkitGUI") _
         'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings
 
-        Public Base_path As String = Appdata_path _
+        Public BasePath As String = AppdataPath
         'base path. Can be changed to [currentdirectory]/BukkitGUI for local settings. Default is appdata.
 
-        Public Cache_path As String = Path.Combine(Base_path, "Cache") 'contains cached data
-        Public Logging_path As String = Path.Combine(Base_path, "Logging") 'contains logs
-        Public Tmp_path As String = Path.Combine(Base_path, "Tmp") 'Contains temporary data, like updates
-        Public Config_path As String = Path.Combine(Base_path, "Config") _
+        Public CachePath As String = Path.Combine(BasePath, "Cache") 'contains cached data
+        Public LoggingPath As String = Path.Combine(BasePath, "Logging") 'contains logs
+        Public TmpPath As String = Path.Combine(BasePath, "Tmp") 'Contains temporary data, like updates
+        Public ConfigPath As String = Path.Combine(BasePath, "Config")
         'Contains config, server configs, backup configs, schedules
-        Public Server_root As String = My.Application.Info.DirectoryPath
-        Public isRunningLight As Boolean = False
 
-        Public mainwinhnd As IntPtr
+        Public ServerRoot As String = My.Application.Info.DirectoryPath
+        Public IsRunningLight As Boolean = False
 
-        Public Localization_path As String = Path.Combine(Appdata_path, "Localization") 'Contains language files
+        Public MainWindowHandle As IntPtr
+
+        Public LocalizationPath As String = Path.Combine(AppdataPath, "Localization") 'Contains language files
 
         'END OF GENERAL NEEDED VARIABLES =========================================================================================================
 
@@ -48,7 +48,7 @@ Namespace Core
         ''' <value></value>
         ''' <returns>True if 64 bit</returns>
         ''' <remarks></remarks>
-        Public ReadOnly Property Is64BitOS As Boolean
+        Public ReadOnly Property Is64BitOs As Boolean
             Get
                 Return FileIO.FileSystem.DirectoryExists("C:/Program Files (x86)/")
             End Get
@@ -61,7 +61,7 @@ Namespace Core
         Public Sub Init()
 
             If filelocation.location = filelocation.filelocation.local_files Then
-                If Not FileIO.FileSystem.DirectoryExists(Local_path) Then FileIO.FileSystem.CreateDirectory(Local_path)
+                If Not FileIO.FileSystem.DirectoryExists(LocalPath) Then FileIO.FileSystem.CreateDirectory(LocalPath)
             End If
 
             updateLocations()
@@ -73,15 +73,15 @@ Namespace Core
         ''' Update the location variables, needed after the filelocation is updated
         ''' </summary>
         ''' <remarks>the localization folder is always located in the appdata folder</remarks>
-        Public Sub updateLocations()
+        Public Sub UpdateLocations()
             livebug.write(loggingLevel.Fine, "Common", "Updating locations...")
-            Logging_path = Path.Combine(Base_path, "Logging") 'contains logs
-            Tmp_path = Path.Combine(Base_path, "Tmp") 'Contains temporary data, like updates
-            Config_path = Path.Combine(Base_path, "Config") 'Contains config, server configs, backup configs, schedules
-            Cache_path = Path.Combine(Base_path, "Cache") 'contains cached data
-            Localization_path = Path.Combine(Base_path, "Localization") 'Contains language files
+            LoggingPath = Path.Combine(BasePath, "Logging") 'contains logs
+            TmpPath = Path.Combine(BasePath, "Tmp") 'Contains temporary data, like updates
+            ConfigPath = Path.Combine(BasePath, "Config") 'Contains config, server configs, backup configs, schedules
+            CachePath = Path.Combine(BasePath, "Cache") 'contains cached data
+            LocalizationPath = Path.Combine(BasePath, "Localization") 'Contains language files
 
-            For Each folder In {Logging_path, Tmp_path, Config_path, Localization_path, Cache_path} _
+            For Each folder In {LoggingPath, TmpPath, ConfigPath, LocalizationPath, CachePath} _
                 'Check if all paths are available. If a folder doesn't exist, create it.
                 Try
                     If Not FileIO.FileSystem.DirectoryExists(folder) Then
@@ -208,10 +208,10 @@ Namespace Core
                     livebug.write(loggingLevel.Warning, "Common",
                                   "Couldn't create file because of access exception: " & path, uac.Message)
                 MessageBox.Show(
-                    lr(
+                    Lr(
                         "This file couldn't be created:" & path &
                         ". Probably you don't have the required permissions. Try running as administrator"),
-                    lr("Couldn't create file"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Lr("Couldn't create file"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
             Catch ex As Exception
                 If Not disable_logging Then _
@@ -243,7 +243,7 @@ Namespace Core
         ''' <param name="array">The array to convert</param>
         ''' <returns>The array as string</returns>
         ''' <remarks></remarks>
-        Public Function serialize(array() As String) As String
+        Public Function Serialize(array() As String) As String
             Try
                 If array Is Nothing OrElse array.Length < 1 Then
                     Return ""
@@ -271,7 +271,7 @@ Namespace Core
         ''' <param name="separator">The character used to separate items</param>
         ''' <returns>The array as string</returns>
         ''' <remarks></remarks>
-        Public Function serialize(array() As String, separator As Char) As String
+        Public Function Serialize(array() As String, separator As Char) As String
             Try
                 If array Is Nothing OrElse array.Length < 1 Then
                     Return ""
@@ -298,7 +298,7 @@ Namespace Core
         ''' <param name="list">The list to convert</param>
         ''' <returns>The list as string</returns>
         ''' <remarks></remarks>
-        Public Function serialize(list As List(Of String)) As String
+        Public Function Serialize(list As List(Of String)) As String
             Try
                 If list Is Nothing OrElse list.Count < 1 Then
                     Return ""
@@ -326,7 +326,7 @@ Namespace Core
         ''' <param name="separator">The character used to separate items</param>
         ''' <returns>The list as string</returns>
         ''' <remarks></remarks>
-        Public Function serialize(list As List(Of String), separator As Char) As String
+        Public Function Serialize(list As List(Of String), separator As Char) As String
             Try
                 If list Is Nothing OrElse list.Count < 1 Then
                     Return ""
@@ -373,8 +373,9 @@ Namespace Core
         '=================================================================================================================================================
         WithEvents Adom As AppDomain = AppDomain.CurrentDomain
 
-        Public Function LoadDLL(sender As Object, args As ResolveEventArgs) As System.Reflection.Assembly _
+        Public Function LoadDll(sender As Object, args As ResolveEventArgs) As System.Reflection.Assembly _
             Handles Adom.AssemblyResolve 'Load embedded DLLs
+
             ' livebug.write(loggingLevel.Fine, "Common", "DLL requested:" & args.Name)
 
             Dim resourceName As [String] = "Net.Bertware.BukkitGUI." & New AssemblyName(args.Name).Name & ".dll"
@@ -386,7 +387,7 @@ Namespace Core
             End Using
         End Function
 
-        Public Sub exhandle(sender As Object, e As System.UnhandledExceptionEventArgs) Handles Adom.UnhandledException _
+        Public Sub HandleUnhandledException(sender As Object, e As System.UnhandledExceptionEventArgs) Handles Adom.UnhandledException _
             'Catch unhandled exceptions, and log them. Also ask user to report them.
             livebug.WriteUnhandledError(e)
         End Sub
@@ -411,15 +412,15 @@ Namespace Core
         End Function
 
         Public Sub Reset()
-            If FileIO.FileSystem.DirectoryExists(Base_path) Then _
-                FileIO.FileSystem.DeleteDirectory(Base_path, FileIO.DeleteDirectoryOption.DeleteAllContents)
+            If FileIO.FileSystem.DirectoryExists(BasePath) Then _
+                FileIO.FileSystem.DeleteDirectory(BasePath, FileIO.DeleteDirectoryOption.DeleteAllContents)
         End Sub
 
         ''' <summary>
         ''' Stop/Close everything
         ''' </summary>
         ''' <remarks></remarks>
-        Public Sub dispose()
+        Public Sub Dispose()
             performance.disable()
 
             livebug.dispose()
@@ -470,9 +471,9 @@ Namespace Core
 
         Public Function GetSpaceInDrive(DriveLetter As String) As UInt64
             Try
-                Dim Drv As New DriveInfo(DriveLetter)
-                If Drv.IsReady Then
-                    Return Drv.AvailableFreeSpace
+                Dim driveInfo As DriveInfo = New DriveInfo(DriveLetter)
+                If driveInfo.IsReady Then
+                    Return driveInfo.AvailableFreeSpace
                     Exit Function
                 End If
                 Return 0

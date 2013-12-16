@@ -117,7 +117,7 @@ Public Class SplashScreen
 
         setload("Initializing localization", 50) 'set UI (text and progress %)
         Try
-            If Not common.isRunningLight Then language.init() _
+            If Not common.isRunningLight Then language.Init() _
             'Initialize the localization module, this allows translations of the GUI.
         Catch ex As Exception
             livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Language")

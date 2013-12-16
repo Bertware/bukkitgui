@@ -8,7 +8,7 @@ Namespace TaskManager
     Public Module TaskManager
         Public tasks As List(Of task)
 
-        Public task_xml_path As String = common.Config_path & "/tasks.xml"
+        Public task_xml_path As String = common.ConfigPath & "/tasks.xml"
         Public task_xml As fxml
 
         Public Event TasksLoaded()
@@ -614,7 +614,7 @@ Namespace TaskManager
                     Case action.start_server
                         livebug.write(loggingLevel.Fine, "TaskManager", "Starting server by task", Me.name)
                         If server.running = False Then
-                            Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
+                            Dim mf As mainform = mainform.FromHandle(common.MainWindowHandle)
                             If mf IsNot Nothing Then mf.start_server() Else _
                                 livebug.write(loggingLevel.Warning, "TaskManager",
                                               "Mainform not found, cancelling execution.", Me.name)
@@ -623,7 +623,7 @@ Namespace TaskManager
                     Case action.stop_server
                         livebug.write(loggingLevel.Fine, "TaskManager", "Stopping server by task", Me.name)
                         If running = True Then
-                            Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
+                            Dim mf As mainform = mainform.FromHandle(common.MainWindowHandle)
                             If mf IsNot Nothing Then mf.stop_server() Else _
                                 livebug.write(loggingLevel.Warning, "TaskManager",
                                               "Mainform not found, cancelling execution.", Me.name)
@@ -632,7 +632,7 @@ Namespace TaskManager
                     Case action.restart_server
                         livebug.write(loggingLevel.Fine, "TaskManager", "Restarting server by task", Me.name)
                         If running = True Then
-                            Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
+                            Dim mf As mainform = mainform.FromHandle(common.MainWindowHandle)
                             If mf IsNot Nothing Then
                                 mf.stop_server()
                                 Threading.Thread.Sleep(10000) _
@@ -650,7 +650,7 @@ Namespace TaskManager
                                 server.host.Kill()
                             End If
                         End If
-                        Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
+                        Dim mf As mainform = mainform.FromHandle(common.MainWindowHandle)
                         If mf IsNot Nothing Then mf.start_server() Else _
                             livebug.write(loggingLevel.Warning, "TaskManager",
                                           "Mainform not found, cancelling execution.", Me.name)
@@ -677,7 +677,7 @@ Namespace TaskManager
                             Next
                         End If
                     Case action.close_gui
-                        Dim mf As mainform = mainform.FromHandle(common.mainwinhnd)
+                        Dim mf As mainform = mainform.FromHandle(common.MainWindowHandle)
                         If running = True Then
                             If mf IsNot Nothing Then mf.stop_server() Else _
                                 livebug.write(loggingLevel.Warning, "TaskManager",
@@ -764,7 +764,7 @@ Namespace TaskManager
                 text = text.Replace("%server-running%", server.running.ToString.ToLower)
 
                 If playerList IsNot Nothing Then _
-                    text = text.Replace("%players%", common.serialize(server.playerNameList, ",")) Else _
+                    text = text.Replace("%players%", common.Serialize(server.playerNameList, ",")) Else _
                     text = text.Replace("%players%", "INVALID")
                 If playerList IsNot Nothing Then text = text.Replace("%playercount%", server.playerList.Count) Else _
                     text = text.Replace("%players%", "0")

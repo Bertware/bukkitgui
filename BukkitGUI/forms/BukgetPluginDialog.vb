@@ -74,10 +74,10 @@ Public Class BukgetPluginDialog
         lblStatus.Text = lr("Status:") & " " & Plugin.status.ToString
         If Plugin.BukkitDevLink IsNot Nothing Then ALlblWebsite.Text = lr("Website:") & " " & Plugin.BukkitDevLink
 
-        If Plugin.Author IsNot Nothing Then lblAuthors.Text = lr("Authors:") & " " & common.serialize(Plugin.Author)
+        If Plugin.Author IsNot Nothing Then lblAuthors.Text = lr("Authors:") & " " & common.Serialize(Plugin.Author)
 
         If Plugin.Category IsNot Nothing Then _
-            lblcategories.Text = lr("Categories:") & " " & serialize(Plugin.Category).ToString.Replace("_", " ")
+            lblcategories.Text = lr("Categories:") & " " & Serialize(Plugin.Category).ToString.Replace("_", " ")
 
         For Each Version As PluginVersion In Plugin.versions
             Dim str(5) As String

@@ -9,7 +9,7 @@ Namespace Core
         ' Due to this, translations and config aren't available to use here.
         '
 
-        Public ReadOnly filelocation_xml As String = common.Appdata_path & "/filelocation.xml"
+        Public ReadOnly filelocation_xml As String = common.AppdataPath & "/filelocation.xml"
 
         Enum filelocation
             global_files
@@ -22,7 +22,7 @@ Namespace Core
 
         Public Sub init()
             Try
-                If IsRunningOnMono Then Base_path = Local_path : common.updateLocations() : Exit Sub
+                If IsRunningOnMono Then BasePath = LocalPath : common.updateLocations() : Exit Sub
 
                 If Not FileIO.FileSystem.FileExists(filelocation_xml) Then
                     Debug.WriteLine("filelocation.xml missing")
@@ -37,18 +37,18 @@ Namespace Core
 
                 Select Case location
                     Case filelocation.global_files
-                        Base_path = Appdata_path
+                        BasePath = AppdataPath
                         common.updateLocations()
-                        Debug.WriteLine("file location set to " & Base_path)
+                        Debug.WriteLine("file location set to " & BasePath)
                     Case filelocation.local_files
-                        Base_path = Local_path
+                        BasePath = LocalPath
                         common.updateLocations()
-                        Debug.WriteLine("file location set to " & Base_path)
+                        Debug.WriteLine("file location set to " & BasePath)
                 End Select
             Catch ex As Exception
-                Base_path = Local_path
+                BasePath = LocalPath
                 common.updateLocations()
-                Debug.WriteLine("AppData unavailable: file location set to " & Base_path)
+                Debug.WriteLine("AppData unavailable: file location set to " & BasePath)
             End Try
         End Sub
 
@@ -56,11 +56,11 @@ Namespace Core
 
             Get
                 Try
-                    If Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE) Is Nothing Then _
-                        Registry.CurrentUser.CreateSubKey(HKCU_SOFTWARE)
+                    If Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware) Is Nothing Then _
+                        Registry.CurrentUser.CreateSubKey(RegistryHkcuSoftware)
 
                     Dim regKey As Microsoft.Win32.RegistryKey
-                    regKey = Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE, True)
+                    regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                     If regKey.GetValue(REG_VAL) Is Nothing Then 'If still on the old system, use the old system
 
                         If IsRunningOnMono Then Return filelocation.local_files : Exit Property
@@ -110,25 +110,25 @@ Namespace Core
             End Get
 
             Set(value As filelocation)
-                If Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE) Is Nothing Then _
-                    Registry.CurrentUser.CreateSubKey(HKCU_SOFTWARE)
+                If Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware) Is Nothing Then _
+                    Registry.CurrentUser.CreateSubKey(RegistryHkcuSoftware)
 
                 If value = filelocation.local_files Then
                     Try
                         livebug.write(loggingLevel.Fine, "FileLocation", "Changing file location to local")
                         livebug.dispose()
 
-                        If Not IO.Directory.Exists(Local_path) Then IO.Directory.CreateDirectory(Local_path)
-                        FileIO.FileSystem.CopyDirectory(common.Appdata_path, common.Local_path, True)
+                        If Not IO.Directory.Exists(LocalPath) Then IO.Directory.CreateDirectory(LocalPath)
+                        FileIO.FileSystem.CopyDirectory(Common.AppdataPath, Common.LocalPath, True)
 
                         Dim regKey As Microsoft.Win32.RegistryKey
-                        regKey = Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE, True)
+                        regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                         regKey.SetValue(REG_VAL, REG_VAL_LOCAL)
 
                         MessageBox.Show(
-                            lr(
+                            Lr(
                                 "A restart is required in order for the changes to take effect. The GUI will now close itself"),
-                            lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            Lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
                         For Each Frm As Form In My.Application.OpenForms
                             Frm.Close()
                         Next
@@ -165,20 +165,20 @@ Namespace Core
                         livebug.write(loggingLevel.Fine, "FileLocation", "Changing file location to global")
                         livebug.dispose()
 
-                        If FileIO.FileSystem.DirectoryExists(common.Local_path) Then _
-                            FileIO.FileSystem.CopyDirectory(common.Local_path, common.Appdata_path, True)
-                        If FileIO.FileSystem.DirectoryExists(common.Local_path) Then _
-                            FileIO.FileSystem.DeleteDirectory(common.Local_path,
+                        If FileIO.FileSystem.DirectoryExists(Common.LocalPath) Then _
+                            FileIO.FileSystem.CopyDirectory(Common.LocalPath, Common.AppdataPath, True)
+                        If FileIO.FileSystem.DirectoryExists(Common.LocalPath) Then _
+                            FileIO.FileSystem.DeleteDirectory(Common.LocalPath,
                                                               FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                         Dim regKey As Microsoft.Win32.RegistryKey
-                        regKey = Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE, True)
+                        regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                         regKey.SetValue(REG_VAL, REG_VAL_GLOBAL)
 
                         MessageBox.Show(
-                            lr(
+                            Lr(
                                 "A restart is required in order for the changes to take effect. The GUI will now close itself"),
-                            lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            Lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
                         For Each Frm As Form In My.Application.OpenForms
                             thds_closeform(Frm)
                         Next

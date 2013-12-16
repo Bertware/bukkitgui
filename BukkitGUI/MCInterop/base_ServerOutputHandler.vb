@@ -660,7 +660,7 @@ Namespace MCInterop
                 'if something went wrong, exit
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking player lists...")
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                              "Players online now:" & common.serialize(olist, ";"))
+                              "Players online now:" & common.Serialize(olist, ";"))
                 'Check 1: Duplicate Items
                 livebug.write(loggingLevel.Fine, "ServerOutputHandler",
                               "Checking lists (1/4) - players that are show multiple times")

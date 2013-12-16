@@ -57,7 +57,7 @@ Public Class FileDownloader
             old_size_2 = 0
             received = 0
 
-            tmptarget = common.Tmp_path & "/download.tmp"
+            tmptarget = common.TmpPath & "/download.tmp"
 
             webc = New WebClient
             webc.Headers = serverinteraction.header

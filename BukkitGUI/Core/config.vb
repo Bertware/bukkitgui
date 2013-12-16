@@ -14,7 +14,7 @@ Namespace Core
         Dim cfile As fxml
 
         Const CURR_VER As String = "1.2" 'Minimal version for the config xml file
-        Private config_XML As String = common.Config_path & "/config.xml"
+        Private config_XML As String = common.ConfigPath & "/config.xml"
 
         Public ReadOnly Property FxmlHandle As fxml
             Get
@@ -29,7 +29,7 @@ Namespace Core
         ''' <returns>True on success</returns>
         ''' <remarks>Must be done before anything else</remarks>
         Public Function init() As Boolean
-            config_XML = common.Config_path & "/config.xml"
+            config_XML = common.ConfigPath & "/config.xml"
 
             If Not FileIO.FileSystem.FileExists(config_XML) Then _
                 common.Create_file(config_XML, "<config version=""" & CURR_VER & """></config>")

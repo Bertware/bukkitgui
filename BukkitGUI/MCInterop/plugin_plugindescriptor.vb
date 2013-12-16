@@ -77,7 +77,7 @@ Namespace MCInterop
                 If path.Contains(":\") = False Then path = plugin_dir & "\" & path 'relative directory detection
 
                 Dim fi As New FileInfo(path)
-                Dim nfi As New FileInfo(common.Cache_path & "/plugins/" & fi.Name & "/plugin.yml")
+                Dim nfi As New FileInfo(common.CachePath & "/plugins/" & fi.Name & "/plugin.yml")
 
                 livebug.write(loggingLevel.Fine, "plugindescriptor",
                               "loading plugin (step 1/2): " & fi.Name & " - cache allowed:" & read_cache)
@@ -89,12 +89,12 @@ Namespace MCInterop
                     If path Is Nothing OrElse path = "" OrElse fi.Exists = False Then Return Nothing : Exit Function
                     livebug.write(loggingLevel.Fine, "plugindescriptor",
                                   "Plugin data not available in cache or cache not allowed. Building cache for plugin...")
-                    Utilities.compression.decompress(common.Tmp_path & "/plugin", path)
-                    If Not FileIO.FileSystem.FileExists(common.Tmp_path & "/plugin/plugin.yml") Then _
+                    Utilities.compression.decompress(common.TmpPath & "/plugin", path)
+                    If Not FileIO.FileSystem.FileExists(common.TmpPath & "/plugin/plugin.yml") Then _
                         Return Nothing : Exit Function
-                    common.SafeFileCopy(common.Tmp_path & "/plugin/plugin.yml", nfi.FullName, True)
-                    If FileIO.FileSystem.DirectoryExists(common.Tmp_path & "/plugin") Then _
-                        FileIO.FileSystem.DeleteDirectory(common.Tmp_path & "/plugin",
+                    common.SafeFileCopy(common.TmpPath & "/plugin/plugin.yml", nfi.FullName, True)
+                    If FileIO.FileSystem.DirectoryExists(common.TmpPath & "/plugin") Then _
+                        FileIO.FileSystem.DeleteDirectory(common.TmpPath & "/plugin",
                                                           FileIO.DeleteDirectoryOption.DeleteAllContents)
                 End If
 

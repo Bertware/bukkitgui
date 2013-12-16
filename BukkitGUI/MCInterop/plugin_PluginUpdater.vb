@@ -97,8 +97,8 @@ Namespace MCInterop
 
             If targetlocation = "" Then targetlocation = plugin_dir & "/" & version.filename
 
-            Dim zipfile As String = common.Tmp_path & "install.zip"
-            Dim extraction As String = common.Tmp_path & "/install/"
+            Dim zipfile As String = common.TmpPath & "install.zip"
+            Dim extraction As String = common.TmpPath & "/install/"
 
             Dim name As String = version.version
             If version.pluginname IsNot Nothing AndAlso version.pluginname <> "" Then _

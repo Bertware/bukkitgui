@@ -6,7 +6,7 @@ Namespace Utilities
     Public Module BackupManager
         Public backups As List(Of BackupSetting)
 
-        Public backup_xml_path As String = common.Config_path & "/backups.xml"
+        Public backup_xml_path As String = common.ConfigPath & "/backups.xml"
         Public backup_xml As fxml
 
         Public Event BackupsLoaded()
@@ -81,7 +81,7 @@ Namespace Utilities
                 toplevelelement.SetAttribute("name", bs.name)
 
                 Dim folders_element As XmlElement = backup_xml.Document.CreateElement("folders")
-                folders_element.InnerText = common.serialize(bs.folders, ";")
+                folders_element.InnerText = common.Serialize(bs.folders, ";")
                 toplevelelement.AppendChild(folders_element)
 
                 Dim destination_element As XmlElement = backup_xml.Document.CreateElement("destination")
@@ -246,7 +246,7 @@ Namespace Utilities
             Try
 
                 Dim foldername As String = CreateName()
-                Dim tmp_bu As String = My.Computer.FileSystem.CombinePath(common.Tmp_path, foldername)
+                Dim tmp_bu As String = My.Computer.FileSystem.CombinePath(common.TmpPath, foldername)
 
                 Dim dest_hnd As String = ParseParameters(destination)
 
@@ -434,10 +434,10 @@ Namespace Utilities
                 text = text.Replace("%server-running%", server.running.ToString.ToLower)
 
                 If playerList IsNot Nothing Then _
-                    text = text.Replace("%players%", common.serialize(server.playerNameList, ",")) Else _
+                    text = text.Replace("%players%", common.Serialize(server.playerNameList, ",")) Else _
                     text = text.Replace("%players%", "INVALID")
                 If playerList IsNot Nothing Then _
-                    text = text.Replace("%playercount%", common.serialize(server.playerNameList, ",")) Else _
+                    text = text.Replace("%playercount%", common.Serialize(server.playerNameList, ",")) Else _
                     text = text.Replace("%players%", "INVALID")
                 If playerList IsNot Nothing AndAlso playerList.Count > 0 Then _
                     text = text.Replace("%lastplayer%", server.playerList.Last.name) Else _

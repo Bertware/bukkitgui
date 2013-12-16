@@ -163,7 +163,7 @@ Public Class PluginUpdater
                                 lvi =
                                     New ListViewItem(
                                         {entry.Key.name, entry.Key.version, entry.Value.versions(0).version,
-                                         common.serialize(entry.Value.versions(0).builds, ",")})
+                                         common.Serialize(entry.Value.versions(0).builds, ",")})
                                 lvi.Tag = "TRUE"
                                 If common.CheckVersion(entry.Key.version, entry.Value.versions(0).version) = 1 Then
                                     lvi.Checked = True

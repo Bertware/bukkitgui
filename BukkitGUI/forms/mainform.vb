@@ -52,7 +52,7 @@ KeyUp
             livebug.write(loggingLevel.Fine, "mainform", "Starting to load mainform")
             Me.Text = caption
 
-            common.mainwinhnd = Me.Handle
+            common.MainWindowHandle = Me.Handle
             livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
             'Removing disabled tasks + altering layout of general tab
@@ -238,12 +238,12 @@ KeyUp
             'Though, some important are done this way
             'This allows to remove the handlers dynamicly
 
-            If common.mainwinhnd <> Me.Handle Then _
-                livebug.write(loggingLevel.Warning, "mainform", "Mainform window handle save invalid!") : _
-                    common.mainwinhnd = Me.Handle : _
-                    livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
+            If common.MainWindowHandle <> Me.Handle Then _
+                livebug.write(loggingLevel.Warning, "mainform", "Mainform window handle save invalid!") _
+                  : common.MainWindowHandle = Me.Handle _
+                  : livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
-            AddHandler Me.FormClosed, AddressOf common.dispose
+            AddHandler Me.FormClosed, AddressOf common.Dispose
             AddHandler Me.FormClosed, AddressOf KillThreads
 
             AddHandler tmr_update_stats.Elapsed, AddressOf hnd_tmr_update_stats
@@ -947,7 +947,7 @@ KeyUp
                 If server.running = False OrElse server.serverOut Is Nothing Then _
                     livebug.write(loggingLevel.Warning, "mainform",
                                   "Output thread stopped, server stopped immediatly...") : Exit Sub
-                Dim sr As New StreamReader(server.serverOut, System.Text.Encoding.GetEncoding(common.Server_encoding)) _
+                Dim sr As New StreamReader(server.serverOut, System.Text.Encoding.GetEncoding(common.ServerEncoding)) _
                 'ISO-8859-1
                 While _
                     server.serverOut IsNot Nothing AndAlso server.running AndAlso threads_work AndAlso
@@ -998,7 +998,7 @@ KeyUp
                 If server.running = False OrElse server.serverError Is Nothing Then _
                     livebug.write(loggingLevel.Warning, "mainform", "Error thread stopped, server stopped immediatly...") _
                         : Exit Sub
-                Dim sr As New StreamReader(server.serverError, System.Text.Encoding.GetEncoding(common.Server_encoding))
+                Dim sr As New StreamReader(server.serverError, System.Text.Encoding.GetEncoding(common.ServerEncoding))
                 While _
                     server.serverError IsNot Nothing AndAlso server.running AndAlso threads_work AndAlso
                     server.host.HasExited = False AndAlso sr IsNot Nothing
@@ -1449,8 +1449,8 @@ KeyUp
                 CBSuperstartJavaJRE.SelectedIndex = 0 'set to 0, as this field must always be filled in
 
                 If common.IsRunningOnMono = False Then
-                    TBSuperstartJavaMinRam.Maximum = Math.Round(My.Computer.Info.TotalPhysicalMemory/1048576)
-                    TBSuperstartJavaMaxRam.Maximum = Math.Round(My.Computer.Info.TotalPhysicalMemory/1048576)
+                    TBSuperstartJavaMinRam.Maximum = Math.Round(My.Computer.Info.TotalPhysicalMemory / 1048576)
+                    TBSuperstartJavaMaxRam.Maximum = Math.Round(My.Computer.Info.TotalPhysicalMemory / 1048576)
                 Else
                     TBSuperstartJavaMinRam.Maximum = 32768
                     TBSuperstartJavaMaxRam.Maximum = 32768
@@ -1686,8 +1686,8 @@ KeyUp
                             TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                             BukkitTools.Download(BukkitVersionType.rb, TxtSuperstartJavaJarFile.Text)
                         Else
-                            BukkitTools.Download(BukkitVersionType.rb, common.Server_root & "\craftbukkit.jar")
-                            TxtSuperstartJavaJarFile.Text = common.Server_root & "\craftbukkit.jar"
+                            BukkitTools.Download(BukkitVersionType.rb, common.ServerRoot & "\craftbukkit.jar")
+                            TxtSuperstartJavaJarFile.Text = common.ServerRoot & "\craftbukkit.jar"
                         End If
                         superstart_jar_validate(Nothing, Nothing)
                     Case 1
@@ -1696,8 +1696,8 @@ KeyUp
                             TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                             VanillaTools.Download(TxtSuperstartJavaJarFile.Text)
                         Else
-                            VanillaTools.Download(common.Server_root & "\minecraft_server.jar")
-                            TxtSuperstartJavaJarFile.Text = common.Server_root & "\minecraft_server.jar"
+                            VanillaTools.Download(common.ServerRoot & "\minecraft_server.jar")
+                            TxtSuperstartJavaJarFile.Text = common.ServerRoot & "\minecraft_server.jar"
                         End If
                     Case 2
                         'not supported
@@ -1739,8 +1739,8 @@ KeyUp
                         TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                         BukkitTools.Download(BukkitVersionType.beta, TxtSuperstartJavaJarFile.Text)
                     Else
-                        BukkitTools.Download(BukkitVersionType.beta, common.Server_root & "/craftbukkit.jar")
-                        TxtSuperstartJavaJarFile.Text = common.Server_root & "/craftbukkit.jar"
+                        BukkitTools.Download(BukkitVersionType.beta, common.ServerRoot & "/craftbukkit.jar")
+                        TxtSuperstartJavaJarFile.Text = common.ServerRoot & "/craftbukkit.jar"
                     End If
                     superstart_jar_validate(Nothing, Nothing)
                 Case 1
@@ -1762,8 +1762,8 @@ KeyUp
                         TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                         BukkitTools.Download(BukkitVersionType.dev, TxtSuperstartJavaJarFile.Text)
                     Else
-                        BukkitTools.Download(BukkitVersionType.dev, common.Server_root & "/craftbukkit.jar")
-                        TxtSuperstartJavaJarFile.Text = common.Server_root & "/craftbukkit.jar"
+                        BukkitTools.Download(BukkitVersionType.dev, common.ServerRoot & "/craftbukkit.jar")
+                        TxtSuperstartJavaJarFile.Text = common.ServerRoot & "/craftbukkit.jar"
                     End If
                     superstart_jar_validate(Nothing, Nothing)
                 Case 1
@@ -1787,8 +1787,8 @@ KeyUp
                         BukkitTools.DownloadCustom(NumSuperstartCustomBuild.Value, TxtSuperstartJavaJarFile.Text)
                     Else
                         BukkitTools.DownloadCustom(NumSuperstartCustomBuild.Value,
-                                                   common.Server_root & "/craftbukkit.jar")
-                        TxtSuperstartJavaJarFile.Text = common.Server_root & "/craftbukkit.jar"
+                                                   common.ServerRoot & "/craftbukkit.jar")
+                        TxtSuperstartJavaJarFile.Text = common.ServerRoot & "/craftbukkit.jar"
                     End If
                 Case 1
                     'not supported
@@ -2142,8 +2142,8 @@ KeyUp
         ''' <remarks></remarks>
         Private Sub hnd_PlayerJoin(ByVal e As PlayerJoinEventArgs)
             If e Is Nothing OrElse e.PlayerJoin Is Nothing OrElse e.PlayerJoin.player Is Nothing Then _
-                livebug.write(loggingLevel.Warning, "Mainform", "Player joined - invalid PlayerJoinEventArgs passed!") : _
-                    Exit Sub
+                livebug.write(loggingLevel.Warning, "Mainform", "Player joined - invalid PlayerJoinEventArgs passed!") _
+                  : Exit Sub
             livebug.write(loggingLevel.Fine, "Mainform",
                           "Player joined, event catched by UI. Player:" & e.PlayerJoin.player.name)
             AddPlayer(e.PlayerJoin.player)
@@ -2532,8 +2532,8 @@ KeyUp
                         For Each item As ListViewItem In ALVGeneralPlayers.Items
                             If onlineplayers.Contains(item.SubItems(0).Text) = False Then _
                                 livebug.write(loggingLevel.Fine, "mainform",
-                                              "Player shown but not registered! " & item.SubItems(0).Text) : _
-                                    RemovePlayer(item.SubItems(0).Text)
+                                              "Player shown but not registered! " & item.SubItems(0).Text) _
+                                  : RemovePlayer(item.SubItems(0).Text)
                         Next
 
                     End If
@@ -2921,14 +2921,14 @@ KeyUp
                 If pld.FileCreationDate.Year > 2005 Then
                     lvi =
                         New ListViewItem(
-                            {pld.name, pld.version, common.serialize(pld.authors), pld.description,
+                            {pld.name, pld.version, common.Serialize(pld.authors), pld.description,
                              pld.FileCreationDate.Year.ToString.PadLeft(4, "0") & "/" &
                              pld.FileCreationDate.Month.ToString.PadLeft(2, "0") & "/" &
                              pld.FileCreationDate.Day.ToString.PadLeft(2, "0")})
                 Else
                     lvi =
                         New ListViewItem(
-                            {pld.name, pld.version, common.serialize(pld.authors), pld.description, "unknown"})
+                            {pld.name, pld.version, common.Serialize(pld.authors), pld.description, "unknown"})
                 End If
 
                 lvi.Tag = pld.filename
@@ -2960,7 +2960,7 @@ KeyUp
             LblInfoComputerComputerName.Text = lr("Computer name:") & " " & My.Computer.Name
             LblInfoComputerCPU.Text = lr("CPU:") & " " & WMI.GetprocessorInfo(WMI.processorprop.Name)
             If common.IsRunningOnMono = False Then
-                LblInfoComputerRAM.Text = lr("RAM:") & " " & Math.Round(My.Computer.Info.TotalPhysicalMemory/1024/1024) &
+                LblInfoComputerRAM.Text = lr("RAM:") & " " & Math.Round(My.Computer.Info.TotalPhysicalMemory / 1024 / 1024) &
                                           "MB"
                 LblInfoComputerOS.Text = lr("OS:") & " " & My.Computer.Info.OSFullName
             Else
@@ -3173,7 +3173,7 @@ KeyUp
             ShowInTaskbar = False
             Visible = False
 
-            common.mainwinhnd = Me.Handle
+            common.MainWindowHandle = Me.Handle
             livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
             livebug.write(loggingLevel.Fine, "Mainform", "GUI minimized to tray...")
@@ -3197,7 +3197,7 @@ KeyUp
                     ARTXTServerOutput.SelectionColor = Color.Black
                     ARTXTServerOutput.SelectedText = " "
                     ARTXTServerOutput.SelectedText = ""
-                    common.mainwinhnd = Me.Handle
+                    common.MainWindowHandle = Me.Handle
                     livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
                     livebug.write(loggingLevel.Fine, "Mainform", "Showed GUI from tray...")
@@ -3247,7 +3247,7 @@ KeyUp
             ChkOptionsLightMode.Checked = common.isRunningLight
 
             If Not common.isRunningLight Then
-                Dim current As String = language.current_language
+                Dim current As String = language.CurrentLanguage
                 CBInfoSettingsLanguage.Items.Clear()
                 For Each lang As String In language.languages
                     CBInfoSettingsLanguage.Items.Add(lang)
@@ -3316,7 +3316,7 @@ KeyUp
                 LanguageInstaller.ShowDialog()
                 Settings_init()
             Else
-                language_file = GetLanguageFilePath(CBInfoSettingsLanguage.SelectedItem.ToString)
+                LanguageFile = GetLanguageFilePath(CBInfoSettingsLanguage.SelectedItem.ToString)
                 MessageBox.Show(
                     lr("You changed the language to ") & CBInfoSettingsLanguage.SelectedItem.ToString & vbCrLf &
                     lr("Restart the GUI for the changes to take effect"), lr("Restart required"), MessageBoxButtons.OK,
@@ -3992,7 +3992,7 @@ KeyUp
                     For Each bs As BackupSetting In BackupManager.backups
                         ALVBackups.Items.Add(
                             New ListViewItem(
-                                {bs.name, common.serialize(bs.folders, ","), bs.destination, bs.compression.ToString}))
+                                {bs.name, common.Serialize(bs.folders, ","), bs.destination, bs.compression.ToString}))
                     Next
                 End If
             Catch ex As Exception

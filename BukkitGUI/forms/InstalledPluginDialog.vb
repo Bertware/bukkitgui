@@ -19,17 +19,17 @@ Public Class InstalledPluginDialog
 
         lblName.Text = lr("Name:") & " " & plugin.name
         Me.Text = lr("Plugin details:") & " " & plugin.name
-        LblAuthors.Text = lr("Author(s):") & " " & common.serialize(plugin.authors)
+        LblAuthors.Text = lr("Author(s):") & " " & common.Serialize(plugin.authors)
         LblPath.Text = lr("Path:") & " " & plugin_dir & "/" & plugin.filename
         lblVersion.Text = lr("Version:") & " " & plugin.version
-        lblSoftdepend.Text = lr("Softdepend:") & " " & common.serialize(plugin.softdepend)
+        lblSoftdepend.Text = lr("Softdepend:") & " " & common.Serialize(plugin.softdepend)
         lblNamespace.Text = lr("Main namespace:") & " " & plugin.main
 
         For Each Command As pluginCommand In plugin.commands
             Dim _
                 lvi As _
                     New ListViewItem(
-                        {Command.name, Command.description, Command.usage, common.serialize(Command.aliases)})
+                        {Command.name, Command.description, Command.usage, common.Serialize(Command.aliases)})
             ALVCommands.Items.Add(lvi)
         Next
 

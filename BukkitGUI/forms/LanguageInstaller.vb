@@ -72,7 +72,7 @@ Public Class LanguageInstaller
 
         Dim _
             fd As _
-                New FileDownloader(t.url, common.Localization_path & "/" & t.language & ".xml",
+                New FileDownloader(t.url, common.LocalizationPath & "/" & t.language & ".xml",
                                    lr("Installing language:") & " " & t.language)
         fd.ShowDialog()
 

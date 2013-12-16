@@ -23,7 +23,7 @@ Public Class BackupDialog
         If bs IsNot Nothing Then
             If bs.name IsNot Nothing Then TxtName.Text = bs.name
             If bs.folders IsNot Nothing AndAlso bs.folders.Count > 0 Then _
-                TxtFolders.Text = Core.common.serialize(bs.folders, ";")
+                TxtFolders.Text = Core.common.Serialize(bs.folders, ";")
             If bs.destination IsNot Nothing Then TxtDestination.Text = bs.destination
             ChkCompression.Checked = bs.compression
         End If

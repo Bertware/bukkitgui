@@ -13,7 +13,7 @@ Namespace MCInterop
         Public Event InstalledPluginsLoaded_Base(list As Dictionary(Of String, plugindescriptor))
         Public Event InstalledPluginsLoaded_Full(list As Dictionary(Of String, plugindescriptor))
 
-        Public plugin_dir As String = common.Server_root & "\plugins"
+        Public plugin_dir As String = common.ServerRoot & "\plugins"
 
         Public ReadOnly Property loaded As Boolean
             Get
@@ -33,7 +33,7 @@ Namespace MCInterop
         Public Sub init()
             livebug.write(loggingLevel.Fine, "Pluginmanager", "Initializing / Loading")
 
-            plugin_dir = common.Server_root & "/plugins" 'plugins should be in this folder
+            plugin_dir = common.ServerRoot & "/plugins" 'plugins should be in this folder
 
             If Not FileIO.FileSystem.DirectoryExists(plugin_dir) Then 'if not exists, create or exit
                 Try
@@ -159,8 +159,8 @@ Namespace MCInterop
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub ClearPluginCache() 'see plugindescriptor for more cache code
-            If FileIO.FileSystem.DirectoryExists(common.Cache_path & "/plugins/") Then _
-                FileIO.FileSystem.DeleteDirectory(common.Cache_path & "/plugins/",
+            If FileIO.FileSystem.DirectoryExists(common.CachePath & "/plugins/") Then _
+                FileIO.FileSystem.DeleteDirectory(common.CachePath & "/plugins/",
                                                   FileIO.DeleteDirectoryOption.DeleteAllContents)
         End Sub
 
@@ -334,8 +334,8 @@ Namespace MCInterop
                     End If
                 Next
 
-                If FileIO.FileSystem.DirectoryExists(common.Cache_path & "/plugins/" & pld.filename) Then _
-                    FileIO.FileSystem.DeleteDirectory(common.Cache_path & "/plugins/" & pld.filename,
+                If FileIO.FileSystem.DirectoryExists(common.CachePath & "/plugins/" & pld.filename) Then _
+                    FileIO.FileSystem.DeleteDirectory(common.CachePath & "/plugins/" & pld.filename,
                                                       FileIO.DeleteDirectoryOption.DeleteAllContents) _
                 'delete cached data
 
