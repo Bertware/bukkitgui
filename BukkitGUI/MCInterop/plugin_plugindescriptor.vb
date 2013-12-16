@@ -8,15 +8,54 @@ Imports Net.Bertware.BukkitGUI.Core
 Namespace MCInterop
     Public Class plugindescriptor
         'Should be always available
+        ''' <summary>
+        ''' Plugin name
+        ''' </summary>
+        ''' <remarks>Required</remarks>
         Public name As String
+
+        ''' <summary>
+        ''' Plugin version
+        ''' </summary>
+        ''' <remarks>Required</remarks>
         Public version As String
+
+        ''' <summary>
+        ''' Plugin authors
+        ''' </summary>
+        ''' <remarks>Recommended</remarks>
         Public authors() As String
+
+        ''' <summary>
+        ''' Plugin description
+        ''' </summary>
+        ''' <remarks>Recommended</remarks>
         Public description As String
 
         'Additional:
+
+        ''' <summary>
+        ''' Main namespace
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public main As String 'main namespace
+
+        ''' <summary>
+        ''' Commands registered by this plugin
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public commands As List(Of pluginCommand)
+
+        ''' <summary>
+        ''' Permissions registered by this pluing
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public permissions As List(Of pluginPermission)
+
+        ''' <summary>
+        ''' Soft depends on the following plugins
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public softdepend() As String
 
         '------------------------------
@@ -112,6 +151,8 @@ Namespace MCInterop
                 Dim sc As New Scalar
                 Dim seq As New Sequence
                 Dim map As New Mapping
+
+                'References to check file types later on
                 Dim t_scalar As Type = sc.GetType
                 Dim t_sequence As Type = seq.GetType
                 Dim t_mapping As Type = map.GetType
@@ -122,8 +163,11 @@ Namespace MCInterop
                 Dim yml As YamlStream = Grammar.YamlParser.Load(ymltext)
 
                 If yml Is Nothing Then Return Nothing : Exit Function
-                If yml.Documents(0).Root.GetType.Equals(t_mapping) Then
+
+                If yml.Documents(0).Root.GetType.Equals(t_mapping) Then 'if mapping start parsing
                     For Each item As MappingEntry In CType(yml.Documents(0).Root, Grammar.Mapping).Enties
+
+                        'Check the type, check for possible keys and load the value
                         If item.Value.GetType.Equals(t_scalar) Then
                             Select Case CType(item.Key, Scalar).Text
                                 Case "name"
@@ -167,6 +211,11 @@ Namespace MCInterop
             End Try
         End Function
 
+        ''' <summary>
+        ''' Change nothing values to either empty lists or empty strings
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function ToSafeObject() As plugindescriptor
             If name Is Nothing Then name = ""
             If version Is Nothing Then version = ""
@@ -180,6 +229,12 @@ Namespace MCInterop
             Return Me
         End Function
 
+        ''' <summary>
+        ''' Parse commands from plugin.yml
+        ''' </summary>
+        ''' <param name="map"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function parseCommands(map As Mapping) As List(Of pluginCommand)
             Try
                 Dim l As New List(Of pluginCommand)
@@ -231,6 +286,12 @@ Namespace MCInterop
             End Try
         End Function
 
+        ''' <summary>
+        ''' Parse permissions from plugin.yml
+        ''' </summary>
+        ''' <param name="map"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function parsePermissions(map As Mapping) As List(Of pluginPermission)
             Try
                 Dim l As New List(Of pluginPermission)
@@ -273,6 +334,12 @@ Namespace MCInterop
             End Try
         End Function
 
+        ''' <summary>
+        ''' Convert a sequence to an array
+        ''' </summary>
+        ''' <param name="seq"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function ArrayFromSequence(seq As Sequence) As String()
             Try
                 Dim sc As New Scalar

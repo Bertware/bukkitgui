@@ -2392,7 +2392,7 @@ Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version
                 ud = New PluginUpdater(l)
             End If
             ud.ShowDialog()
-            If ud.Updated Then UpdateAsync()
+            If ud.Updated Then RefreshAllInstalledPluginsAsync()
         End Sub
 
         Private Sub CmenuInstalledPluginsProjectPage_Click(sender As System.Object, e As System.EventArgs) Handles CmenuInstalledPluginsProjectPage.Click

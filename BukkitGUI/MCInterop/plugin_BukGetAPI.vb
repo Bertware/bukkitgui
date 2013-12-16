@@ -10,23 +10,85 @@ Imports System.Threading
 
 Namespace MCInterop
     Public Module BukGetAPI
-        'http://api.bukget.org/3/
+        ' base api: http://api.bukget.org/3/
+
+        ''' <summary>
+        ''' Those are the info fields we want for a simpleBukgetPlugin, minimal data
+        ''' </summary>
+        ''' <remarks></remarks>
         Const FIELDS As String = "slug,plugin_name,description,versions.version,versions.game_versions,main"
+
+        ''' <summary>
+        ''' Those are the info fields we want for a BukgetPlugin object, including all data
+        ''' </summary>
+        ''' <remarks></remarks>
         Const FIELDS_ALL As String = "slug,plugin_name,server,server,categories,authors,webpage,dbo_page,description,versions.version,versions.md5,versions.filename,versions.link,versions.type,versions.download,versions.status,versions.game_versions,versions.date,versions.slug,versions.soft_dependencies,versions.hard_dependencies,main"
+
         Const API_BUKGET_BASE As String = "http://api.bukget.org/3/" 'Base address
+
+        ''' <summary>
+        ''' Get most popular plugins (list)
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_PLUGINLIST As String = API_BUKGET_BASE & "plugins?fields=" & FIELDS & "&sort=-popularity.weekly" 'Get a whole plugin list
+
+        ''' <summary>
+        ''' Get plugins in category. Append category
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_CATEGORY As String = API_BUKGET_BASE & "categories/" 'Category should be added
+
+        ''' <summary>
+        ''' URL to get plugin info. Append slug
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_PLUGIN As String = API_BUKGET_BASE & "plugins/bukkit/" 'Plugin name should be added
+
+        ''' <summary>
+        ''' url to search by namespace. Append namespace
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_SEARCHBYNAMESPACE As String = API_BUKGET_BASE & "search/main/=/"
+
+        ''' <summary>
+        ''' url to search by name. Append name
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_SEARCHBYNAME As String = API_BUKGET_BASE & "search/plugin_name/=/"
+
+        ''' <summary>
+        ''' url to search by name, without exact match. Append name
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_SEARCHBYNAMELIKE As String = API_BUKGET_BASE & "search/plugin_name/like/"
+
+        ''' <summary>
+        ''' url to search by namespace. Append namespace
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_POPULAR_SETSIZE As String = API_BUKGET_BASE & "plugins?fields=" & FIELDS & "&sort=-popularity.weekly&start=0&size="
+
+        ''' <summary>
+        ''' URL for top 20 most popular plugins.
+        ''' </summary>
+        ''' <remarks></remarks>
         Const API_POPULAR As String = API_POPULAR_SETSIZE & "20"
+
         Public pluginlist As List(Of SimpleBukgetPlugin)
+
+        ''' <summary>
+        ''' A list of plugins has been loaded
+        ''' </summary>
+        ''' <param name="e">list of the SimpleBukgetPlguins items</param>
+        ''' <remarks>can be for category, most popular, all, or search result</remarks>
         Public Event PluginListLoaded(e As List(Of SimpleBukgetPlugin))
 
         Public IsPluginListLoaded As Boolean = False
 
+        ''' <summary>
+        ''' The plugin status on bukkitdev
+        ''' </summary>
+        ''' <remarks></remarks>
         Enum PluginStatus
             Planning
             Alpha
@@ -36,6 +98,7 @@ Namespace MCInterop
             Semi_normal
             Normal
         End Enum
+
 #Region "Loading"
         Public Function GetPluginCategories() As List(Of String)
             livebug.write(loggingLevel.Fine, "BukGetAPI", "Getting categories")
@@ -173,6 +236,7 @@ Namespace MCInterop
             Return pluginlist
         End Function
 #End Region
+
 #Region "Parser"
         Private Function LoadPluginResult(webresult As String) As BukgetPlugin
             Dim pl As New BukgetPlugin
@@ -430,6 +494,13 @@ Namespace MCInterop
         End Function
 #End Region
 
+        ''' <summary>
+        ''' Get a bukgetplugin opbject based upon a plugin namespace
+        ''' </summary>
+        ''' <param name="Main"></param>
+        ''' <param name="ShowUI"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function GetPluginInfoByNamespace(Main As String, Optional ByVal ShowUI As Boolean = True) As BukgetPlugin
             livebug.write(loggingLevel.Fine, "BukGetAPI", "Getting plugin info from plugin: " & Main)
             If Main Is Nothing OrElse Main = "" OrElse Main.Trim = "" Then Return Nothing : Exit Function
@@ -444,6 +515,11 @@ Namespace MCInterop
             Return pl
         End Function
 
+        ''' <summary>
+        ''' Show a dialog containing version info and plugin details
+        ''' </summary>
+        ''' <param name="main">The namespace of the plugin you want to display</param>
+        ''' <remarks></remarks>
         Public Sub ShowPluginDialogByNamespace(main As String)
             Dim pd As New BukgetPluginDialog
             Dim pi As BukgetPlugin = GetPluginInfoByNamespace(main)
@@ -455,11 +531,11 @@ Namespace MCInterop
             pd.ShowDialog()
         End Sub
 
-
-        Public Sub OpenProjectPageByFileName(filename As String)
-            OpenProjectPageByNamespace(GetPluginMainspaceByFileName(filename))
-        End Sub
-
+        ''' <summary>
+        ''' Open the project page on dev.bukkit.org for a plugin with the provided namespace
+        ''' </summary>
+        ''' <param name="main">The namespace of the plugin you want to display</param>
+        ''' <remarks></remarks>
         Public Sub OpenProjectPageByNamespace(main As String)
             Dim p As New Process
             Dim pi As BukgetPlugin = BukGetAPI.GetPluginInfoByNamespace(main)
@@ -471,11 +547,27 @@ Namespace MCInterop
             p.Start()
         End Sub
 
+        ''' <summary>
+        ''' Install a plugin by providing the namespace
+        ''' </summary>
+        ''' <param name="main">The namespace of the plugin you want to install</param>
+        ''' <param name="targetlocation">Target location, plugins/name by default</param>
+        ''' <param name="updatelist">Update the list of installed plugins</param>
+        ''' <param name="ShowUI">Allow pop-up dialogs</param>
+        ''' <remarks></remarks>
         Public Sub InstallPluginByNamespace(main As String, Optional ByVal targetlocation As String = "", Optional ByVal updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
             Dim pi As BukgetPlugin = GetPluginInfoByNamespace(main)
             InstallPlugin(pi, targetlocation, updatelist, ShowUI)
         End Sub
 
+        ''' <summary>
+        ''' Install a plugin by providing the namespace
+        ''' </summary>
+        ''' <param name="pi">The bukgetplugin object of the plugin you want to install</param>
+        ''' <param name="targetlocation">Target location, plugins/name by default</param>
+        ''' <param name="updatelist">Update the list of installed plugins</param>
+        ''' <param name="ShowUI">Allow pop-up dialogs</param>
+        ''' <remarks></remarks>
         Public Sub InstallPlugin(pi As BukgetPlugin, Optional ByVal targetlocation As String = "", Optional ByVal updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
             If pi Is Nothing Then
                 MessageBox.Show(lr("Could not get data for this plugin"), lr("Could not get data"), MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -494,6 +586,10 @@ Namespace MCInterop
 
     End Module
 
+    ''' <summary>
+    ''' Less detailled plugin class for installing plugins and showing info
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class SimpleBukgetPlugin
         Public slug As String = "", name As String = "", descr As String = "", LastVersion As String = "", LastBukkit As String = "", main As String = ""
 
@@ -541,6 +637,10 @@ Namespace MCInterop
 
     End Class
 
+    ''' <summary>
+    ''' Most detailled plugin class for installing plugins and showing info
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class BukgetPlugin
         Public slug As String, main As String, name As String, Author As List(Of String), Category As List(Of String), status As PluginStatus, versions As List(Of PluginVersion), BukkitDevLink As String, Website As String, Description As String
 
@@ -587,6 +687,10 @@ Namespace MCInterop
         End Sub
     End Class
 
+    ''' <summary>
+    ''' Contains details of a plugin version, including all data needed to update or install a plugin
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class PluginVersion
         '    "date": 1317404619, 
         '    "dl_link": "http://dev.bukkit.org/media/files/LINK_TO_JAR/ZIP", 
@@ -625,150 +729,6 @@ Namespace MCInterop
             pluginname = ""
         End Sub
 
-    End Class
-
-    Public Class PluginInstaller
-
-        Public Shared Sub Install(version As PluginVersion, Optional ByVal targetlocation As String = "", Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
-            If targetlocation = "" AndAlso version.filename IsNot Nothing Then
-                targetlocation = plugin_dir & "/" & version.filename
-            End If
-
-            If version.filename.EndsWith(".jar") Then
-                InstallJar(version, targetlocation, updatelist, ShowUI)
-            ElseIf version.filename.EndsWith(".zip") Then
-                InstallZip(version, targetlocation, updatelist, ShowUI)
-            Else
-                MessageBox.Show(lr("The file you chose to download is not supported yet.") & vbCrLf & lr("At this moment only .jar and .zip files are supported."), lr("Not supported"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Exit Sub
-            End If
-        End Sub
-
-        Private Shared Sub InstallJar(version As PluginVersion, Optional ByVal targetlocation As String = "", Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
-            If ShowUI Then
-                If MessageBox.Show(lr("You are about to install") & " " & version.filename.Replace(".jar", "") & " (" & version.version & ")" & vbCrLf & lr("Do you wish to continue?"), lr("Continue?"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
-            End If
-
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Installing plugin:" & version.filename & ", packed as jar file")
-
-            If targetlocation = "" Then targetlocation = plugin_dir & "/" & version.filename
-
-            Dim name As String = version.version
-            If version.pluginname IsNot Nothing AndAlso version.pluginname <> "" Then name = version.pluginname & " - " & version.version
-            Dim fdd As New FileDownloader(version.DownloadLink, targetlocation, lr("installing plugin:") & name)
-            fdd.ShowDialog()
-
-            updatePluginData(targetlocation)
-            If ShowUI Then
-                MessageBox.Show(version.filename.Replace(".jar", "") & " (" & version.version & ") " & lr("was installed succesfully"), lr("Plugin Installed"), MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
-            If updatelist Then InstalledPluginManager.UpdateAsync() 'refresh installed list
-        End Sub
-
-        Private Shared Sub InstallZip(version As PluginVersion, Optional ByVal targetlocation As String = "", Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
-            If ShowUI Then
-                If MessageBox.Show(lr("You are about to install") & " " & version.filename.Replace(".zip", "") & " (" & version.version & ")" & vbCrLf & lr("Do you wish to continue?"), lr("Continue?"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
-            End If
-
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Installing plugin:" & version.filename & ", packed as zip file")
-
-            If targetlocation = "" Then targetlocation = plugin_dir & "/" & version.filename
-            Dim zipfile As String = common.Tmp_path & "install.zip"
-            Dim extraction As String = common.Tmp_path & "/install/"
-
-            Dim name As String = version.version
-            If version.pluginname IsNot Nothing AndAlso version.pluginname <> "" Then name = version.pluginname & " - " & version.version
-            Dim fdd As New FileDownloader(version.DownloadLink, zipfile, lr("installing plugin:") & name)
-            fdd.ShowDialog()
-
-            Utilities.compression.decompress(extraction, zipfile)
-
-            Dim installed As Boolean = False
-            Dim folderinstalled = False
-
-            'file is decompressed, now search the needed files
-            Dim di As New DirectoryInfo(extraction)
-            If di.Exists = False Then
-                di.Create()
-                Utilities.compression.decompress(extraction, zipfile)
-            End If
-
-            Dim fnames As New List(Of String)
-            For Each File As FileInfo In di.GetFiles
-                If File.Extension = ".jar" Then
-                    CopyFile(File.FullName, plugin_dir & "/" & File.Name, True)
-                    fnames.Add(File.Name)
-                    installed = True
-                    livebug.write(loggingLevel.Fine, "BukGetAPI", "Jar file found in .zip (L1), copied:" & File.Name)
-                End If
-            Next
-
-
-
-            For Each Dir As DirectoryInfo In di.GetDirectories
-                Dim copy As Boolean = False
-
-                For Each f As String In fnames
-                    If f.Contains(Dir.Name) Then copy = True : livebug.write(loggingLevel.Fine, "BukgetAPI", "Config/Info folder found in .zip, marked directory for copy:" & Dir.Name)
-                Next
-                If Not copy Then
-                    For Each File As FileInfo In Dir.GetFiles()
-                        If File.Extension = ".txt" Or File.Extension = ".yml" Or File.Extension = ".cfg" Or File.Extension = ".csv" Or File.Extension = ".js" Then
-                            copy = True
-                            livebug.write(loggingLevel.Fine, "BukgetAPI", "Config/Info file found in .zip, marked directory for copy:" & File.Name)
-                        End If
-                    Next
-                End If
-                If copy Then CopyDirectory(Dir.FullName, plugin_dir & "/" & Dir.Name, True) : installed = False : folderinstalled = True
-
-                'L2
-                If Not installed Then
-                    For Each File As FileInfo In Dir.GetFiles
-                        If File.Extension = ".jar" Then
-                            CopyFile(File.FullName, plugin_dir & "/" & File.Name, True)
-                            installed = True
-                            livebug.write(loggingLevel.Fine, "BukgetAPI", "Jar file found in .zip (L2), copied:" & File.Name)
-                        End If
-                    Next
-                End If
-
-                If Not folderinstalled Then
-                    For Each Dir_2 As DirectoryInfo In Dir.GetDirectories
-                        Dim copy_2 As Boolean = False
-                        For Each f As String In fnames
-                            If f.Contains(Dir_2.Name) Then copy_2 = True : livebug.write(loggingLevel.Fine, "BukgetAPI", "Config/Info folder found in .zip, marked directory for copy:" & Dir_2.Name)
-                        Next
-                        For Each File As FileInfo In Dir_2.GetFiles()
-                            If File.Extension = ".txt" Or File.Extension = ".yml" Or File.Extension = ".cfg" Or File.Extension = ".csv" Or File.Extension = ".js" Then
-                                copy_2 = True
-                                livebug.write(loggingLevel.Fine, "BukgetAPI", "Config/Info file found in .zip, marked directory for copy:" & File.Name)
-                            End If
-                        Next
-                        If copy_2 Then CopyDirectory(Dir.FullName, plugin_dir & "/" & Dir_2.Name, True) : installed = False : folderinstalled = True
-                    Next
-                End If
-
-                ' end of second level searching
-
-            Next
-
-            livebug.write(loggingLevel.Fine, "BukgetAPI", "Finished plugin installation: Succeed?" & (installed Or folderinstalled).ToString)
-            'remove files
-
-            If FileExists(zipfile) Then DeleteFile(zipfile, FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently)
-            If DirectoryExists(extraction) Then DeleteDirectory(extraction, FileIO.DeleteDirectoryOption.DeleteAllContents)
-
-
-            If (installed Or folderinstalled) Then
-                If ShowUI Then
-                    MessageBox.Show(version.filename.Replace(".zip", "") & " (" & version.version & ") " & lr("was installed succesfully"), lr("Plugin Installed"), MessageBoxButtons.OK, MessageBoxIcon.Information)
-                End If
-            Else
-                MessageBox.Show(version.filename.Replace(".zip", "") & " (" & version.version & ") " & lr("couldn't be installed. You have to visit the project page in order to install it manually."), lr("Plugin Installation failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End If
-
-            If updatelist Then InstalledPluginManager.UpdateAsync() 'refresh installed list
-        End Sub
     End Class
 
 

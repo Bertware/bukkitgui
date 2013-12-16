@@ -253,7 +253,7 @@ Public Class PluginUpdater
                 Next
                 If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso Not (lblStatus.IsDisposed Or lblStatus.Disposing) Then Me.SetStatus(lr("Idle"))
                 If Me IsNot Nothing AndAlso BtnClose IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso Not (BtnClose.Disposing Or BtnClose.IsDisposed) Then BtnClose.Enabled = True
-                InstalledPluginManager.UpdateAsync()
+                InstalledPluginManager.RefreshAllInstalledPluginsAsync()
                 If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) Then Me.Close()
             End If
         Catch ex As Exception
