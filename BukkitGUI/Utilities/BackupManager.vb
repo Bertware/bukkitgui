@@ -415,13 +415,13 @@ Namespace Utilities
             Try
                 livebug.write(loggingLevel.Fine, "BackupManager", "Parsing action parameters for " & text)
 
-                text = text.Replace("%server-cpu%", performance.server_cpu)
-                text = text.Replace("%gui-cpu%", performance.gui_cpu)
-                text = text.Replace("%total-cpu%", performance.total_cpu)
+                text = text.Replace("%server-cpu%", performance.ServerCpu)
+                text = text.Replace("%gui-cpu%", performance.GuiCpu)
+                text = text.Replace("%total-cpu%", Performance.TotalCpu)
 
-                text = text.Replace("%server-ram%", performance.server_mem)
-                text = text.Replace("%gui-ram%", performance.gui_mem)
-                text = text.Replace("%total-ram%", performance.total_mem)
+                text = text.Replace("%server-ram%", performance.ServerMem)
+                text = text.Replace("%gui-ram%", performance.GuiMem)
+                text = text.Replace("%total-ram%", performance.TotalMem)
 
                 text = text.Replace("%gui-dir%", My.Application.Info.DirectoryPath)
                 text = text.Replace("%gui-ver%", My.Application.Info.Version.ToString)

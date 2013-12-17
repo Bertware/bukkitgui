@@ -152,7 +152,7 @@ Public Class SplashScreen
 
         setload("Initializing performance", 60) 'set UI (text and progress %)
         Try
-            If common.IsRunningOnMono = False AndAlso Not common.isRunningLight Then performance.init() _
+            If common.IsRunningOnMono = False AndAlso Not common.isRunningLight Then performance.Init() _
             'Initialize the performance module, this allows CPU and RAM measurement.
         Catch ex As Exception
             livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Performance")
