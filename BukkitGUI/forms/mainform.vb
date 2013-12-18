@@ -37,7 +37,7 @@ Namespace Core
         End Sub
 #Else
 
-        Private ReadOnly caption As String = "BukkitGUI v" & My.Application.Info.Version.ToString
+        Private ReadOnly _caption As String = "BukkitGUI v" & My.Application.Info.Version.ToString
 
 #End If
 
@@ -50,7 +50,7 @@ Namespace Core
         Private Sub mainform_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
 
             livebug.write(loggingLevel.Fine, "mainform", "Starting to load mainform")
-            Me.Text = caption
+            Me.Text = _caption
 
             Common.MainWindowHandle = Me.Handle
             livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
@@ -806,20 +806,20 @@ Namespace Core
                     If server.CurrentServerType <> McInteropType.remote Then
                         If motd = "" Then
                             If ip IsNot Nothing AndAlso ip <> "" AndAlso ip.Contains("error") = False Then
-                                thds_setformCaption(caption & " - " & Lr("Server running") & " - " & ip)
+                                thds_setformCaption(_caption & " - " & Lr("Server running") & " - " & ip)
                             Else
-                                thds_setformCaption(caption & " - " & Lr("Server running"))
+                                thds_setformCaption(_caption & " - " & Lr("Server running"))
                             End If
                         Else
                             If ip IsNot Nothing AndAlso ip <> "" AndAlso ip.Contains("error") = False Then
-                                thds_setformCaption(caption & " - " & Lr("Server running") & " - " & ip & " - " & motd)
+                                thds_setformCaption(_caption & " - " & Lr("Server running") & " - " & ip & " - " & motd)
                             Else
-                                thds_setformCaption(caption & " - " & Lr("Server running") & " - " & motd)
+                                thds_setformCaption(_caption & " - " & Lr("Server running") & " - " & motd)
                             End If
                         End If
                     Else
                         thds_setformCaption(
-                            caption & " - " & Lr("Connected to remote server") & " - " &
+                            _caption & " - " & Lr("Connected to remote server") & " - " &
                             config.read("remote_host", "", "superstart"))
                     End If
 
@@ -867,7 +867,7 @@ Namespace Core
                 Try
                     livebug.write(loggingLevel.Info, "mainform", "The server has stopped. Updating UI")
                     thds_setserverstate(Lr("Server stopped"))
-                    thds_setformCaption(caption & " - " & Lr("Server stopped"))
+                    thds_setformCaption(_caption & " - " & Lr("Server stopped"))
 
                     ALVPlayersPlayers.Items.Clear()
                     ALVGeneralPlayers.Items.Clear()
