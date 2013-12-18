@@ -61,7 +61,7 @@ Public Class LangGen
             Dim l As UInt64 = content.ToCharArray.Length
             While i < l - 1
                 If i > 3 Then
-                    If content(i) = Char.Parse("""") And content(i - 1) = Char.Parse("(") And content(i - 2) = Char.Parse("r") And content(i - 3) = Char.Parse("l") Then
+                    If content(i) = Char.Parse("""") And content(i - 1) = Char.Parse("(") And content(i - 2) = Char.Parse("r") And (content(i - 3) = Char.Parse("l") Or content(i - 3) = Char.Parse("L")) Then
                         'Start detected
                         Dim e As String = content.IndexOf("""", CInt(i + 1))
                         Dim text As String = content.Substring(i + 1, e - i - 1)

@@ -27,12 +27,12 @@ Namespace Core
         ''' </summary>
         ''' <remarks></remarks>
 #If DEBUG Then
-        Private ReadOnly caption As String = "[DEBUG] BukkitGUI v" & My.Application.Info.Version.ToString
+        Private ReadOnly _caption As String = "[DEBUG] BukkitGUI v" & My.Application.Info.Version.ToString
 
-        Private Sub debughook(s As Object, e As KeyEventArgs) Handles Me.KeyUp, TabCtrlMain.KeyUp, ARTXTServerOutput.KeyUp
+        Private Sub Debughook(s As Object, e As KeyEventArgs) Handles Me.KeyUp, TabCtrlMain.KeyUp, ARTXTServerOutput.KeyUp
             If e.Control And e.KeyCode = Keys.E Then
-                Dim text = InputBox("emulated console output", "debug emulator")
-                hnd_handle_output(text)
+                Dim output = InputBox("emulated console output", "debug emulator")
+                hnd_handle_output(output)
             End If
         End Sub
 #Else
