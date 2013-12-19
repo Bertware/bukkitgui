@@ -135,6 +135,12 @@ Public Class PortForwarder
         Try
             Dim pnp = New UPnP()
             Me.LastMapping = pnp
+
+            If pnp Is Nothing Then
+                MessageBox.Show(Lr("Port forwarding requires Plug-and-play support from your router. This function seems unavailable. Ensure your router supports uPnP, and that uPnP is enabled."), Lr("Unavailable"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return Nothing
+            End If
+
             Dim mapping = pnp.GetMapping
             RaiseEvent MappingUpdateReceived(mapping)
             Return mapping
