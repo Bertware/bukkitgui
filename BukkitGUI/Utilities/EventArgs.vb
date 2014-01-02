@@ -1,5 +1,4 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.MCInterop
+﻿Imports Net.Bertware.BukkitGUI.MCInterop
 
 Namespace Utilities
     Public Class PlayerJoinEventArgs
@@ -19,11 +18,13 @@ Namespace Utilities
         ''' </summary>
         ''' <remarks></remarks>
         Public reason As playerjoinreason
+
         ''' <summary>
         ''' The message that triggered this event
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
+
         ''' <summary>
         ''' The PlayerJoin object about this join
         ''' </summary>
@@ -39,7 +40,8 @@ Namespace Utilities
             ban
         End Enum
 
-        Public Sub New(player As SimplePlayer, reason As playerleavereason, message As String, Optional ByVal details As Object = Nothing)
+        Public Sub New(player As SimplePlayer, reason As playerleavereason, message As String,
+                       Optional ByVal details As Object = Nothing)
             Me.player = player
             Me.reason = reason
             Me.message = message
@@ -51,16 +53,19 @@ Namespace Utilities
         ''' </summary>
         ''' <remarks></remarks>
         Public player As SimplePlayer
+
         ''' <summary>
         ''' The disconnect reason, leave, kick, ban, or list update
         ''' </summary>
         ''' <remarks></remarks>
         Public reason As playerleavereason
+
         ''' <summary>
         ''' The message that raised this event
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
+
         ''' <summary>
         ''' More details, can be playerleave, playerban, playerkick
         ''' </summary>
@@ -74,11 +79,13 @@ Namespace Utilities
         ''' </summary>
         ''' <remarks></remarks>
         Public Added_players As List(Of String)
+
         ''' <summary>
         ''' List with removed players
         ''' </summary>
         ''' <remarks></remarks>
         Public Removed_players As List(Of String)
+
         Public Sub New()
             Added_players = New List(Of String)
             Removed_players = New List(Of String)
@@ -96,6 +103,7 @@ Namespace Utilities
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
+
         ''' <summary>
         ''' the output type, warning or severe
         ''' </summary>
@@ -114,6 +122,7 @@ Namespace Utilities
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
+
         Public Sub New(message As String)
             Me.message = message
         End Sub

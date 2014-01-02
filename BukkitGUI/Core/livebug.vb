@@ -7,17 +7,11 @@
 '
 ' datestamp;timestamp;level;category;message;detail
 '
-
-
 Imports System.IO
-Imports System.Xml
-Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.Utilities
 Imports Net.Bertware.Utilities
 
 Namespace Core
     Module livebug
-
         Enum loggingLevel
             Info
             Fine
@@ -26,7 +20,7 @@ Namespace Core
             Critical
         End Enum
 
-        Public log_file As String = common.Logging_path & "/BukkitGUI.log"
+        Public log_file As String = common.LoggingPath & "/BukkitGUI.log"
         Dim tls As TextWriterTraceListener
         Dim fs As Stream
         Dim sw As StreamWriter
@@ -37,10 +31,11 @@ Namespace Core
         ''' </summary>
         ''' <remarks>This routine should be executed first.</remarks>
         Public Sub init()
-            log_file = common.Logging_path & "/BukkitGUI.log"
+            log_file = common.LoggingPath & "/BukkitGUI.log"
             'this module is initialized before the common module. So the folder needs to be created if not present
             Try
-                If Not FileIO.FileSystem.DirectoryExists(common.Logging_path) Then FileIO.FileSystem.CreateDirectory(common.Logging_path)
+                If Not FileIO.FileSystem.DirectoryExists(common.LoggingPath) Then _
+                    FileIO.FileSystem.CreateDirectory(common.LoggingPath)
 
                 fs = New FileStream(log_file, FileMode.Create)
                 sw = New StreamWriter(fs)
@@ -63,10 +58,13 @@ Namespace Core
         ''' <remarks>Livebug must be initialized before use</remarks>
         Public Sub write(level As loggingLevel, category As String, message As String, Optional detail As String = "-")
             Try
-                Debug.WriteLine("[" & category & "] " & message & " ; " & detail, "livebug") 'Write to debug, so output can be followed in real time
+                Debug.WriteLine("[" & category & "] " & message & " ; " & detail, "livebug") _
+                'Write to debug, so output can be followed in real time
                 If Not initialized Then Exit Sub 'If not initialized,don't write 
 
-                Writeline(datestamp & ";" & timestamp & ";" & level.ToString & ";" & category.ToString & ";" & message.ToString & ";" & detail.ToString & ";")
+                Writeline(
+                    datestamp & ";" & timestamp & ";" & level.ToString & ";" & category.ToString & ";" &
+                    message.ToString & ";" & detail.ToString & ";")
 
             Catch ex As Exception
                 Trace.WriteLine("Severe error! could not write livebug entry!")
@@ -84,10 +82,12 @@ Namespace Core
             Try
                 If Not initialized Then Exit Sub
 
-                write(loggingLevel.Critical, "livebug", "Unhandled exception:" & e.ExceptionObject.ToString) 'create the element
+                write(loggingLevel.Critical, "livebug", "Unhandled exception:" & e.ExceptionObject.ToString) _
+                'create the element
 
                 If e.ExceptionObject.ToString.Contains("System.Core") Then
-                    MessageBox.Show(".NET framework 3.5 is missing or corrupted. Please reinstall .NET 3.5", ".NET framework error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(".NET framework 3.5 is missing or corrupted. Please reinstall .NET 3.5",
+                                    ".NET framework error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
 
                 Report(True)
@@ -101,25 +101,39 @@ Namespace Core
         Public Sub Report(Optional ByVal Critical As Boolean = False) 'Ask the user if he wants to send a (crash) report
             Dim result As DialogResult = DialogResult.No
             If Critical Then
-                result = MessageBox.Show(lr("Oh no! something went wrong in the application. The application is unable to continue it's work, and will exit. Please report this error to the developers by mailing the log file to contact@bertware.net" & vbCrLf & "Do you want to copy the log file to your desktop, so you can mail it whenever you want?"), lr("Critical error"), MessageBoxButtons.YesNo, MessageBoxIcon.Error)
+                result =
+                    MessageBox.Show(
+                        lr(
+                            "Oh no! something went wrong in the application. The application is unable to continue it's work, and will exit. Please report this error to the developers by mailing the log file to contact@bertware.net" &
+                            vbCrLf &
+                            "Do you want to copy the log file to your desktop, so you can mail it whenever you want?"),
+                        lr("Critical error"), MessageBoxButtons.YesNo, MessageBoxIcon.Error)
             Else
                 result = MessageBox.Show(lr("The application encountered some problems." & vbCrLf _
-& "If you noticed problems and want to help us to fix these problems, please provide us the log file." & vbCrLf _
-& "You can mail the log file to contact@bertware.net" & vbCrLf _
-& "If you have additional details or information, you can send this info along with the log file in the e-mail." & vbCrLf & vbCrLf _
-& "Do you want to copy the log file to your desktop, so you can mail it whenever you want?"), lr("Bugs detected"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                                            &
+                                            "If you noticed problems and want to help us to fix these problems, please provide us the log file." &
+                                            vbCrLf _
+                                            & "You can mail the log file to contact@bertware.net" & vbCrLf _
+                                            &
+                                            "If you have additional details or information, you can send this info along with the log file in the e-mail." &
+                                            vbCrLf & vbCrLf _
+                                            &
+                                            "Do you want to copy the log file to your desktop, so you can mail it whenever you want?"),
+                                         lr("Bugs detected"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
 
 
             End If
 
             If result = DialogResult.Yes Then
                 Try
-                    IO.File.Copy(log_file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop) & "/Bukkitgui-error.log")
+                    IO.File.Copy(log_file,
+                                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop) & "/Bukkitgui-error.log")
                 Catch ex As Exception
-                    MessageBox.Show("Couldn't copy the logfile! You can still find it at %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.log", "Couldn't copy!", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    MessageBox.Show(
+                        "Couldn't copy the logfile! You can still find it at %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.log",
+                        "Couldn't copy!", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End Try
             End If
-
         End Sub
 
         Private Sub Writeline(text As String)
@@ -134,7 +148,9 @@ Namespace Core
         ''' <remarks></remarks>
         Private ReadOnly Property timestamp() As String
             Get
-                Return Date.Now.Hour.ToString.PadLeft(2, "0") & ":" & Date.Now.Minute.ToString.PadLeft(2, "0") & ":" & Date.Now.Second.ToString.PadLeft(2, "0") & ":" & Date.Now.Millisecond.ToString.PadLeft(4, "0")
+                Return _
+                    Date.Now.Hour.ToString.PadLeft(2, "0") & ":" & Date.Now.Minute.ToString.PadLeft(2, "0") & ":" &
+                    Date.Now.Second.ToString.PadLeft(2, "0") & ":" & Date.Now.Millisecond.ToString.PadLeft(4, "0")
             End Get
         End Property
 
@@ -145,7 +161,9 @@ Namespace Core
         ''' <remarks></remarks>
         Private ReadOnly Property datestamp() As String
             Get
-                Return Date.Now.Year.ToString.PadLeft(4, "0") & "/" & Date.Now.Month.ToString.PadLeft(2, "0") & "/" & Date.Now.Day.ToString.PadLeft(2, "0")
+                Return _
+                    Date.Now.Year.ToString.PadLeft(4, "0") & "/" & Date.Now.Month.ToString.PadLeft(2, "0") & "/" &
+                    Date.Now.Day.ToString.PadLeft(2, "0")
             End Get
         End Property
 
@@ -162,7 +180,9 @@ Namespace Core
                 write(loggingLevel.Info, "Livebug", "path", My.Application.Info.DirectoryPath)
 
                 Try
-                    write(loggingLevel.Info, "Livebug", "netframework", Net.Bertware.Utilities.NetVersionDetector.NetFrameworkVersionDetector.GetHighestInstalledVersion_CatchErrors().Version)
+                    write(loggingLevel.Info, "Livebug", "netframework",
+                          Net.Bertware.Utilities.NetVersionDetector.NetFrameworkVersionDetector.
+                             GetHighestInstalledVersion_CatchErrors().Version)
                 Catch ex As Exception
                     write(loggingLevel.Warning, "Livebug", ".NET check error", ex.Message)
                 End Try
@@ -176,11 +196,16 @@ Namespace Core
                         write(loggingLevel.Info, "Livebug", "CPU", "threads: unknown/mono")
                         write(loggingLevel.Info, "Livebug", "CPU", "speed: unknown/mono")
                     Else
-                        write(loggingLevel.Info, "Livebug", "CPU", "mfg: " & WMI.GetprocessorInfo(WMI.processorprop.Manufacturer).Trim)
-                        write(loggingLevel.Info, "Livebug", "CPU", "name: " & WMI.GetprocessorInfo(WMI.processorprop.Name))
-                        write(loggingLevel.Info, "Livebug", "CPU", "cores: " & WMI.GetprocessorInfo(WMI.processorprop.NumberOfCores))
-                        write(loggingLevel.Info, "Livebug", "CPU", "threads: " & WMI.GetprocessorInfo(WMI.processorprop.NumberOfLogicalProcessors))
-                        write(loggingLevel.Info, "Livebug", "CPU", "speed: " & WMI.GetprocessorInfo(WMI.processorprop.CurrentClockSpeed))
+                        write(loggingLevel.Info, "Livebug", "CPU",
+                              "mfg: " & WMI.GetprocessorInfo(WMI.processorprop.Manufacturer).Trim)
+                        write(loggingLevel.Info, "Livebug", "CPU",
+                              "name: " & WMI.GetprocessorInfo(WMI.processorprop.Name))
+                        write(loggingLevel.Info, "Livebug", "CPU",
+                              "cores: " & WMI.GetprocessorInfo(WMI.processorprop.NumberOfCores))
+                        write(loggingLevel.Info, "Livebug", "CPU",
+                              "threads: " & WMI.GetprocessorInfo(WMI.processorprop.NumberOfLogicalProcessors))
+                        write(loggingLevel.Info, "Livebug", "CPU",
+                              "speed: " & WMI.GetprocessorInfo(WMI.processorprop.CurrentClockSpeed))
                     End If
                 Catch ex1 As Exception
                     write(loggingLevel.Warning, "livebug", "could not read CPU information: " & ex1.Message)
@@ -192,8 +217,10 @@ Namespace Core
                         write(loggingLevel.Info, "Livebug", "RAM", "mfg: unknown/mono")
                         write(loggingLevel.Info, "Livebug", "RAM", "amount: unknown/mono")
                     Else
-                        write(loggingLevel.Info, "Livebug", "RAM", "amount: " & WMI.GetMemoryInfo(WMI.Memoryprop.Capacity))
-                        write(loggingLevel.Info, "Livebug", "RAM", "mfg: " & WMI.GetMemoryInfo(WMI.Memoryprop.Manufacturer))
+                        write(loggingLevel.Info, "Livebug", "RAM",
+                              "amount: " & WMI.GetMemoryInfo(WMI.Memoryprop.Capacity))
+                        write(loggingLevel.Info, "Livebug", "RAM",
+                              "mfg: " & WMI.GetMemoryInfo(WMI.Memoryprop.Manufacturer))
                     End If
 
                 Catch ex2 As Exception
@@ -212,7 +239,6 @@ Namespace Core
                 Trace.WriteLine("Severe error! could not write livebug head!")
                 Trace.WriteLine("exception:" & ex.Message)
             End Try
-
         End Sub
 
         Public Sub dispose(Optional no_report As Boolean = False)

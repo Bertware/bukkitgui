@@ -1,16 +1,17 @@
-﻿Imports Net.Bertware.BukkitGUI.Utilities
-Imports Net.Bertware.BukkitGUI.Core
+﻿Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.Utilities
 Imports System.Threading
 
 Public Class PortForwarder
-
     Public Event MappingUpdateReceived(mapping As List(Of PortMappingEntry))
     Public Event PortForwardApplied()
     Public LastMapping As UPnP
 
     Private Sub PortForwarder_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Not available() Then
-            MessageBox.Show(lr("Port forwarding isn't available") & vbCrLf & lr("Your network device (router) doesn't support UPnP"), lr("Port forwarding unavailable"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(
+                lr("Port forwarding isn't available") & vbCrLf & lr("Your network device (router) doesn't support UPnP"),
+                lr("Port forwarding unavailable"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             Me.Close()
         End If
 
@@ -71,29 +72,35 @@ Public Class PortForwarder
         Dim protocol As UPnP.Protocol
         If CBProtocol.SelectedIndex = 1 Then protocol = UPnP.Protocol.UDP Else protocol = UPnP.Protocol.TCP
         If Not System.Text.RegularExpressions.Regex.IsMatch(TxtIp.Text, "(\d{1,3}\.){3}\d{1,3}") Then
-            MessageBox.Show(lr("The IP address you entered is invalid. It should be something like for example 192.168.1.2"), lr("Invalid inpunt"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show(
+                lr("The IP address you entered is invalid. It should be something like for example 192.168.1.2"),
+                lr("Invalid inpunt"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         forward(TxtName.Text, CUInt(NumPort.Value), TxtIp.Text, protocol, True)
-
     End Sub
 
     Private Function available() As Boolean
         Return New UPnP().UPnPEnabled
     End Function
 
-    Private Function forward_this(name As String, port As UInteger, ip As String, Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP, Optional ByVal async As Boolean = True) As Boolean
+    Private Function forward_this(name As String, port As UInteger, ip As String,
+                                  Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP,
+                                  Optional ByVal async As Boolean = True) As Boolean
         Return forward(name, port, UPnP.LocalIP, protocol, async)
     End Function
 
-    Private Function forward(name As String, port As UInteger, ip As String, Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP, Optional ByVal async As Boolean = True) As Boolean
+    Private Function forward(name As String, port As UInteger, ip As String,
+                             Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP,
+                             Optional ByVal async As Boolean = True) As Boolean
         Try
             Me.Cursor = Cursors.WaitCursor
             lblStatus.Text = "adding port forward..."
             If LastMapping Is Nothing Then LastMapping = New UPnP()
             If LastMapping.Exists(port, protocol) Then
-                MessageBox.Show(lr("This port is already forwarded"), lr("Port already in use"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(lr("This port is already forwarded"), lr("Port already in use"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
                 Return False 'already in use
             Else
 
@@ -107,7 +114,9 @@ Public Class PortForwarder
             End If
         Catch ex As Exception
             livebug.write(loggingLevel.Warning, "PortForwarder", "Couldn't forward ports", ex.InnerException.Message)
-            MessageBox.Show(lr("This port couldn't be forwarded. Something went wrong while communicating with your router"), lr("Can't forward"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(
+                lr("This port couldn't be forwarded. Something went wrong while communicating with your router"),
+                lr("Can't forward"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
         End Try
     End Function
@@ -120,13 +129,18 @@ Public Class PortForwarder
             success = success And forward(name, port, ip)
         End While
         Return success
-
     End Function
 
     Private Function GetMaps() As List(Of PortMappingEntry)
         Try
             Dim pnp = New UPnP()
             Me.LastMapping = pnp
+
+            If pnp Is Nothing Then
+                MessageBox.Show(Lr("Port forwarding requires Plug-and-play support from your router. This function seems unavailable. Ensure your router supports uPnP, and that uPnP is enabled."), Lr("Unavailable"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return Nothing
+            End If
+
             Dim mapping = pnp.GetMapping
             RaiseEvent MappingUpdateReceived(mapping)
             Return mapping
@@ -145,12 +159,13 @@ Public Class PortForwarder
         End Try
         RaiseEvent PortForwardApplied()
     End Sub
-
 End Class
 
 Friend Class portForwardInfo
     Public name As String, port As UInteger, ip As String, protocol As UPnP.Protocol = UPnP.Protocol.TCP
-    Public Sub New(name As String, port As UInteger, ip As String, Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP)
+
+    Public Sub New(name As String, port As UInteger, ip As String,
+                   Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP)
         Me.name = name
         Me.port = port
         Me.ip = ip

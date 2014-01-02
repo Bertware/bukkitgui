@@ -1,5 +1,4 @@
-﻿Imports System.IO
-Imports System.Text
+﻿
 
 Namespace MCInterop
     ''' <summary>
@@ -64,7 +63,6 @@ Namespace MCInterop
             _outstream = Nothing
             server.StopServer()
         End Sub
-
     End Class
 
     Public Class RemoteCredentials
@@ -95,5 +93,4 @@ Namespace MCInterop
             End Get
         End Property
     End Class
-
 End Namespace

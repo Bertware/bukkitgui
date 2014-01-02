@@ -2,7 +2,13 @@
 'ported from beta
 Namespace MCInterop
     Public Class Player
-        Public name As String, IP As String, time As Date, WhiteList As Boolean, OP As Boolean, location As String, avatar As Image
+        Public name As String,
+               IP As String,
+               time As Date,
+               WhiteList As Boolean,
+               OP As Boolean,
+               location As String,
+               avatar As Image
 
         Public Sub New()
             name = ""
@@ -56,7 +62,6 @@ Namespace MCInterop
 
             Return Me
         End Function
-
     End Class
 
     Public Class SimplePlayer
@@ -87,6 +92,5 @@ Namespace MCInterop
             p.time = player.time
             Return p
         End Function
-
     End Class
 End Namespace

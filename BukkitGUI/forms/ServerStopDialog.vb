@@ -2,7 +2,6 @@
 Imports System.Threading
 
 Public Class ServerStopDialog
-
     Private Sub ServerStopDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
         If server.running = True Then StopServer() Else Me.Close() : Exit Sub
         AddHandler ServerStopped, AddressOf SafeFormClose

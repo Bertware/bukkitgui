@@ -1,19 +1,15 @@
-﻿Imports System.Threading
-Imports System.Xml
-
-Imports Net.Bertware.BukkitGUI.Core
-Imports Microsoft.Win32
+﻿Imports Microsoft.Win32
+Imports System.Threading
 
 
 Namespace Core
     Module filelocation
-
         ' ! ! ! IMPORTANT ! ! !
         ' This module is loaded before config and translation.
         ' Due to this, translations and config aren't available to use here.
         '
 
-        Public ReadOnly filelocation_xml As String = common.Appdata_path & "/filelocation.xml"
+        Public ReadOnly filelocation_xml As String = common.AppdataPath & "/filelocation.xml"
 
         Enum filelocation
             global_files
@@ -26,43 +22,45 @@ Namespace Core
 
         Public Sub init()
             Try
-                If IsRunningOnMono Then Base_path = Local_path : common.updateLocations() : Exit Sub
+                If IsRunningOnMono Then BasePath = LocalPath : common.updateLocations() : Exit Sub
 
                 If Not FileIO.FileSystem.FileExists(filelocation_xml) Then
                     Debug.WriteLine("filelocation.xml missing")
                     Dim newlocation As String = REG_VAL_GLOBAL
-                    If FileIO.FileSystem.DirectoryExists(My.Application.Info.DirectoryPath & "\BukkitGUI\Config\") Then newlocation = REG_VAL_LOCAL : Debug.WriteLine("Local settings detected")
+                    If FileIO.FileSystem.DirectoryExists(My.Application.Info.DirectoryPath & "\BukkitGUI\Config\") Then _
+                        newlocation = REG_VAL_LOCAL : Debug.WriteLine("Local settings detected")
                     Debug.WriteLine("Set filelocation to " & newlocation)
-                    common.Create_file(filelocation_xml, "<filelocation><location>" & newlocation & "</location></filelocation>")
+                    common.Create_file(filelocation_xml,
+                                       "<filelocation><location>" & newlocation & "</location></filelocation>")
                 End If
 
 
                 Select Case location
                     Case filelocation.global_files
-                        Base_path = Appdata_path
+                        BasePath = AppdataPath
                         common.updateLocations()
-                        Debug.WriteLine("file location set to " & Base_path)
+                        Debug.WriteLine("file location set to " & BasePath)
                     Case filelocation.local_files
-                        Base_path = Local_path
+                        BasePath = LocalPath
                         common.updateLocations()
-                        Debug.WriteLine("file location set to " & Base_path)
+                        Debug.WriteLine("file location set to " & BasePath)
                 End Select
             Catch ex As Exception
-                Base_path = Local_path
+                BasePath = LocalPath
                 common.updateLocations()
-                Debug.WriteLine("AppData unavailable: file location set to " & Base_path)
+                Debug.WriteLine("AppData unavailable: file location set to " & BasePath)
             End Try
-
         End Sub
 
         Public Property location As filelocation
 
             Get
                 Try
-                    If Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE) Is Nothing Then Registry.CurrentUser.CreateSubKey(HKCU_SOFTWARE)
+                    If Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware) Is Nothing Then _
+                        Registry.CurrentUser.CreateSubKey(RegistryHkcuSoftware)
 
                     Dim regKey As Microsoft.Win32.RegistryKey
-                    regKey = Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE, True)
+                    regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                     If regKey.GetValue(REG_VAL) Is Nothing Then 'If still on the old system, use the old system
 
                         If IsRunningOnMono Then Return filelocation.local_files : Exit Property
@@ -109,77 +107,108 @@ Namespace Core
                 Catch
                     Return Nothing
                 End Try
-
-
-
             End Get
 
             Set(value As filelocation)
-                If Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE) Is Nothing Then Registry.CurrentUser.CreateSubKey(HKCU_SOFTWARE)
+                If Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware) Is Nothing Then _
+                    Registry.CurrentUser.CreateSubKey(RegistryHkcuSoftware)
 
                 If value = filelocation.local_files Then
                     Try
                         livebug.write(loggingLevel.Fine, "FileLocation", "Changing file location to local")
                         livebug.dispose()
 
-                        If Not IO.Directory.Exists(Local_path) Then IO.Directory.CreateDirectory(Local_path)
-                        FileIO.FileSystem.CopyDirectory(common.Appdata_path, common.Local_path, True)
+                        If Not IO.Directory.Exists(LocalPath) Then IO.Directory.CreateDirectory(LocalPath)
+                        FileIO.FileSystem.CopyDirectory(Common.AppdataPath, Common.LocalPath, True)
 
                         Dim regKey As Microsoft.Win32.RegistryKey
-                        regKey = Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE, True)
+                        regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                         regKey.SetValue(REG_VAL, REG_VAL_LOCAL)
 
-                        MessageBox.Show(lr("A restart is required in order for the changes to take effect. The GUI will now close itself"), lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show(
+                            Lr(
+                                "A restart is required in order for the changes to take effect. The GUI will now close itself"),
+                            Lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
                         For Each Frm As Form In My.Application.OpenForms
                             Frm.Close()
                         Next
                     Catch ioex As InvalidOperationException
                         'Cyclic operation
-                        MessageBox.Show("Something went wrong while copying files from appdata to the local folder:" & vbCrLf & "Cyclic operation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
+                            "Cyclic operation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch dnfex As IO.DirectoryNotFoundException
                         'source doesn't exist
-                        MessageBox.Show("Something went wrong while copying files from appdata to the local folder:" & vbCrLf & "Source folder doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
+                            "Source folder doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch sex As Security.SecurityException
                         'no permissions
-                        MessageBox.Show("Something went wrong while copying files from appdata to the local folder:" & vbCrLf & "You don't have the right permissions to read the source folder and/or write the destination folder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
+                            "You don't have the right permissions to read the source folder and/or write the destination folder",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch uaex As UnauthorizedAccessException
                         'no permissions
-                        MessageBox.Show("Something went wrong while copying files from appdata to the local folder:" & vbCrLf & "You don't have the right permissions to read the source folder and/or write the destination folder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
+                            "You don't have the right permissions to read the source folder and/or write the destination folder",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch ex As Exception
                         'unknown error
-                        MessageBox.Show("Something went wrong while copying files from appdata to the local folder:" & vbCrLf & "unknown error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
+                            "unknown error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 Else
                     Try
                         livebug.write(loggingLevel.Fine, "FileLocation", "Changing file location to global")
                         livebug.dispose()
 
-                        If FileIO.FileSystem.DirectoryExists(common.Local_path) Then FileIO.FileSystem.CopyDirectory(common.Local_path, common.Appdata_path, True)
-                        If FileIO.FileSystem.DirectoryExists(common.Local_path) Then FileIO.FileSystem.DeleteDirectory(common.Local_path, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        If FileIO.FileSystem.DirectoryExists(Common.LocalPath) Then _
+                            FileIO.FileSystem.CopyDirectory(Common.LocalPath, Common.AppdataPath, True)
+                        If FileIO.FileSystem.DirectoryExists(Common.LocalPath) Then _
+                            FileIO.FileSystem.DeleteDirectory(Common.LocalPath,
+                                                              FileIO.DeleteDirectoryOption.DeleteAllContents)
 
                         Dim regKey As Microsoft.Win32.RegistryKey
-                        regKey = Registry.CurrentUser.OpenSubKey(HKCU_SOFTWARE, True)
+                        regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                         regKey.SetValue(REG_VAL, REG_VAL_GLOBAL)
 
-                        MessageBox.Show(lr("A restart is required in order for the changes to take effect. The GUI will now close itself"), lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show(
+                            Lr(
+                                "A restart is required in order for the changes to take effect. The GUI will now close itself"),
+                            Lr("Restart required"), MessageBoxButtons.OK, MessageBoxIcon.Information)
                         For Each Frm As Form In My.Application.OpenForms
                             thds_closeform(Frm)
                         Next
                     Catch ioex As InvalidOperationException
                         'Cyclic operation
-                        MessageBox.Show("Something went wrong while copying files from the local folder to appdata:" & vbCrLf & "Cyclic operation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
+                            "Cyclic operation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch dnfex As IO.DirectoryNotFoundException
                         'source doesn't exist
-                        MessageBox.Show("Something went wrong while copying files from the local folder to appdata:" & vbCrLf & "Source folder doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
+                            "Source folder doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch sex As Security.SecurityException
                         'no permissions
-                        MessageBox.Show("Something went wrong while copying files from the local folder to appdata:" & vbCrLf & "You don't have the right permissions to read the source folder and/or write the destination folder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
+                            "You don't have the right permissions to read the source folder and/or write the destination folder",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch uaex As UnauthorizedAccessException
                         'no permissions
-                        MessageBox.Show("Something went wrong while copying files from the local folder to appdata:" & vbCrLf & "You don't have the right permissions to read the source folder and/or write the destination folder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
+                            "You don't have the right permissions to read the source folder and/or write the destination folder",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch ex As Exception
                         'unknown error
-                        MessageBox.Show("Something went wrong while copying files from the local folder to appdata:" & vbCrLf & "unknown error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(
+                            "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
+                            "unknown error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
 
                 End If
@@ -194,8 +223,5 @@ Namespace Core
                 frm.Close()
             End If
         End Sub
-
-
-
     End Module
 End Namespace

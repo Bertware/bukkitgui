@@ -7,9 +7,11 @@ Namespace MCInterop
     ''' </summary>
     ''' <remarks></remarks>
     Module ServerSettings
-
-        Private _ops As List(Of String), _whitelist As List(Of String), _player_bans As List(Of String), _ip_bans As List(Of String),
-        _settings As Dictionary(Of String, String)
+        Private _ops As List(Of String),
+                _whitelist As List(Of String),
+                _player_bans As List(Of String),
+                _ip_bans As List(Of String),
+                _settings As Dictionary(Of String, String)
 
         Public ReadOnly ops_file As String = My.Application.Info.DirectoryPath & "/ops.txt"
         Public ReadOnly whitelist_file As String = My.Application.Info.DirectoryPath & "/white-list.txt"
@@ -111,7 +113,8 @@ Namespace MCInterop
                 Return list
 
             Catch ioex As System.IO.IOException
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path, ioex.Message)
+                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
+                              ioex.Message)
                 Return New List(Of String)
             Catch ex As Exception
                 Try
@@ -125,10 +128,12 @@ Namespace MCInterop
 
                     Return list
                 Catch ioex As System.IO.IOException
-                    livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path, ioex.Message)
+                    livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
+                                  ioex.Message)
                     Return New List(Of String)
                 Catch ex2 As Exception
-                    livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path, ex.Message)
+                    livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
+                                  ex.Message)
                     Return New List(Of String)
                 End Try
             End Try
@@ -144,7 +149,6 @@ Namespace MCInterop
             Next
 
             sw.Close()
-
         End Sub
 
         Private Function ReadServerSettings(path As String) As Dictionary(Of String, String)
@@ -167,23 +171,28 @@ Namespace MCInterop
                         If item.Contains("=") Then _settings.Add(item.Trim.Split("=")(0), item.Trim.Split("=")(1))
                     Next
                 Else
-                    Return New Dictionary(Of String, String) : Exit Function
+                    Return New Dictionary(Of String, String)
+                    Exit Function
                 End If
 
                 sr.Close()
 
                 Return _settings
             Catch ioex As IO.IOException
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read server settings from file: " & path, ioex.Message)
+                livebug.write(loggingLevel.Warning, "ServerSettings",
+                              "Could not read server settings from file: " & path, ioex.Message)
                 Return New Dictionary(Of String, String)
             Catch aex As ArgumentException
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read server settings from file: " & path, aex.Message)
+                livebug.write(loggingLevel.Warning, "ServerSettings",
+                              "Could not read server settings from file: " & path, aex.Message)
                 Return New Dictionary(Of String, String)
             Catch pex As Security.SecurityException
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read server settings from file: " & path, pex.Message)
+                livebug.write(loggingLevel.Warning, "ServerSettings",
+                              "Could not read server settings from file: " & path, pex.Message)
                 Return New Dictionary(Of String, String)
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read server settings from file: " & path, ex.Message)
+                livebug.write(loggingLevel.Warning, "ServerSettings",
+                              "Could not read server settings from file: " & path, ex.Message)
                 Return New Dictionary(Of String, String)
             End Try
         End Function
@@ -290,7 +299,8 @@ Namespace MCInterop
 
         Public Sub SetSetting(name As String, value As String)
             If _settings.ContainsKey(name) Then _settings(name) = value Else _settings.Add(name, value)
-            WriteServerSettings(_settings, server_properties_file) : Exit Sub
+            WriteServerSettings(_settings, server_properties_file)
+            Exit Sub
         End Sub
 
         Public Function GetSetting(name As String) As String
@@ -307,7 +317,6 @@ Namespace MCInterop
             If _settings.ContainsKey(name) Then _settings.Remove(name)
             WriteServerSettings(_settings, server_properties_file)
         End Sub
-
     End Module
 
     Public Class ServerSetting

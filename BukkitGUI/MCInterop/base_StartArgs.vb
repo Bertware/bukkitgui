@@ -1,5 +1,5 @@
-﻿Imports Net.Bertware.BukkitGUI.Utilities
-Imports Net.Bertware.BukkitGUI.Core
+﻿Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.Utilities
 
 Namespace MCInterop
     Public Class execStartArgs
@@ -10,7 +10,6 @@ Namespace MCInterop
             Me.executable = executable
             Me.arguments = arguments
         End Sub
-
     End Class
 
     Public Class javaStartArgs
@@ -49,7 +48,9 @@ Namespace MCInterop
         ''' <param name="CustomArgs">Custom arguments that should be added (optional)</param>
         ''' <param name="server">The server type. Baded upon this type required switches will be added. (Optional)</param>
         ''' <remarks></remarks>
-        Public Sub New(jre As javaAPI.javaVersion, minram As UInt32, maxram As UInt32, jar As String, Optional ByVal CustomArgs As String = "", Optional ByVal CustomSwitches As String = "", Optional ByVal server As McInteropType = McInteropType.bukkit)
+        Public Sub New(jre As javaAPI.javaVersion, minram As UInt32, maxram As UInt32, jar As String,
+                       Optional ByVal CustomArgs As String = "", Optional ByVal CustomSwitches As String = "",
+                       Optional ByVal server As McInteropType = McInteropType.bukkit)
             If minram < 16 Then minram = 16
             If maxram < 16 Then maxram = 16
 
@@ -63,7 +64,8 @@ Namespace MCInterop
                 Case McInteropType.bukkit
                     Me.switches = "-nojline"
                     Me.args += "-Duser.language=en "
-                    If config.readAsBool("utf_8_compatibility", False, "output") Then Me.args += "-Dfile.encoding=utf-8 "
+                    If config.readAsBool("utf_8_compatibility", False, "output") Then _
+                        Me.args += "-Dfile.encoding=utf-8 "
 
                 Case McInteropType.vanilla
                     Me.switches = "nogui"
@@ -79,10 +81,10 @@ Namespace MCInterop
         ''' <remarks></remarks>
         Public ReadOnly Property buildArgs() As String
             Get
-                Return (args & " " & custom_arg & " " & "-jar """ & jar & """ " & Me.switches & " " & custom_switch).Replace("   ", " ").Replace("  ", " ").Trim
+                Return _
+                    (args & " " & custom_arg & " " & "-jar """ & jar & """ " & Me.switches & " " & custom_switch).
+                        Replace("   ", " ").Replace("  ", " ").Trim
             End Get
         End Property
-
     End Class
-
 End Namespace

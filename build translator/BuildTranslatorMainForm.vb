@@ -22,8 +22,8 @@ Public Class BuildTranslatorMainForm
     Public Function BuildFileList(path As String) As List(Of String)
         WriteLogText("Building file list...")
         Dim project As fxml = New fxml(path)
-        Dim filelist As New List(Of String)
         Dim base As String = New FileInfo(project.path).Directory.FullName
+        FileList = New List(Of String)
         Try
             For Each item As XmlElement In project.GetElementsByName("Compile")
                 If item.GetAttribute("Include").EndsWith(".vb") Then filelist.Add(base & "/" & item.GetAttribute("Include"))
@@ -37,11 +37,11 @@ Public Class BuildTranslatorMainForm
     End Function
 
     Public Sub Run()
-        For FileNumber As UInt16 = 0 To FileList.Count - 1
-            Dim File As String = FileList(FileNumber)
+        For fileNumber As UInt16 = 0 To FileList.Count - 1
+            Dim File As String = FileList(fileNumber)
             Dim t As New Thread(AddressOf RunOnFile)
             t.IsBackground = True
-            t.Start(New FileDetails(File, FileNumber, FileList.Count))
+            t.Start(New FileDetails(File, fileNumber, FileList.Count))
         Next
     End Sub
 
@@ -101,7 +101,7 @@ Public Class BuildTranslatorMainForm
                 WriteLogText("Reading (" & id + 1 & "/" & total & ") :" & file)
                 Dim text As String = IO.File.ReadAllText(file)
                 WriteLogText("Parsing (" & id + 1 & "/" & total & ") :" & file)
-                Dim JustSkipped As Boolean = False
+                Dim justSkipped As Boolean = False
 
                 Const P1 As String = "\.(Text|Tooltip)\s\=\s\""(.*)\""(\s|\n|\r)"
                 Const P2 As String = "\""(.*)"

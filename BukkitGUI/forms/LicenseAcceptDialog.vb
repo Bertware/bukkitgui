@@ -16,7 +16,8 @@ Public Class LicenseAcceptDialog
         WebLicense.Navigate(License_url)
     End Sub
 
-    Private Sub ChkAccept_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChkAccept.CheckedChanged
+    Private Sub ChkAccept_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Handles ChkAccept.CheckedChanged
         If ChkAccept.Checked Then btnOk.Enabled = True
     End Sub
 

@@ -3,7 +3,7 @@ Imports Net.Bertware.BukkitGUI.MCInterop
 Imports Net.Bertware.BukkitGUI.Utilities
 
 Public Class ErrorDiagnose
-    Private type As MessageType, time As String, cause As ErrorCause
+    Private type As serverOutputHandler.MessageType, time As String, cause As ErrorCause
 
     Public Sub New(type As serverOutputHandler.MessageType, time As String, cause As ErrorCause)
         Me.type = type
@@ -29,8 +29,13 @@ Public Class ErrorDiagnose
                     lvi.Tag = "plugin:remove:" & CType(cause, ErrorCause_Plugin).plugin.name
                     LVsolutions.Items.Add(lvi)
                 Case ErrorCause.ErrorCauseType.setting
-                    Dim lvi As New ListViewItem({"Change value for setting " & CType(cause, ErrorCause_setting).setting & " to " & CType(cause, ErrorCause_setting).Fixvalue})
-                    lvi.Tag = "setting:set:" & CType(cause, ErrorCause_setting).setting & ":" & CType(cause, ErrorCause_setting).Fixvalue
+                    Dim _
+                        lvi As _
+                            New ListViewItem(
+                                {"Change value for setting " & CType(cause, ErrorCause_setting).setting & " to " &
+                                 CType(cause, ErrorCause_setting).Fixvalue})
+                    lvi.Tag = "setting:set:" & CType(cause, ErrorCause_setting).setting & ":" &
+                              CType(cause, ErrorCause_setting).Fixvalue
                     LVsolutions.Items.Add(lvi)
                 Case ErrorCause.ErrorCauseType.other
                     Dim lvi As New ListViewItem({"This problem can't be solved by the error solver."})
@@ -39,9 +44,9 @@ Public Class ErrorDiagnose
             End Select
 
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "ErrorDiagnose", "Severe Exception while loading error analyzer dialog", ex.Message)
+            livebug.write(livebug.loggingLevel.Severe, "ErrorDiagnose",
+                          "Severe Exception while loading error analyzer dialog", ex.Message)
         End Try
-
     End Sub
 
     Private Sub BtnApply_Click(sender As System.Object, e As System.EventArgs) Handles BtnApply.Click
@@ -55,21 +60,26 @@ Public Class ErrorDiagnose
                     d.UpdateOnLoad = True
                     d.ShowDialog()
                 Else
-                    MessageBox.Show(lr("Couldn't find plugin!"), lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    MessageBox.Show(lr("Couldn't find plugin!"), lr("Failed"), MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error)
                 End If
 
             ElseIf solution.StartsWith("plugin:remove") Then
                 Dim pld As plugindescriptor = GetInstalledPluginByName(solution.Split(":")(2).Trim(":"))
-                If pld IsNot Nothing Then RemoveInstalledplugin(pld) Else MessageBox.Show(lr("Couldn't find plugin!"), lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If pld IsNot Nothing Then RemoveInstalledplugin(pld) Else _
+                    MessageBox.Show(lr("Couldn't find plugin!"), lr("Failed"), MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error)
             ElseIf solution.StartsWith("setting:set") Then
                 ServerSettings.SetSetting(solution.Split(":")(2).Trim(":"), solution.Split(":")(3).Trim(":"))
             Else
-                MessageBox.Show(lr("This isn't a valid solution."), lr("Invalid solution"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(lr("This isn't a valid solution."), lr("Invalid solution"), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error)
             End If
-                Me.DialogResult = Windows.Forms.DialogResult.OK
-                Me.Close()
+            Me.DialogResult = Windows.Forms.DialogResult.OK
+            Me.Close()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "ErrorDiagnose", "Severe Exception while aplying fix for error(s)", ex.Message)
+            livebug.write(loggingLevel.Severe, "ErrorDiagnose", "Severe Exception while aplying fix for error(s)",
+                          ex.Message)
         End Try
     End Sub
 

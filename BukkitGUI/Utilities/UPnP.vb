@@ -29,7 +29,6 @@ Namespace Utilities
             ''' </summary>
             ''' <remarks></remarks>
             UDP
-
         End Enum
 
         ''' <summary>
@@ -56,7 +55,6 @@ Namespace Utilities
             'generate the static mappings
             Me.GetStaticMappings()
             Me.GetDynamicMappings()
-
         End Sub
 
         ''' <summary>
@@ -103,11 +101,11 @@ Namespace Utilities
             If Not IsPrivateIP(localIP) Then Throw New ArgumentException("This is not a local IP address!", "localIP")
 
             ' Final check!
-            If Not staticEnabled Then Throw New ApplicationException("UPnP is not enabled, or there was an error with UPnP Initialization.")
+            If Not staticEnabled Then _
+                Throw New ApplicationException("UPnP is not enabled, or there was an error with UPnP Initialization.")
 
             ' Okay, continue on
             staticMapping.Add(Port, prot.ToString(), Port, localIP, True, desc)
-
         End Sub
 
         ''' <summary>
@@ -125,11 +123,11 @@ Namespace Utilities
             If Not Exists(Port, Prot) Then Throw New ArgumentException("This mapping doesn't exist!", "Port;prot")
 
             ' Final check!
-            If Not staticEnabled Then Throw New ApplicationException("UPnP is not enabled, or there was an error with UPnP Initialization.")
+            If Not staticEnabled Then _
+                Throw New ApplicationException("UPnP is not enabled, or there was an error with UPnP Initialization.")
 
             ' Okay, continue on
             staticMapping.Remove(Port, Prot.ToString)
-
         End Sub
 
         ''' <summary>
@@ -144,14 +142,17 @@ Namespace Utilities
         Public Function Exists(ByVal Port As Long, ByVal Prot As Protocol) As Boolean
             Try
                 ' Final check!
-                If Not staticEnabled Then Throw New ApplicationException("UPnP is not enabled, or there was an error with UPnP Initialization.")
+                If Not staticEnabled Then _
+                    Throw _
+                        New ApplicationException("UPnP is not enabled, or there was an error with UPnP Initialization.")
 
-                livebug.write(loggingLevel.Info, "uPnP", "Checking if port is in use...")
+                livebug.write(livebug.loggingLevel.Info, "uPnP", "Checking if port is in use...")
                 ' Begin checking
                 For Each mapping As NATUPNPLib.IStaticPortMapping In staticMapping
 
                     ' Compare
-                    If mapping.ExternalPort = Port AndAlso mapping.Protocol.ToLower.Equals(Prot.ToString.ToLower) Then Return True
+                    If mapping.ExternalPort = Port AndAlso mapping.Protocol.ToLower.Equals(Prot.ToString.ToLower) Then _
+                        Return True
 
                 Next
                 livebug.write(loggingLevel.Info, "uPnP", "ok: Port is not in use", Port & ":" & Prot.ToString)
@@ -162,7 +163,6 @@ Namespace Utilities
                 Throw New Exception("Couldn't check if mapping exists!", ex)
                 Return False
             End Try
-
         End Function
 
         ''' <summary>
@@ -173,7 +173,9 @@ Namespace Utilities
         Public Shared Function LocalIP() As String
             Dim IPList As System.Net.IPHostEntry = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName)
             For Each IPaddress In IPList.AddressList
-                If (IPaddress.AddressFamily = System.Net.Sockets.AddressFamily.InterNetwork) AndAlso IsPrivateIP(IPaddress.ToString()) Then
+                If _
+                    (IPaddress.AddressFamily = System.Net.Sockets.AddressFamily.InterNetwork) AndAlso
+                    IsPrivateIP(IPaddress.ToString()) Then
                     Return IPaddress.ToString
                 End If
             Next
@@ -236,7 +238,8 @@ Namespace Utilities
             If staticEnabled Then
                 For Each mapping As NATUPNPLib.IStaticPortMapping In staticMapping
                     Try
-                        L.Add(New PortMappingEntry(CUInt(mapping.InternalPort), mapping.InternalClient, mapping.Description, mapping.Protocol))
+                        L.Add(New PortMappingEntry(CUInt(mapping.InternalPort), mapping.InternalClient,
+                                                   mapping.Description, mapping.Protocol))
                     Catch ex As Exception
                         livebug.write(loggingLevel.Warning, "uPnP", "Couldn't load mapping: " & ex.Message)
                     End Try
@@ -246,9 +249,7 @@ Namespace Utilities
 
             ' Give it back
             Return L
-
         End Function
-
     End Class
 
     Public Class PortMappingEntry
@@ -273,7 +274,8 @@ Namespace Utilities
                 Me.Port = port
                 Me.Ip = ip
                 Me.Name = name
-                If protocol.ToLower.Contains("udp") Then Me.Protocol = UPnP.Protocol.UDP Else Me.Protocol = UPnP.Protocol.TCP
+                If protocol.ToLower.Contains("udp") Then Me.Protocol = UPnP.Protocol.UDP Else _
+                    Me.Protocol = UPnP.Protocol.TCP
             Catch ex As Exception
                 Throw New InvalidCastException("Couldn't create portmapping entry")
             End Try

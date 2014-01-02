@@ -36,9 +36,8 @@
 '<slug>dev</slug>
 '</channel>
 '</root>
-Imports Net.Bertware.BukkitGUI.Core
 Imports System.Net
-Imports System
+Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
     Module dlb
@@ -84,11 +83,13 @@ Namespace MCInterop
         End Function
 
         Private Function build_url(version As dlb.BukkitVersionType) As String
-            Return "http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/view/latest-" & version.ToString & "/" 'build URL for dlb api - http://dl.bukkit.org/about/
+            Return "http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/view/latest-" & version.ToString & "/" _
+            'build URL for dlb api - http://dl.bukkit.org/about/
         End Function
 
         Private Function build_url(build As UInt16) As String
-            Return "http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/view/build-" & build.ToString & "/" 'build URL for dlb api - http://dl.bukkit.org/about/
+            Return "http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/view/build-" & build.ToString & "/" _
+            'build URL for dlb api - http://dl.bukkit.org/about/
         End Function
 
         Private Function getcontents(url As String) As String
@@ -102,17 +103,24 @@ Namespace MCInterop
                 livebug.write(loggingLevel.Severe, "dlb", "Could not download data from " & url, ex.Message)
             End Try
         End Function
-
     End Module
 
     Public Class dlb_download
-        Public name As String, file_size As UInt64, build As UInt16, created As DateTime, html_url As String, target_filename As String, file_url As String, version As String
+        Public name As String,
+               file_size As UInt64,
+               build As UInt16,
+               created As DateTime,
+               html_url As String,
+               target_filename As String,
+               file_url As String,
+               version As String
 
 
         Public Sub New(Xml As String)
             Try
                 If Xml Is Nothing OrElse Xml = "" OrElse Xml.Contains("<") = False OrElse Xml.Contains(">") = False Then
-                    livebug.write(loggingLevel.Warning, "dlb", "Could not create dlb_download object, xml invalid. Xml:" & Xml)
+                    livebug.write(loggingLevel.Warning, "dlb",
+                                  "Could not create dlb_download object, xml invalid. Xml:" & Xml)
                     Exit Sub
                 End If
                 Dim bxml As New fxml 'use fxml to parse the xml quickly
@@ -129,10 +137,13 @@ Namespace MCInterop
                 If file_url.StartsWith("http") = False Then file_url = "http://dl.bukkit.org/" & file_url.Trim("/")
 
                 Dim created_string As String = bxml.read("created", "", "") 'e.g. 2012-04-05 11:14:24
-                Dim dtstring As String = System.Text.RegularExpressions.Regex.Match(created_string, "\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}").ToString
+                Dim dtstring As String =
+                        System.Text.RegularExpressions.Regex.Match(created_string,
+                                                                   "\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}").ToString
                 dtstring = dtstring.Replace(":", "-").Replace(" ", "-")
                 Dim dtarr() As String = dtstring.Split("-")
-                created = New DateTime(CInt(dtarr(0)), CInt(dtarr(1)), CInt(dtarr(2)), CInt(dtarr(3)), CInt(dtarr(4)), CInt(dtarr(5)))
+                created = New DateTime(CInt(dtarr(0)), CInt(dtarr(1)), CInt(dtarr(2)), CInt(dtarr(3)), CInt(dtarr(4)),
+                                       CInt(dtarr(5)))
             Catch ex As Exception
                 livebug.write(loggingLevel.Severe, "dlb", "Severe error while trying to create dlb object!", ex.Message)
             End Try

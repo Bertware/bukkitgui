@@ -125,10 +125,6 @@
       <HintPath>dll\JSONAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="JsonExSerializer">
-      <HintPath>dll\JsonExSerializer.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Net.Bertware.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c9e5ac8d47563bd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\Net.Bertware.Controls.dll</HintPath>
@@ -150,19 +146,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Deployment">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Design">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Drawing">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Management">
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Web">
@@ -177,9 +161,6 @@
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="YamlUtility">
       <HintPath>dll\YamlUtility.dll</HintPath>
       <Private>False</Private>
@@ -190,12 +171,10 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
-    <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="forms\OutputBrowser.Designer.vb">
@@ -210,18 +189,19 @@
     <Compile Include="forms\PortForwarder.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MCInterop\base_StartArgs.vb" />
+    <Compile Include="MCInterop\plugin_PluginUpdater.vb" />
     <Compile Include="SoundNotificator.vb" />
     <Compile Include="Utilities\AdvancedOptions.vb" />
     <Compile Include="Utilities\BackupManager.vb" />
-    <Compile Include="MCInterop\BukGetAPI.vb" />
+    <Compile Include="MCInterop\plugin_BukGetAPI.vb" />
     <Compile Include="Core\common.vb" />
     <Compile Include="Utilities\compression.vb" />
     <Compile Include="Core\config.vb" />
     <Compile Include="Utilities\ErrorManager.vb" />
-    <Compile Include="Utilities\EventArgs.vb" />
     <Compile Include="Core\filelocation.vb" />
     <Compile Include="Core\dlb.vb" />
-    <Compile Include="MCInterop\BukkitTools.vb" />
+    <Compile Include="MCInterop\tools_BukkitTools.vb" />
     <Compile Include="forms\BackupDialog.Designer.vb">
       <DependentUpon>BackupDialog.vb</DependentUpon>
     </Compile>
@@ -288,8 +268,9 @@
     <Compile Include="forms\TaskDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MCInterop\ServerSettings.vb" />
+    <Compile Include="MCInterop\tools_ServerSettings.vb" />
     <Compile Include="TaskManager.vb" />
+    <Compile Include="Utilities\EventArgs.vb" />
     <Compile Include="Utilities\LicenseManager.vb" />
     <Compile Include="forms\ServerStopDialog.Designer.vb">
       <DependentUpon>ServerStopDialog.vb</DependentUpon>
@@ -297,21 +278,21 @@
     <Compile Include="forms\ServerStopDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MCInterop\InstalledPlugins.vb" />
-    <Compile Include="MCInterop\plugindescriptor.vb" />
-    <Compile Include="MCInterop\VanillaTools.vb" />
+    <Compile Include="MCInterop\plugin_InstalledPlugins.vb" />
+    <Compile Include="MCInterop\plugin_plugindescriptor.vb" />
+    <Compile Include="MCInterop\tools_VanillaTools.vb" />
     <Compile Include="threadsafe_pass_args.vb" />
     <Compile Include="Utilities\javaAPI.vb" />
-    <Compile Include="MCInterop\player.vb" />
-    <Compile Include="MCInterop\RemoteJSONAPI.vb" />
-    <Compile Include="MCInterop\RemoteServerBase.vb" />
-    <Compile Include="MCInterop\server.vb" />
+    <Compile Include="MCInterop\base_Player.vb" />
+    <Compile Include="MCInterop\base_RemoteJSONAPI.vb" />
+    <Compile Include="MCInterop\base_RemoteServerBase.vb" />
+    <Compile Include="MCInterop\base_Server.vb" />
     <Compile Include="Core\serverinteraction.vb" />
-    <Compile Include="forms\mainform.vb">
+    <Compile Include="forms\Mainform.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\mainform.Designer.vb">
-      <DependentUpon>mainform.vb</DependentUpon>
+    <Compile Include="forms\Mainform.Designer.vb">
+      <DependentUpon>Mainform.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Utilities\performance.vb" />
@@ -339,8 +320,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="MCInterop\serverOutputHandler.vb" />
-    <Compile Include="MCInterop\StartArgs.vb" />
+    <Compile Include="MCInterop\base_ServerOutputHandler.vb" />
     <Compile Include="Utilities\UPnP.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -365,8 +345,8 @@
     <EmbeddedResource Include="forms\LicenseAcceptDialog.resx">
       <DependentUpon>LicenseAcceptDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\mainform.resx">
-      <DependentUpon>mainform.vb</DependentUpon>
+    <EmbeddedResource Include="forms\Mainform.resx">
+      <DependentUpon>Mainform.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\BukgetPluginDialog.resx">
@@ -497,7 +477,6 @@
     <EmbeddedResource Include="sound\disconnect.wav" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LICENSE.txt" />
     <EmbeddedResource Include="img\menu_icons\plugin_add.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_delete.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_disabled.png" />

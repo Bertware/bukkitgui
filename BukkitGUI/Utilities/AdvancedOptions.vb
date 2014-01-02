@@ -7,7 +7,6 @@ Namespace Utilities
     ''' </summary>
     ''' <remarks></remarks>
     Module AdvancedOptions
-
         Public SpamFilter As List(Of String)
         Public MinotarSize As Byte = 32
         Public MinotarSource As String = "http://minotar.net"
@@ -19,7 +18,10 @@ Namespace Utilities
                 Dim nlist As Xml.XmlNodeList = config.FxmlHandle.GetElementsByName("spamfilter")
                 For Each element As Xml.XmlElement In nlist
                     'if innertext is nothing or "", don't add!
-                    If element.InnerText IsNot Nothing AndAlso element.InnerText IsNot Nothing AndAlso element.InnerText <> "" AndAlso element.InnerText.Trim <> "" Then SpamFilter.Add(element.InnerText)
+                    If _
+                        element.InnerText IsNot Nothing AndAlso element.InnerText IsNot Nothing AndAlso
+                        element.InnerText <> "" AndAlso element.InnerText.Trim <> "" Then _
+                        SpamFilter.Add(element.InnerText)
                 Next
 
                 Dim tmp As Integer = 0
@@ -34,7 +36,5 @@ Namespace Utilities
             Catch ex As Exception
             End Try
         End Sub
-
     End Module
-
 End Namespace

@@ -1,9 +1,8 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
+﻿Imports Net.Bertware.BukkitGUI.MCInterop
+Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
-Imports Net.Bertware.BukkitGUI.MCInterop
 
 Module SoundNotificator
-
     Private _onPlayerJoin As Boolean, _onplayerDisconnect As Boolean, _onWarning As Boolean, _onsevere As Boolean
 
     Public Property onPlayerJoin As Boolean
@@ -83,5 +82,4 @@ Module SoundNotificator
             My.Computer.Audio.Play(My.Resources.sound_severe, AudioPlayMode.Background)
         End If
     End Sub
-
 End Module

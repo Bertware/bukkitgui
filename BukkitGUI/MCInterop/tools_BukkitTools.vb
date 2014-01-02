@@ -1,10 +1,7 @@
-﻿Imports System.Threading
-
+﻿Imports System.IO
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
-Imports Net.Bertware.BukkitGUI.MCInterop
-
-Imports System.IO
+Imports System.Threading
 
 Namespace MCInterop
     Module BukkitTools
@@ -77,7 +74,8 @@ Namespace MCInterop
         ''' <remarks></remarks>
         Public Sub FetchLatestVersions()
             _lrb = dlb.getlatest(BukkitVersionType.rb)
-            livebug.write(loggingLevel.Fine, "BukkitTools", "Fetched latest recommended bukkit version (" & _lrb.build & ")")
+            livebug.write(livebug.loggingLevel.Fine, "BukkitTools",
+                          "Fetched latest recommended bukkit version (" & _lrb.build & ")")
             _lbeta = dlb.getlatest(BukkitVersionType.beta)
             livebug.write(loggingLevel.Fine, "BukkitTools", "Fetched latest beta bukkit version (" & _lbeta.build & ")")
             _ldev = dlb.getlatest(BukkitVersionType.dev)
@@ -96,7 +94,8 @@ Namespace MCInterop
             If server.running Then
                 Dim d As New ServerStopDialog
                 If d.ShowDialog <> DialogResult.OK Then
-                    Return DialogResult.Cancel : Exit Function
+                    Return DialogResult.Cancel
+                    Exit Function
                 End If
             End If
             Dim info As dlb_download = dlb.getlatest(v) 'Always update to the latest
@@ -115,7 +114,8 @@ Namespace MCInterop
             If server.running Then
                 Dim d As New ServerStopDialog
                 If d.ShowDialog <> DialogResult.OK Then
-                    Return DialogResult.Cancel : Exit Function
+                    Return DialogResult.Cancel
+                    Exit Function
                 End If
             End If
             Dim info As dlb_download = dlb.GetCustomBuild(build) 'Always update to the latest
@@ -130,7 +130,8 @@ Namespace MCInterop
         ''' <param name="bukkitpath">bukkit path</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function GetCurrentBukkitVersion(java As javaVersion, bukkitpath As String) As BukkitVersionDetails
+        Public Function GetCurrentBukkitVersion(java As javaAPI.javaVersion, bukkitpath As String) _
+            As BukkitVersionDetails
             '"C:/Program Files/java/jre7/bin/java.exe" -Xincgc -Xmx32M -jar "Craftbukkit.jar" -v
             'git-Bukkit-1.2.5-R4.0-b2222jnks
             If bukkitpath.ToLower.Contains("bukkit") = False Then
@@ -149,8 +150,14 @@ Namespace MCInterop
                     .UseShellExecute = False
                     .CreateNoWindow = True
                 End With
-                If FileIO.FileSystem.FileExists(p.StartInfo.FileName) = False Then livebug.write(loggingLevel.Warning, "BukkitTools", "Could not determine current bukkit version: Java not found") : Return New BukkitVersionDetails : Exit Function
-                If FileIO.FileSystem.FileExists(bukkitpath) = False Then livebug.write(loggingLevel.Warning, "BukkitTools", "Could not determine current bukkit version: Bukkit not found") : Return New BukkitVersionDetails : Exit Function
+                If FileIO.FileSystem.FileExists(p.StartInfo.FileName) = False Then _
+                    livebug.write(loggingLevel.Warning, "BukkitTools",
+                                  "Could not determine current bukkit version: Java not found") : _
+                        Return New BukkitVersionDetails : Exit Function
+                If FileIO.FileSystem.FileExists(bukkitpath) = False Then _
+                    livebug.write(loggingLevel.Warning, "BukkitTools",
+                                  "Could not determine current bukkit version: Bukkit not found") : _
+                        Return New BukkitVersionDetails : Exit Function
                 p.Start()
                 Dim sr As New StreamReader(p.StandardOutput.BaseStream)
                 Dim vstring As String = sr.ReadToEnd
@@ -159,15 +166,20 @@ Namespace MCInterop
                 livebug.write(loggingLevel.Fine, "BukkitTools", "Current version : " & v.Build)
                 Return v
             Catch pex As System.Security.SecurityException
-                MessageBox.Show(lr("The current bukkit version could not be determined. It seems like you don't have permissions to do this. Try running the GUI as administator"), lr("Insufficient rights"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BukkitTools", "Security error in GetCurrentBukkitVersion! " & pex.Message)
+                MessageBox.Show(
+                    lr(
+                        "The current bukkit version could not be determined. It seems like you don't have permissions to do this. Try running the GUI as administator"),
+                    lr("Insufficient rights"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                livebug.write(loggingLevel.Warning, "BukkitTools",
+                              "Security error in GetCurrentBukkitVersion! " & pex.Message)
                 Return New BukkitVersionDetails
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "BukkitTools", "Could not determine current bukkit version, exception: " & ex.Message)
+                livebug.write(loggingLevel.Warning, "BukkitTools",
+                              "Could not determine current bukkit version, exception: " & ex.Message)
                 Return New BukkitVersionDetails
             End Try
-
         End Function
+
         ''' <summary>
         ''' parse a version string (jenkins etc)
         ''' </summary>
@@ -178,7 +190,8 @@ Namespace MCInterop
             Dim pattern As String = "(#\d\d\d\d|#\d\d\d|b\d\d\d\djnks|b\d\d\djnks)"
             Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
             Dim chars() As Char = {"#", "b", "j", "n", "k", "s"}
-            If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else Return CInt(match.Value.Trim(chars))
+            If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else _
+                Return CInt(match.Value.Trim(chars))
         End Function
 
         ''' <summary>
@@ -190,7 +203,8 @@ Namespace MCInterop
         Function ParseVersionStringBukkitVer(text As String) As String
             Dim pattern As String = "(\d.\d.\d|\d.\d)(\-R\d|)"
             Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
-            If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else Return match.Value
+            If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else _
+                Return match.Value
         End Function
 
         ''' <summary>
@@ -202,7 +216,8 @@ Namespace MCInterop
         Function ParseVersionStringMCVer(text As String) As String
             Dim pattern As String = "MC: (\d.\d.\d|\d.\d)"
             Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
-            If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else Return match.Value
+            If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else _
+                Return match.Value
         End Function
     End Module
 

@@ -1,22 +1,59 @@
 ﻿Imports System.IO
-Imports Yaml
-Imports Yaml.Grammar
-
 Imports Net.Bertware.BukkitGUI.Core
+Imports Yaml.Grammar
 
 
 Namespace MCInterop
     Public Class plugindescriptor
         'Should be always available
+        ''' <summary>
+        ''' Plugin name
+        ''' </summary>
+        ''' <remarks>Required</remarks>
         Public name As String
+
+        ''' <summary>
+        ''' Plugin version
+        ''' </summary>
+        ''' <remarks>Required</remarks>
         Public version As String
+
+        ''' <summary>
+        ''' Plugin authors
+        ''' </summary>
+        ''' <remarks>Recommended</remarks>
         Public authors() As String
+
+        ''' <summary>
+        ''' Plugin description
+        ''' </summary>
+        ''' <remarks>Recommended</remarks>
         Public description As String
 
         'Additional:
+
+        ''' <summary>
+        ''' Main namespace
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public main As String 'main namespace
+
+        ''' <summary>
+        ''' Commands registered by this plugin
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public commands As List(Of pluginCommand)
+
+        ''' <summary>
+        ''' Permissions registered by this pluing
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public permissions As List(Of pluginPermission)
+
+        ''' <summary>
+        ''' Soft depends on the following plugins
+        ''' </summary>
+        ''' <remarks>optional</remarks>
         Public softdepend() As String
 
         '------------------------------
@@ -40,22 +77,29 @@ Namespace MCInterop
                 If path.Contains(":\") = False Then path = plugin_dir & "\" & path 'relative directory detection
 
                 Dim fi As New FileInfo(path)
-                Dim nfi As New FileInfo(common.Cache_path & "/plugins/" & fi.Name & "/plugin.yml")
+                Dim nfi As New FileInfo(common.CachePath & "/plugins/" & fi.Name & "/plugin.yml")
 
-                livebug.write(loggingLevel.Fine, "plugindescriptor", "loading plugin (step 1/2): " & fi.Name & " - cache allowed:" & read_cache)
+                livebug.write(loggingLevel.Fine, "plugindescriptor",
+                              "loading plugin (step 1/2): " & fi.Name & " - cache allowed:" & read_cache)
 
-                If nfi.Exists And read_cache = True Then 'check if the cache exists, if not, create cache (we need this cache file, it will be read later on)
+                If nfi.Exists And read_cache = True Then _
+                    'check if the cache exists, if not, create cache (we need this cache file, it will be read later on)
                     livebug.write(loggingLevel.Fine, "plugindescriptor", "Reading plugin data from cache...")
                 Else 'create cache
                     If path Is Nothing OrElse path = "" OrElse fi.Exists = False Then Return Nothing : Exit Function
-                    livebug.write(loggingLevel.Fine, "plugindescriptor", "Plugin data not available in cache or cache not allowed. Building cache for plugin...")
-                    Utilities.compression.decompress(common.Tmp_path & "/plugin", path)
-                    If Not FileIO.FileSystem.FileExists(common.Tmp_path & "/plugin/plugin.yml") Then Return Nothing : Exit Function
-                    common.SafeFileCopy(common.Tmp_path & "/plugin/plugin.yml", nfi.FullName, True)
-                    If FileIO.FileSystem.DirectoryExists(common.Tmp_path & "/plugin") Then FileIO.FileSystem.DeleteDirectory(common.Tmp_path & "/plugin", FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    livebug.write(loggingLevel.Fine, "plugindescriptor",
+                                  "Plugin data not available in cache or cache not allowed. Building cache for plugin...")
+                    Utilities.compression.decompress(common.TmpPath & "/plugin", path)
+                    If Not FileIO.FileSystem.FileExists(common.TmpPath & "/plugin/plugin.yml") Then _
+                        Return Nothing : Exit Function
+                    common.SafeFileCopy(common.TmpPath & "/plugin/plugin.yml", nfi.FullName, True)
+                    If FileIO.FileSystem.DirectoryExists(common.TmpPath & "/plugin") Then _
+                        FileIO.FileSystem.DeleteDirectory(common.TmpPath & "/plugin",
+                                                          FileIO.DeleteDirectoryOption.DeleteAllContents)
                 End If
 
-                livebug.write(loggingLevel.Fine, "plugindescriptor", "loading plugin (step 2/2): " & fi.Name & " - cache allowed:" & read_cache)
+                livebug.write(loggingLevel.Fine, "plugindescriptor",
+                              "loading plugin (step 2/2): " & fi.Name & " - cache allowed:" & read_cache)
 
                 If nfi Is Nothing OrElse FileIO.FileSystem.FileExists(nfi.FullName) = False Then
                     Me.filename = New FileInfo(path).Name
@@ -68,13 +112,16 @@ Namespace MCInterop
                 Me.FileCreationDate = IO.File.GetLastWriteTime(path)
                 Me.filename = New FileInfo(path).Name
 
-                If Me.name Is Nothing OrElse Me.name = "" AndAlso Me.filename.Contains(".") Then Me.name = Me.filename.Split(".")(0) 'if name couldn't be read from yml, parse filename
+                If Me.name Is Nothing OrElse Me.name = "" AndAlso Me.filename.Contains(".") Then _
+                    Me.name = Me.filename.Split(".")(0) 'if name couldn't be read from yml, parse filename
 
-                livebug.write(loggingLevel.Fine, "plugindescriptor", "loaded plugin: " & fi.Name & " - cache allowed:" & read_cache)
+                livebug.write(loggingLevel.Fine, "plugindescriptor",
+                              "loaded plugin: " & fi.Name & " - cache allowed:" & read_cache)
 
                 Return Me 'return this item
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "Plugindescriptor", "An exception occured when trying to load plugin", ex.Message)
+                livebug.write(loggingLevel.Warning, "Plugindescriptor",
+                              "An exception occured when trying to load plugin", ex.Message)
                 Return Nothing
             End Try
         End Function
@@ -87,7 +134,8 @@ Namespace MCInterop
         ''' <remarks></remarks>
         Public Function loadymlfile(path As String) As plugindescriptor
             Try
-                If path Is Nothing OrElse path = "" OrElse FileIO.FileSystem.FileExists(path) = False Then Return Nothing : Exit Function
+                If path Is Nothing OrElse path = "" OrElse FileIO.FileSystem.FileExists(path) = False Then _
+                    Return Nothing : Exit Function
                 Dim content As String
                 Dim sr As New StreamReader(path)
                 content = sr.ReadToEnd
@@ -96,7 +144,8 @@ Namespace MCInterop
                 loadyml(content)
                 Return Me
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "PluginDescriptor", "An exception occured when trying to load yml file", ex.Message)
+                livebug.write(loggingLevel.Severe, "PluginDescriptor",
+                              "An exception occured when trying to load yml file", ex.Message)
                 Return Nothing
             End Try
         End Function
@@ -112,6 +161,8 @@ Namespace MCInterop
                 Dim sc As New Scalar
                 Dim seq As New Sequence
                 Dim map As New Mapping
+
+                'References to check file types later on
                 Dim t_scalar As Type = sc.GetType
                 Dim t_sequence As Type = seq.GetType
                 Dim t_mapping As Type = map.GetType
@@ -119,11 +170,14 @@ Namespace MCInterop
 
                 If ymltext Is Nothing Or ymltext = "" Then Return Nothing : Exit Function
 
-                Dim yml As YamlStream = Grammar.YamlParser.Load(ymltext)
+                Dim yml As YamlStream = Yaml.Grammar.YamlParser.Load(ymltext)
 
                 If yml Is Nothing Then Return Nothing : Exit Function
-                If yml.Documents(0).Root.GetType.Equals(t_mapping) Then
-                    For Each item As MappingEntry In CType(yml.Documents(0).Root, Grammar.Mapping).Enties
+
+                If yml.Documents(0).Root.GetType.Equals(t_mapping) Then 'if mapping start parsing
+                    For Each item As MappingEntry In CType(yml.Documents(0).Root, Yaml.Grammar.Mapping).Enties
+
+                        'Check the type, check for possible keys and load the value
                         If item.Value.GetType.Equals(t_scalar) Then
                             Select Case CType(item.Key, Scalar).Text
                                 Case "name"
@@ -153,20 +207,30 @@ Namespace MCInterop
                         ElseIf item.Value.GetType.Equals(t_mapping) Then
                             Select Case CType(item.Key, Scalar).Text
                                 Case "commands"
-                                    If item.Value.GetType.Equals(t_mapping) Then Me.commands = parseCommands(CType(item.Value, Mapping)) Else commands = New List(Of pluginCommand)
+                                    If item.Value.GetType.Equals(t_mapping) Then _
+                                        Me.commands = parseCommands(CType(item.Value, Mapping)) Else _
+                                        commands = New List(Of pluginCommand)
                                 Case "permissions"
-                                    If item.Value.GetType.Equals(t_mapping) Then Me.permissions = parsePermissions(CType(item.Value, Mapping)) Else permissions = New List(Of pluginPermission)
+                                    If item.Value.GetType.Equals(t_mapping) Then _
+                                        Me.permissions = parsePermissions(CType(item.Value, Mapping)) Else _
+                                        permissions = New List(Of pluginPermission)
                             End Select
                         End If
                     Next
                 End If
                 Return Me
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "PluginDescriptor", "An exception occured when trying to parse yml text", ex.Message)
+                livebug.write(loggingLevel.Warning, "PluginDescriptor",
+                              "An exception occured when trying to parse yml text", ex.Message)
                 Return Nothing
             End Try
         End Function
 
+        ''' <summary>
+        ''' Change nothing values to either empty lists or empty strings
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public Function ToSafeObject() As plugindescriptor
             If name Is Nothing Then name = ""
             If version Is Nothing Then version = ""
@@ -180,6 +244,12 @@ Namespace MCInterop
             Return Me
         End Function
 
+        ''' <summary>
+        ''' Parse commands from plugin.yml
+        ''' </summary>
+        ''' <param name="map"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function parseCommands(map As Mapping) As List(Of pluginCommand)
             Try
                 Dim l As New List(Of pluginCommand)
@@ -226,11 +296,18 @@ Namespace MCInterop
                 End If
                 Return l
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "PluginDescriptor", "An exception occured when trying to load plugin commands", ex.Message)
+                livebug.write(loggingLevel.Warning, "PluginDescriptor",
+                              "An exception occured when trying to load plugin commands", ex.Message)
                 Return New List(Of pluginCommand)
             End Try
         End Function
 
+        ''' <summary>
+        ''' Parse permissions from plugin.yml
+        ''' </summary>
+        ''' <param name="map"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function parsePermissions(map As Mapping) As List(Of pluginPermission)
             Try
                 Dim l As New List(Of pluginPermission)
@@ -254,7 +331,8 @@ Namespace MCInterop
 
                                         Case "children"
                                             pp.children = New List(Of pluginPermissionChild)
-                                            For Each thirdlevel As MappingEntry In CType(secondlevel.Value, Mapping).Enties
+                                            For Each thirdlevel As MappingEntry In _
+                                                CType(secondlevel.Value, Mapping).Enties
                                                 Dim ppc As New pluginPermissionChild
                                                 ppc.name = CType(thirdlevel.Key, Scalar).Text
                                                 pp.children.Add(ppc)
@@ -268,11 +346,18 @@ Namespace MCInterop
                 End If
                 Return l
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "PluginDescriptor", "An exception occured when trying to load plugin permissions", ex.Message)
+                livebug.write(loggingLevel.Warning, "PluginDescriptor",
+                              "An exception occured when trying to load plugin permissions", ex.Message)
                 Return New List(Of pluginPermission)
             End Try
         End Function
 
+        ''' <summary>
+        ''' Convert a sequence to an array
+        ''' </summary>
+        ''' <param name="seq"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function ArrayFromSequence(seq As Sequence) As String()
             Try
                 Dim sc As New Scalar
@@ -285,11 +370,11 @@ Namespace MCInterop
                 Next
                 Return arr
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "PluginDescriptor", "An exception occured when trying to convert array to sequence", ex.Message)
+                livebug.write(loggingLevel.Severe, "PluginDescriptor",
+                              "An exception occured when trying to convert array to sequence", ex.Message)
                 Return {""}
             End Try
         End Function
-
     End Class
 
     Public Class pluginCommand
@@ -305,6 +390,7 @@ Namespace MCInterop
             op
             no
         End Enum
+
         Public name As String
         Public description As String
         Public default_perm As defaultmode
