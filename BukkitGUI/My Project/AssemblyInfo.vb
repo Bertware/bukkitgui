@@ -34,7 +34,7 @@ Imports System.Runtime.InteropServices
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
 
-<Assembly: AssemblyVersion("1.7.1.418")> 
-<Assembly: AssemblyFileVersion("1.7.1.418")> 
+<Assembly: AssemblyVersion("1.7.1.529")> 
+<Assembly: AssemblyFileVersion("1.7.1.529")> 
 
 <Assembly: NeutralResourcesLanguageAttribute("en")> 
