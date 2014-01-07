@@ -395,7 +395,7 @@ Namespace Core
                             End If
 
                             If Regex.IsMatch(jarfile, "(.)*spigot([^/\\])*\.jar") Then
-                                WrongServerTypePopup("vanilla", 0) 'vanilla (1) must become 0
+                                WrongServerTypePopup("vanilla", 4) 'vanilla (1) must become 4
                             End If
 
                             If Regex.IsMatch(jarfile, "(.)*mcpc([^/\\])*\.jar") Then
@@ -407,7 +407,7 @@ Namespace Core
                             End If
 
                             If Regex.IsMatch(jarfile, "(.)*spigot([^/\\])*\.jar") Then
-                                WrongServerTypePopup("Generic java", 0) 'vanilla (1) must become 0
+                                WrongServerTypePopup("vanilla", 4) 'vanilla (1) must become 4
                             End If
 
                             If Regex.IsMatch(jarfile, "(.)*mcpc([^/\\])*\.jar") Then
@@ -521,6 +521,21 @@ Namespace Core
                                                       TxtSuperstartJavaCustomArgs.Text,
                                                       TxtSuperstartJavaCustomSwitch.Text, McInteropType.java)
                             server.StartServer(ja, McInteropType.java)
+
+                        Case 4
+                            livebug.write(loggingLevel.Fine, "Mainform", "Starting new spigot server...")
+                            thds_write_output(
+                                New thds_pass_servermessage(
+                                    "[GUI]" & Lr("Starting spigot server") & " - " & Lr("min. RAM:") &
+                                    TBSuperstartJavaMinRam.Value & " - " & Lr("max. RAM:") &
+                                    TBSuperstartJavaMaxRam.Value, clrInfo))
+                            Dim _
+                                ja As _
+                                    New javaStartArgs(CBSuperstartJavaJRE.SelectedIndex, TBSuperstartJavaMinRam.Value,
+                                                      TBSuperstartJavaMaxRam.Value, TxtSuperstartJavaJarFile.Text,
+                                                      TxtSuperstartJavaCustomArgs.Text,
+                                                      TxtSuperstartJavaCustomSwitch.Text, McInteropType.spigot) 'spigot type for extra parameter
+                            server.StartServer(ja, McInteropType.bukkit) 'list as bukkit server for other services like plugin manager and parsing output
                     End Select
                     TabCtrlMain.SelectedTab = TabGeneral
                 Catch ex As Exception
@@ -1621,6 +1636,36 @@ Namespace Core
                         llblSuperStartsite.Text = ""
 
                         PBSuperStartServerIcon.Image = Nothing
+
+                        BtnSuperStartGetCurrent.Enabled = False
+                        BtnSuperStartDownloadDev.Enabled = False
+                        BtnSuperStartDownloadBeta.Enabled = False
+                        BtnSuperStartDownloadRecommended.Enabled = False
+                        BtnSuperStartDownloadCustomBuild.Enabled = False
+
+                    Case 4 'spigot
+                        GBSuperstartJavaServer.Enabled = True
+                        GBSuperStartMaintainance.Enabled = True
+                        GBSuperStartRemoteServer.Enabled = False
+
+                        lblSuperStartLatestStable.Visible = False
+                        lblSuperStartLatestBeta.Visible = False
+                        lblSuperStartLatestDev.Visible = False
+
+                        ChkSuperStartRetrieveCurrent.Enabled = False
+                        ChkSuperstartAutoUpdateNotify.Enabled = False
+                        ChkSuperstartAutoUpdate.Enabled = False
+
+                        llblSuperStartsite.Text = ""
+
+                        PBSuperStartServerIcon.Image = My.Resources.spigot_logo
+
+                        BtnSuperStartGetCurrent.Enabled = False
+                        BtnSuperStartDownloadDev.Enabled = True
+                        BtnSuperStartDownloadBeta.Enabled = False
+                        BtnSuperStartDownloadRecommended.Enabled = True
+                        BtnSuperStartDownloadCustomBuild.Enabled = False
+
                 End Select
                 If _initializeCompleted Then config.write("server", CBSuperstartServerType.SelectedIndex, "superstart")
             Catch ex As Exception
@@ -1702,6 +1747,16 @@ Namespace Core
                         End If
                     Case 2
                         'not supported
+
+                    case 3 
+                        'not suported
+                    case 4
+                        If TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                            SpigotTools.Download(TxtSuperstartJavaJarFile.Text)
+                        Else
+                            SpigotTools.Download(Common.ServerRoot & "\spigot.jar")
+                            TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "\spigot.jar"
+                        End If
                 End Select
             Catch ex As Exception
                 livebug.write(loggingLevel.Fine, "mainform", "Severe exception in superstart_DownloadRecommended()",
@@ -1768,9 +1823,21 @@ Namespace Core
                     End If
                     superstart_jar_validate(Nothing, Nothing)
                 Case 1
-                    'not supported
+                    'not supported, vanilla
                 Case 2
-                    'not supported
+                    'not supported, remote
+                Case 3
+                    'not supported, generic
+                Case 4
+                    If _
+                      TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
+                      TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                        SpigotTools.DownloadDev(TxtSuperstartJavaJarFile.Text)
+                    Else
+                        SpigotTools.DownloadDev(Common.ServerRoot & "/spigot.jar")
+                        TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "/spigot.jar"
+                    End If
+                    superstart_jar_validate(Nothing, Nothing)
             End Select
         End Sub
 
@@ -1810,7 +1877,7 @@ Namespace Core
                               "Validating settings for server type " & CBSuperstartServerType.SelectedItem.ToString)
                 Dim is_correct As Boolean = True
                 Select Case CBSuperstartServerType.SelectedIndex
-                    Case 0
+                    Case 0 Or 4
                         If TxtSuperstartJavaJarFile.Text Is Nothing Then is_correct = False : Exit Select
                         If TxtSuperstartJavaJarFile.Text = "" Then is_correct = False : Exit Select
                         If TxtSuperstartJavaJarFile.Text.EndsWith(".jar") = False Then is_correct = False : Exit Select
@@ -4012,7 +4079,7 @@ Namespace Core
                     For Each bs As BackupSetting In BackupManager.backups
                         ALVBackups.Items.Add(
                             New ListViewItem(
-                                {bs.name, common.Serialize(bs.folders, ","), bs.destination, bs.compression.ToString}))
+                                {bs.name, Common.Serialize(bs.folders, ","), bs.destination, bs.compression.ToString}))
                     Next
                 End If
             Catch ex As Exception
@@ -4085,7 +4152,7 @@ Namespace Core
             Try
                 My.Computer.Clipboard.SetText(LblInfoComputerLocIP.Text.Split(":")(1).Trim)
             Catch ex As Exception
-                MessageBox.Show(lr("Couldn't copy your IP!"), lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Lr("Couldn't copy your IP!"), Lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -4095,9 +4162,10 @@ Namespace Core
             Try
                 My.Computer.Clipboard.SetText(LblInfoComputerExtIP.Text.Split(":")(1).Trim)
             Catch ex As Exception
-                MessageBox.Show(lr("Couldn't copy your IP!"), lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(Lr("Couldn't copy your IP!"), Lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
+
     End Class
 End Namespace
 

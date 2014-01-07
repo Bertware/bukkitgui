@@ -20,6 +20,7 @@ Namespace MCInterop
             remote 'remote server
             exexcutable 'general executable server
             java 'general java server
+            spigot
         End Enum
 
         Private _running As Boolean,

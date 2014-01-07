@@ -280,7 +280,7 @@
     </Compile>
     <Compile Include="MCInterop\plugin_InstalledPlugins.vb" />
     <Compile Include="MCInterop\plugin_plugindescriptor.vb" />
-    <Compile Include="MCInterop\tools_VanillaTools.vb" />
+    <Compile Include="MCInterop\tools_Various.vb" />
     <Compile Include="threadsafe_pass_args.vb" />
     <Compile Include="Utilities\javaAPI.vb" />
     <Compile Include="MCInterop\base_Player.vb" />
@@ -477,6 +477,7 @@
     <EmbeddedResource Include="sound\disconnect.wav" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="img\spigot_logo.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_add.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_delete.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_disabled.png" />

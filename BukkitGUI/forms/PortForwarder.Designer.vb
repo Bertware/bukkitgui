@@ -58,22 +58,22 @@ Partial Class PortForwarder
         '
         'ColName
         '
-        Me.ColName.Text = Lr("Description")
+        Me.ColName.Text = "Description"
         Me.ColName.Width = 240
         '
         'ColIP
         '
-        Me.ColIP.Text = Lr("IP")
+        Me.ColIP.Text = "IP"
         Me.ColIP.Width = 120
         '
         'ColPort
         '
-        Me.ColPort.Text = Lr("Port")
+        Me.ColPort.Text = "Port"
         Me.ColPort.Width = 120
         '
         'ColProtocol
         '
-        Me.ColProtocol.Text = Lr("Protocol")
+        Me.ColProtocol.Text = "Protocol"
         '
         'TxtName
         '
@@ -82,7 +82,7 @@ Partial Class PortForwarder
         Me.TxtName.Name = "TxtName"
         Me.TxtName.Size = New System.Drawing.Size(100, 20)
         Me.TxtName.TabIndex = 1
-        Me.TxtName.Text = Lr("Minecraft-server")
+        Me.TxtName.Text = "Minecraft-server"
         '
         'TxtIp
         '
@@ -110,7 +110,7 @@ Partial Class PortForwarder
         Me.BtnAdd.Name = "BtnAdd"
         Me.BtnAdd.Size = New System.Drawing.Size(75, 23)
         Me.BtnAdd.TabIndex = 4
-        Me.BtnAdd.Text = Lr("Add")
+        Me.BtnAdd.Text = "Add"
         Me.BtnAdd.UseVisualStyleBackColor = True
         '
         'BtnRefresh
@@ -120,7 +120,7 @@ Partial Class PortForwarder
         Me.BtnRefresh.Name = "BtnRefresh"
         Me.BtnRefresh.Size = New System.Drawing.Size(75, 23)
         Me.BtnRefresh.TabIndex = 5
-        Me.BtnRefresh.Text = Lr("Refresh")
+        Me.BtnRefresh.Text = "Refresh"
         Me.BtnRefresh.UseVisualStyleBackColor = True
         '
         'BtnClose
@@ -130,7 +130,7 @@ Partial Class PortForwarder
         Me.BtnClose.Name = "BtnClose"
         Me.BtnClose.Size = New System.Drawing.Size(75, 23)
         Me.BtnClose.TabIndex = 6
-        Me.BtnClose.Text = Lr("Close")
+        Me.BtnClose.Text = "Close"
         Me.BtnClose.UseVisualStyleBackColor = True
         '
         'Label1
@@ -141,7 +141,7 @@ Partial Class PortForwarder
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(29, 13)
         Me.Label1.TabIndex = 7
-        Me.Label1.Text = Lr("Port:")
+        Me.Label1.Text = "Port:"
         '
         'Label2
         '
@@ -151,7 +151,7 @@ Partial Class PortForwarder
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(63, 13)
         Me.Label2.TabIndex = 8
-        Me.Label2.Text = Lr("Description:")
+        Me.Label2.Text = "Description:"
         '
         'Label3
         '
@@ -161,7 +161,7 @@ Partial Class PortForwarder
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(20, 13)
         Me.Label3.TabIndex = 9
-        Me.Label3.Text = Lr("IP:")
+        Me.Label3.Text = "IP:"
         '
         'CBProtocol
         '
@@ -181,7 +181,7 @@ Partial Class PortForwarder
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(24, 13)
         Me.lblStatus.TabIndex = 12
-        Me.lblStatus.Text = Lr("Idle")
+        Me.lblStatus.Text = "Idle"
         '
         'PortForwarder
         '
@@ -202,7 +202,7 @@ Partial Class PortForwarder
         Me.Controls.Add(Me.ALVMapping)
         Me.Name = "PortForwarder"
         Me.ShowIcon = False
-        Me.Text = Lr("Port forwarding (experimantal)")
+        Me.Text = "Port forwarding ( EXPERIMENTAL ! )"
         CType(Me.NumPort, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()

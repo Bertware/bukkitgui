@@ -69,6 +69,14 @@ Namespace MCInterop
 
                 Case McInteropType.vanilla
                     Me.switches = "nogui"
+                Case McInteropType.spigot
+                    Me.switches = "-nojline"
+                    Me.args += "-Duser.language=en -XX:MaxPermSize=128M"
+                    If config.readAsBool("utf_8_compatibility", False, "output") Then _
+                        Me.args += "-Dfile.encoding=utf-8 "
+
+
+
             End Select
         End Sub
 

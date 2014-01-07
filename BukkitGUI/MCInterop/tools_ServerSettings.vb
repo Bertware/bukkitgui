@@ -87,15 +87,21 @@ Namespace MCInterop
         End Sub
 
         Private Sub WriteList(list As List(Of String), path As String)
-            Dim fs As New FileStream(path, IO.FileMode.Create)
-            Dim sw As New StreamWriter(fs)
-            Dim text As String = ""
-            For Each entry As String In list
-                text += entry & vbCrLf
-            Next
-            text = text.Trim(vbCrLf).Trim
-            sw.WriteLine(text)
-            sw.Close()
+            livebug.write(loggingLevel.Info, "ServerSettings", "Writing list to " & path)
+            Try
+                Dim fs As New FileStream(path, IO.FileMode.Create)
+                Dim sw As New StreamWriter(fs)
+                Dim text As String = ""
+                For Each entry As String In list
+                    text += entry & vbCrLf
+                Next
+                text = text.Trim(vbCrLf).Trim
+                sw.WriteLine(text)
+                sw.Close()
+            Catch ex As Exception
+                livebug.write(loggingLevel.Warning, "ServerSettings", "Error while writing list to " & path, ex.Message)
+            End Try
+
         End Sub
 
         Private Function ReadList(path As String) As List(Of String)
@@ -106,7 +112,12 @@ Namespace MCInterop
                 Dim sr As New StreamReader(fs)
                 Dim list As New List(Of String)
                 While sr.EndOfStream = False
-                    list.Add(sr.ReadLine)
+                    Dim entry As String = sr.ReadLine
+                    If entry.Contains("|") = False Then
+                        list.Add(entry)
+                    Else
+                        list.Add(entry.Split("|")(0))
+                    End If
                 End While
                 sr.Close()
 
@@ -116,8 +127,9 @@ Namespace MCInterop
                 livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
                               ioex.Message)
                 Return New List(Of String)
-            Catch ex As Exception
+            Catch ex As Exception 'The file could've been in use
                 Try
+                    Threading.Thread.Sleep(50) 'The file could've been in use, wait a few ms then try again
                     Dim fs2 As New FileStream(path, FileMode.Open, FileAccess.Read)
                     Dim sr2 As New StreamReader(fs2)
                     Dim list As New List(Of String)
@@ -199,8 +211,10 @@ Namespace MCInterop
 
         Public Sub AddOp(player As String)
             If server.running Then
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Opping player through console:" & player)
                 server.SendCommand("op " & player)
             Else
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Opping player through file:" & player)
                 _ops.Add(player)
                 WriteList(_ops, ops_file)
             End If
@@ -208,8 +222,10 @@ Namespace MCInterop
 
         Public Sub AddWhitelist(player As String)
             If server.running Then
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Whitelisting player through console:" & player)
                 server.SendCommand("whitelist add " & player)
             Else
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Whitelisting player through file:" & player)
                 _whitelist.Add(player)
                 WriteList(_whitelist, whitelist_file)
             End If
@@ -217,8 +233,10 @@ Namespace MCInterop
 
         Public Sub AddPlayerBan(player As String)
             If server.running Then
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning player through console:" & player)
                 server.SendCommand("ban " & player)
             Else
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning player through file:" & player)
                 _player_bans.Add(player)
                 WriteList(_player_bans, playerban_file)
             End If
@@ -226,8 +244,10 @@ Namespace MCInterop
 
         Public Sub AddIpBan(ip As String)
             If server.running Then
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning ip through console:" & ip)
                 server.SendCommand("ban-ip " & ip)
             Else
+                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning ip through file:" & ip)
                 _ip_bans.Add(ip)
                 WriteList(_ip_bans, ipban_file)
             End If
