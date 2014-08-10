@@ -158,6 +158,15 @@ Namespace Core
                     livebug.dispose(True)
                 End If
 
+                'Autostart & minimized start
+                For Each argument As String In Environment.GetCommandLineArgs()
+                    If (argument.Equals("-minimized")) Then
+                        TrayAlways = True
+                        TrayMinimize = True
+                        Me.SendToTray()
+                    End If
+                    If (argument).Equals("-startserver") Then start_server()
+                Next
             Catch ex As Exception
                 livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize mainform", ex.Message)
             End Try
@@ -1898,8 +1907,10 @@ Namespace Core
                             is_correct = False : Exit Select
                         If MTxtSuperstartRemotePassword.Text Is Nothing OrElse MTxtSuperstartRemotePassword.Text = "" _
                             Then is_correct = False : Exit Select
-                        If MTxtSuperstartRemoteSalt.Text Is Nothing OrElse MTxtSuperstartRemoteSalt.Text = "" Then _
-                            is_correct = False : Exit Select
+
+                        'Salt isn't required any longer
+                        ' If MTxtSuperstartRemoteSalt.Text Is Nothing OrElse MTxtSuperstartRemoteSalt.Text = "" Then _ 
+                        ' is_correct = False : Exit Select
                 End Select
                 If Not is_correct And warn Then _
                     MessageBox.Show(
