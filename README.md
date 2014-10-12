@@ -1,3 +1,6 @@
+Want to add or fix something? Instead of forking this repo, fork the new version! Find it here: https://github.com/Bertware/bukkitgui2/ .
+----------------------------
+
 bukkitgui
 =========
 
