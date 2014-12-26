@@ -1736,6 +1736,8 @@ Namespace Core
             Try
                 Select Case CBSuperstartServerType.SelectedIndex
                     Case 0
+                        MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return
                         If _
                             TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
                             TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
@@ -1799,6 +1801,8 @@ Namespace Core
         Private Sub superstart_DownloadBeta() Handles BtnSuperStartDownloadBeta.Click
             Select Case CBSuperstartServerType.SelectedIndex
                 Case 0
+                    MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
                     If _
                         TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
                         TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
@@ -1822,6 +1826,9 @@ Namespace Core
         Private Sub superstart_DownloadDev() Handles BtnSuperStartDownloadDev.Click
             Select Case CBSuperstartServerType.SelectedIndex
                 Case 0
+                    MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+
                     If _
                         TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
                         TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
@@ -1858,6 +1865,9 @@ Namespace Core
             Handles BtnSuperStartDownloadCustomBuild.Click
             Select Case CBSuperstartServerType.SelectedIndex
                 Case 0
+                    MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+
                     If _
                         TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
                         TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
