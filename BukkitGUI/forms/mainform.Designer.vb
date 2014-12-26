@@ -310,6 +310,7 @@ Namespace Core
             Me.Tray = New System.Windows.Forms.NotifyIcon(Me.components)
             Me.CmenuTray = New System.Windows.Forms.ContextMenuStrip(Me.components)
             Me.BtnCmenuTrayExit = New System.Windows.Forms.ToolStripMenuItem()
+            Me.lblInfo2 = New System.Windows.Forms.Label()
             Me.GBGeneralGeneral.SuspendLayout()
             Me.SplitGeneral.Panel1.SuspendLayout()
             Me.SplitGeneral.Panel2.SuspendLayout()
@@ -3272,10 +3273,20 @@ Namespace Core
             Me.BtnCmenuTrayExit.Size = New System.Drawing.Size(92, 22)
             Me.BtnCmenuTrayExit.Text = "Exit"
             '
+            'lblInfo2
+            '
+            Me.lblInfo2.AutoSize = True
+            Me.lblInfo2.Location = New System.Drawing.Point(592, 544)
+            Me.lblInfo2.Name = "lblInfo2"
+            Me.lblInfo2.Size = New System.Drawing.Size(227, 13)
+            Me.lblInfo2.TabIndex = 6
+            Me.lblInfo2.Text = "BukkitGui v2 is available! visit get.bertware.net"
+            '
             'Mainform
             '
             Me.BackColor = System.Drawing.Color.White
             Me.ClientSize = New System.Drawing.Size(834, 562)
+            Me.Controls.Add(Me.lblInfo2)
             Me.Controls.Add(Me.LblStatusBarServerOutput)
             Me.Controls.Add(Me.lblStatusBarServerState)
             Me.Controls.Add(Me.TabCtrlMain)
@@ -3341,6 +3352,7 @@ Namespace Core
             CType(Me.ErrProv, System.ComponentModel.ISupportInitialize).EndInit()
             Me.CmenuTray.ResumeLayout(False)
             Me.ResumeLayout(False)
+            Me.PerformLayout()
 
         End Sub
         Friend WithEvents GBGeneralGeneral As System.Windows.Forms.GroupBox
@@ -3627,6 +3639,7 @@ Namespace Core
         Friend WithEvents TxtGeneralServerIn As System.Windows.Forms.TextBox
         Friend WithEvents BtnBrowseOutput As System.Windows.Forms.Button
         Friend WithEvents BtnSuperStartPortForwarding As System.Windows.Forms.Button
+        Friend WithEvents lblInfo2 As System.Windows.Forms.Label
 
     End Class
 

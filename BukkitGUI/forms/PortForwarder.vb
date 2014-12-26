@@ -39,16 +39,6 @@ Public Class PortForwarder
         End If
     End Sub
 
-    Private Sub UpdateMappingSync()
-        Dim m As List(Of PortMappingEntry) = GetMaps()
-        ALVMapping.Items.Clear()
-        For Each entry As PortMappingEntry In m
-            Dim lvi As New ListViewItem({entry.Name, entry.Ip, entry.Port, entry.Protocol})
-            lvi.Tag = entry.Port
-            ALVMapping.Items.Add(lvi)
-        Next
-    End Sub
-
     Private Sub Displaymapping(mapping As List(Of PortMappingEntry)) Handles Me.MappingUpdateReceived
         If Me.InvokeRequired Then
             Dim c As New ContextCallback(AddressOf Displaymapping)
@@ -84,13 +74,7 @@ Public Class PortForwarder
     Private Function available() As Boolean
         Return New UPnP().UPnPEnabled
     End Function
-
-    Private Function forward_this(name As String, port As UInteger, ip As String,
-                                  Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP,
-                                  Optional ByVal async As Boolean = True) As Boolean
-        Return forward(name, port, UPnP.LocalIP, protocol, async)
-    End Function
-
+    
     Private Function forward(name As String, port As UInteger, ip As String,
                              Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP,
                              Optional ByVal async As Boolean = True) As Boolean

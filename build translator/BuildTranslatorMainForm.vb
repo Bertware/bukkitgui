@@ -21,12 +21,13 @@ Public Class BuildTranslatorMainForm
 
     Public Function BuildFileList(path As String) As List(Of String)
         WriteLogText("Building file list...")
+        path = path.Trim()
         Dim project As fxml = New fxml(path)
         Dim base As String = New FileInfo(project.path).Directory.FullName
         FileList = New List(Of String)
         Try
             For Each item As XmlElement In project.GetElementsByName("Compile")
-                If item.GetAttribute("Include").EndsWith(".vb") Then filelist.Add(base & "/" & item.GetAttribute("Include"))
+                If (item.GetAttribute("Include").EndsWith(".vb") Or item.GetAttribute("Include").EndsWith(".cs")) Then FileList.Add(base & "/" & item.GetAttribute("Include"))
             Next
         Catch ex As Exception
             Debug.WriteLine("File list building failed! " & ex.Message)
@@ -103,7 +104,7 @@ Public Class BuildTranslatorMainForm
                 WriteLogText("Parsing (" & id + 1 & "/" & total & ") :" & file)
                 Dim justSkipped As Boolean = False
 
-                Const P1 As String = "\.(Text|Tooltip)\s\=\s\""(.*)\""(\s|\n|\r)"
+                Const P1 As String = "\.(Text|Tooltip)\s\=\s\""(.*)\""(\s|\n|\r|;)"
                 Const P2 As String = "\""(.*)"
                 Dim trimm() As Char = {vbCrLf, vbCr, vbLf, vbNewLine}
 

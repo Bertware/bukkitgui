@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Xml
 Imports System.Reflection
+Imports System.Text.RegularExpressions
 
 Public Class LangGen
     Dim proj As New fxml()
@@ -13,7 +14,7 @@ Public Class LangGen
 
         Dim ofd As New OpenFileDialog
         ofd.InitialDirectory = "D:\Users\Bert\Documents\Visual Studio 2010\Projects\BukkitGUI\BukkitGUI\BukkitGUI"
-        ofd.Filter = "Project file (*.vbproj)|*.vbproj"
+        ofd.Filter = "Project file (*.vbproj)|*.vbproj|Project file (*.csproj)|*.csproj"
         ofd.Multiselect = False
         ofd.Title = "Select solution..."
         If ofd.ShowDialog <> Windows.Forms.DialogResult.OK Then Exit Sub
@@ -49,7 +50,7 @@ Public Class LangGen
         Dim filelist As New List(Of String)
         Dim base As String = New FileInfo(proj.path).Directory.FullName
         For Each item As XmlElement In proj.GetElementsByName("Compile")
-            If item.GetAttribute("Include").EndsWith(".vb") Then filelist.Add(base & "/" & item.GetAttribute("Include"))
+            If (item.GetAttribute("Include").EndsWith(".vb") Or item.GetAttribute("Include").EndsWith(".cs")) Then filelist.Add(base & "/" & item.GetAttribute("Include"))
         Next
         writelog(filelist.Count & " files found to parse. Starting...")
 
@@ -57,6 +58,40 @@ Public Class LangGen
             Dim file As String = filelist(f)
             writelog("Parsing " & f + 1 & "/" & filelist.Count & ":" & file)
             Dim content As String = New StreamReader(New FileStream(File, FileMode.Open)).ReadToEnd
+            Dim i As UInteger = 0
+            While (Regex.IsMatch(content.Substring(i), "Tr\(""(.*)""\);"))
+                Dim match As Match = Regex.Match(content.Substring(i), "Tr\(""(.*)""\);")
+                If (match.Length > 5) Then
+                    Dim text As String = content.Substring(match.Index + 3, match.Length - 5)
+                    Debug.WriteLine("Found " & text & " starting at " & i)
+                    i = match.Index + match.Length + 4
+                    Dim res As Xml.XmlElement = lang.getElementByAttribute("text", "string", text)
+                    If res Is Nothing Then
+                        Dim cl As New List(Of CXMLAttribute)
+                        cl.Add(New CXMLAttribute("string", text))
+                        lang.write("text", text, "", cl, True)
+                    End If
+                Else
+                    i += 10
+                End If
+            End While
+            i = 0
+            Addprogress(100 / filelist.Count)
+        Next
+    End Sub
+
+    Private Sub runold()
+        Dim filelist As New List(Of String)
+        Dim base As String = New FileInfo(proj.path).Directory.FullName
+        For Each item As XmlElement In proj.GetElementsByName("Compile")
+            If item.GetAttribute("Include").EndsWith(".vb") Then filelist.Add(base & "/" & item.GetAttribute("Include"))
+        Next
+        writelog(filelist.Count & " files found to parse. Starting...")
+
+        For f = 0 To filelist.Count - 1
+            Dim file As String = filelist(f)
+            writelog("Parsing " & f + 1 & "/" & filelist.Count & ":" & file)
+            Dim content As String = New StreamReader(New FileStream(file, FileMode.Open)).ReadToEnd
             Dim i As UInt64 = 0
             Dim l As UInt64 = content.ToCharArray.Length
             While i < l - 1
