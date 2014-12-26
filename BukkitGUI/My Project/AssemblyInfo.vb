@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("Bertware")> 
 <Assembly: AssemblyProduct("BukkitGUI")> 
-<Assembly: AssemblyCopyright("Copyright ©Bertware 2011-2014")> 
+<Assembly: AssemblyCopyright("Copyright ©Bertware 2011-2015")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)> 
@@ -34,7 +34,7 @@ Imports System.Runtime.InteropServices
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
 
-<Assembly: AssemblyVersion("1.7.2.534")> 
-<Assembly: AssemblyFileVersion("1.7.2.534")> 
+<Assembly: AssemblyVersion("1.7.3.535")> 
+<Assembly: AssemblyFileVersion("1.7.3.535")> 
 
 <Assembly: NeutralResourcesLanguageAttribute("en")> 
