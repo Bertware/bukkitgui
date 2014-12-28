@@ -3275,6 +3275,7 @@ Namespace Core
             '
             'lblInfo2
             '
+            Me.lblInfo2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblInfo2.AutoSize = True
             Me.lblInfo2.Location = New System.Drawing.Point(592, 544)
             Me.lblInfo2.Name = "lblInfo2"
