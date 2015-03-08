@@ -1,10 +1,18 @@
-﻿Imports System.Threading
-Imports System.IO
-Imports Net.Bertware.BukkitGUI.MCInterop
-Imports Net.Bertware.BukkitGUI.Utilities
+﻿Imports System.IO
+Imports System.Security
+Imports System.Text
 Imports System.Text.RegularExpressions
-Imports Net.Bertware.Utilities
+Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
 Imports Microsoft.Win32
+Imports Net.Bertware.BukkitGUI.MCInterop
+Imports Net.Bertware.BukkitGUI.TaskManager
+Imports Net.Bertware.BukkitGUI.Utilities
+Imports Net.Bertware.Controls
+Imports Net.Bertware.Get
+Imports Net.Bertware.Utilities
+Imports Timer = System.Timers.Timer
+Imports Net.Bertware.BukkitGUI.forms
 
 Namespace Core
     Public Class Mainform
@@ -22,14 +30,16 @@ Namespace Core
         Public Event ToTray()
         Public Event FromTray()
 
+
         ''' <summary>
-        ''' Allow output emulation in debug. Add debug caption to top
+        '''     Allow output emulation in debug. Add debug caption to top
         ''' </summary>
         ''' <remarks></remarks>
 #If DEBUG Then
         Private ReadOnly _caption As String = "[DEBUG] BukkitGUI v" & My.Application.Info.Version.ToString
 
-        Private Sub Debughook(s As Object, e As KeyEventArgs) Handles Me.KeyUp, TabCtrlMain.KeyUp, ARTXTServerOutput.KeyUp
+        Private Sub Debughook(s As Object, e As KeyEventArgs) Handles Me.KeyUp, TabCtrlMain.KeyUp, ARTXTServerOutput. _
+KeyUp
             If e.Control And e.KeyCode = Keys.E Then
                 Dim output = InputBox("emulated console output", "debug emulator")
                 hnd_handle_output(output)
@@ -37,7 +47,7 @@ Namespace Core
         End Sub
 #Else
 
-        Private ReadOnly _caption As String = "BukkitGUI v" & My.Application.Info.Version.ToString
+            Private ReadOnly _caption As String = "BukkitGUI v" & My.Application.Info.Version.ToString
 
 #End If
 
@@ -47,39 +57,39 @@ Namespace Core
         Const WaitCreationTimeout As UInt16 = 100
         Const MaxWaitCreationCycles As Byte = 100
 
-        Private Sub mainform_Load(sender As System.Object, e As System.EventArgs) Handles Me.Load
+        Private Sub mainform_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-            livebug.write(loggingLevel.Fine, "mainform", "Starting to load mainform")
+            Log(loggingLevel.Fine, "mainform", "Starting to load mainform")
             Me.Text = _caption
 
-            Common.MainWindowHandle = Me.Handle
-            livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
+            MainWindowHandle = Me.Handle
+            Log(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
             'Removing disabled tasks + altering layout of general tab
             '
-            If Common.IsRunningLight Then 'in light mode, tabs are hidden, bit smaller window
+            If IsRunningLight Then 'in light mode, tabs are hidden, bit smaller window
                 TabCtrlMain.TabPages.Remove(TabErrorLogging)
                 TabCtrlMain.TabPages.Remove(TabServerOptions)
                 TabCtrlMain.TabPages.Remove(TabPlugins)
                 TabCtrlMain.TabPages.Remove(TabTaskManager)
                 TabCtrlMain.TabPages.Remove(TabBackups)
                 PanelPerformanceInfo.Visible = False
-                BtnGeneralRestart.Location = New Drawing.Point(87, 19)
-                BtnGeneralReload.Location = New Drawing.Point(168, 19)
-                BtnGeneralKill.Location = New Drawing.Point(249, 19)
-                GbGeneralInfo.Size = New Drawing.Size(817, 50)
-                lblGeneralTimeSinceStartText.Location = New Drawing.Point(330, 30)
+                BtnGeneralRestart.Location = New Point(87, 19)
+                BtnGeneralReload.Location = New Point(168, 19)
+                BtnGeneralKill.Location = New Point(249, 19)
+                GbGeneralInfo.Size = New Size(817, 50)
+                lblGeneralTimeSinceStartText.Location = New Point(330, 30)
                 GBGeneralGeneral.Anchor -= AnchorStyles.Bottom
                 GbGeneralInfo.Anchor -= AnchorStyles.Bottom
-                Me.Size = New Drawing.Size(Me.Width, Me.Height - 100)
+                Me.Size = New Size(Me.Width, Me.Height - 100)
                 GBGeneralGeneral.Anchor += AnchorStyles.Bottom
                 GbGeneralInfo.Anchor += AnchorStyles.Bottom
-                GbGeneralInfo.Location = New Drawing.Point(GbGeneralInfo.Location.X, GbGeneralInfo.Location.Y + 50)
-                Me.Size = New Drawing.Size(850, 600)
+                GbGeneralInfo.Location = New Point(GbGeneralInfo.Location.X, GbGeneralInfo.Location.Y + 50)
+                Me.Size = New Size(850, 600)
             End If
 
 
-            _tmrUpdateStats = New Timers.Timer
+            _tmrUpdateStats = New Timer
             set_handles()
 
             ARTXTServerOutput.AutoScrollDown = True
@@ -91,39 +101,39 @@ Namespace Core
                 superstart_init() 'init the superstart tab
 
                 Try 'init the plugin manager
-                    If Not Common.IsRunningLight Then Me.pluginmanager_install_init()
-                    If Not Common.IsRunningLight And InstalledPluginManager.loaded = True Then _
+                    If Not IsRunningLight Then Me.pluginmanager_install_init()
+                    If Not IsRunningLight And InstalledPluginManager.loaded = True Then _
                         LoadInstalledPlugins(plugins)
                 Catch plex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize pluginmanager UI",
-                                  plex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Error: Could not initialize pluginmanager UI",
+                        plex.Message)
                 End Try
 
                 info_load() 'load info in settings & info tab
 
                 'tray and sound
-                If Not Common.IsRunningLight Then tray_sound_init() Else _
+                If Not IsRunningLight Then tray_sound_init() Else _
                     GBOptionsInfoAboutTray.Enabled = False : GBOptionsInfoSound.Enabled = False
 
                 Settings_init() 'GUI settings (UI only, already loaded in splashscreen)
 
-                If Not Common.IsRunningLight Then ErrorManager_InitUI() 'error manager tab
+                If Not IsRunningLight Then ErrorManager_InitUI() 'error manager tab
 
                 Try 'backups
-                    If Not Common.IsRunningLight Then TaskManager_UpdateUI()
-                    If Not Common.IsRunningLight Then BackupManager_UpdateUI()
+                    If Not IsRunningLight Then TaskManager_UpdateUI()
+                    If Not IsRunningLight Then BackupManager_UpdateUI()
                 Catch plex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize Task/Backupmanager UI",
-                                  plex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Error: Could not initialize Task/Backupmanager UI",
+                        plex.Message)
                 End Try
 
                 text_options_init() 'console output coloring
 
                 Try
-                    If Not Common.IsRunningLight Then Server_settings_refresh_UI() 'server settings
+                    If Not IsRunningLight Then Server_settings_refresh_UI() 'server settings
                 Catch plex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize ServerSettings UI",
-                                  plex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Error: Could not initialize ServerSettings UI",
+                        plex.Message)
                 End Try
 
                 'all needed stuff is loaded. Set this as true so the GUI knows it can do everything.
@@ -137,24 +147,24 @@ Namespace Core
                 autoserverstart_check() 'check if the server should be started, by the autostart on GUI start setting.
 
                 'resource monitor
-                If Not Common.IsRunningLight Then
+                If Not IsRunningLight Then
                     _tmrUpdateStats.Interval = 500 ' Timer to update the UI with new RAM and CPU data
                     _tmrUpdateStats.Enabled = True
                     _tmrUpdateStats.Start()
                 End If
 
-                If Not Common.IsRunningLight Then AdvancedOptions.AdvancedOptions_Load()
+                If Not IsRunningLight Then AdvancedOptions_Load()
 
                 'Sometimes, due to downloading at high speed, downloads are finished before mainform is loaded
                 'In this case, events might not be handles
                 'These lines fix most of these problems.
-                hnd_ip_loaded(serverinteraction.external_ip_chache) 'update the IP
-                If Net.Bertware.Get.LatestRecommendedVersion IsNot Nothing Then _
-                    hnd_last_version_loaded(Net.Bertware.Get.LatestRecommendedVersion) 'update last retrieved version
-                If Not Common.IsRunningLight Then thds_SetBukGetPlugins(BukGetAPI.pluginlist) 'set plugin list
-                livebug.write(loggingLevel.Fine, "mainform", "finished to load mainform")
+                hnd_ip_loaded(external_ip_chache) 'update the IP
+                If LatestRecommendedVersion IsNot Nothing Then _
+                    hnd_last_version_loaded(LatestRecommendedVersion) 'update last retrieved version
+                If Not IsRunningLight Then thds_SetBukGetPlugins(pluginlist) 'set plugin list
+                Log(loggingLevel.Fine, "mainform", "finished to load mainform")
 
-                If Common.IsRunningLight Then
+                If IsRunningLight Then
                     livebug.dispose(True)
                 End If
 
@@ -168,25 +178,25 @@ Namespace Core
                     If (argument).Equals("-startserver") Then start_server()
                 Next
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Error: Could not initialize mainform", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Error: Could not initialize mainform", ex.Message)
             End Try
         End Sub
 
-        Private Sub mainform_closing(sender As System.Object, e As FormClosingEventArgs) Handles Me.FormClosing
-            livebug.write(loggingLevel.Fine, "mainform", "Closing mainform")
-            If server.running Then
+        Private Sub mainform_closing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+            Log(loggingLevel.Fine, "mainform", "Closing mainform")
+            If running Then
                 If lblStatusBarServerState.Text.ToLower.Contains("stopping") Then
                     If _
                         MessageBox.Show(
                             Lr("It seems that the server stopped responding. Do you want to kill the server?"),
                             Lr("Server not responding"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) =
-                        Windows.Forms.DialogResult.Yes Then
+                        DialogResult.Yes Then
                         kill_server()
                     Else
                         e.Cancel = True
                     End If
                 Else
-                    If server.CurrentServerType <> McInteropType.remote And e.CloseReason <> CloseReason.WindowsShutDown _
+                    If CurrentServerType <> McInteropType.remote And e.CloseReason <> CloseReason.WindowsShutDown _
                         Then
                         Dim res As DialogResult =
                                 MessageBox.Show(
@@ -196,7 +206,7 @@ Namespace Core
                             StopServer()
                             AddHandler ServerStopped, AddressOf SafeFormClose
                             e.Cancel = True
-                        ElseIf res = Windows.Forms.DialogResult.Cancel Then
+                        ElseIf res = DialogResult.Cancel Then
                             e.Cancel = True
                         End If
                     End If
@@ -213,18 +223,21 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' If we need to go to tray, make sure we do. (prevents the GUI to be minimized instead of hidden due to a bug on some systems)
+        '''     If we need to go to tray, make sure we do. (prevents the GUI to be minimized instead of hidden due to a bug on some
+        '''     systems)
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub mainform_Resize(sender As System.Object, e As System.EventArgs) Handles MyBase.Resize
+        Private Sub mainform_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
             If TrayMinimize And Me.WindowState = FormWindowState.Minimized Then SendToTray()
         End Sub
 
+
         ''' <summary>
-        ''' Close form thread-safe
+        '''     Close form thread-safe
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub SafeFormClose()
@@ -236,8 +249,9 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Set all dynamic handles
+        '''     Set all dynamic handles
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub set_handles()
@@ -245,10 +259,10 @@ Namespace Core
             'Though, some important are done this way
             'This allows to remove the handlers dynamicly
 
-            If Common.MainWindowHandle <> Me.Handle Then _
-                livebug.write(loggingLevel.Warning, "mainform", "Mainform window handle save invalid!") _
-                  : Common.MainWindowHandle = Me.Handle _
-                  : livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
+            If MainWindowHandle <> Me.Handle Then _
+                Log(loggingLevel.Warning, "mainform", "Mainform window handle save invalid!") _
+                    : MainWindowHandle = Me.Handle _
+                    : Log(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
             AddHandler Me.FormClosed, AddressOf Common.Dispose
             AddHandler Me.FormClosed, AddressOf KillThreads
@@ -257,31 +271,31 @@ Namespace Core
 
             AddHandler BukkitTools.BukkitVersionFetchComplete, AddressOf BukkitVersionFetchComplete
 
-            AddHandler server.ServerStarted, AddressOf hnd_server_started
-            AddHandler server.ServerStopped, AddressOf hdn_server_stop
-            AddHandler server.ServerStarting, AddressOf hnd_server_starting
+            AddHandler ServerStarted, AddressOf hnd_server_started
+            AddHandler ServerStopped, AddressOf hdn_server_stop
+            AddHandler ServerStarting, AddressOf hnd_server_starting
 
             AddHandler serverOutputHandler.PlayerJoin, AddressOf hnd_PlayerJoin
             AddHandler serverOutputHandler.PlayerDisconnect, AddressOf hnd_PlayerDisconnect
 
-            AddHandler InstalledPluginManager.InstalledPluginsLoaded_Base, AddressOf LoadInstalledPlugins
-            AddHandler InstalledPluginManager.InstalledPluginsLoaded_Full, AddressOf LoadInstalledPlugins
+            AddHandler InstalledPluginsLoaded_Base, AddressOf LoadInstalledPlugins
+            AddHandler InstalledPluginsLoaded_Full, AddressOf LoadInstalledPlugins
 
-            AddHandler BukGetAPI.PluginListLoaded, AddressOf thds_SetBukGetPlugins
+            AddHandler PluginListLoaded, AddressOf thds_SetBukGetPlugins
 
-            AddHandler TaskManager.TasksLoaded, AddressOf TaskManager_UpdateUI
+            AddHandler TasksLoaded, AddressOf TaskManager_UpdateUI
 
-            AddHandler serverinteraction.IP_Loaded, AddressOf hnd_ip_loaded
-            AddHandler Bertware.Get.api.LatestRecommededVersionLoaded, AddressOf hnd_last_version_loaded
+            AddHandler IP_Loaded, AddressOf hnd_ip_loaded
+            AddHandler LatestRecommededVersionLoaded, AddressOf hnd_last_version_loaded
 
             AddHandler Tray.DoubleClick, AddressOf ShowFromTray
 
             AddHandler ErrorManager.ErrorLVICreated, AddressOf errorLVICreated
-            AddHandler BackupManager.BackupsLoaded, AddressOf BackupManager_UpdateUI
+            AddHandler BackupsLoaded, AddressOf BackupManager_UpdateUI
 
-            AddHandler serverOutputHandler.CheckUILists, AddressOf playerlist_CheckUIList
+            AddHandler CheckUILists, AddressOf playerlist_CheckUIList
 
-            AddHandler Me.ToTray, AddressOf Performance.Disable
+            AddHandler Me.ToTray, AddressOf Disable
             AddHandler Me.FromTray, AddressOf Performance.Init
         End Sub
 
@@ -322,8 +336,9 @@ Namespace Core
 
 #Region "Server management"
 
+
         ''' <summary>
-        ''' Starts or stops the server, depending on the current state
+        '''     Starts or stops the server, depending on the current state
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub toggle_server() Handles BtnGeneralStartStop.Click
@@ -331,19 +346,20 @@ Namespace Core
                 Dim d As New ContextCallback(AddressOf toggle_server)
                 Me.Invoke(d, New Object())
             Else
-                If server.running = False Then start_server() Else stop_server()
+                If running = False Then start_server() Else stop_server()
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Start the server
+        '''     Start the server
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub start_server() Handles BtnSuperStartLaunch.Click
 
-            RemoveHandler server.ServerStopped, AddressOf start_server
+            RemoveHandler ServerStopped, AddressOf start_server
 
-            serverOutputHandler.UTF8Compatibility = ChkTextUTF8.Checked
+            UTF8Compatibility = ChkTextUTF8.Checked
 
             If Me.Created = False Then
                 Dim i As Byte = 0
@@ -363,13 +379,13 @@ Namespace Core
 
                 Try
                     If CBSuperstartServerType.SelectedItem Is Nothing Then
-                        livebug.write(loggingLevel.Warning, "Mainform",
-                                      "No settings for superstart available. Checking if they can be loaded")
+                        Log(loggingLevel.Warning, "Mainform",
+                            "No settings for superstart available. Checking if they can be loaded")
                         superstart_init()
                         If CBSuperstartServerType.SelectedItem Is Nothing Then Exit Sub
                     End If
-                    livebug.write(loggingLevel.Fine, "Mainform",
-                                  "Starting new server - selected type:" & CBSuperstartServerType.SelectedItem.ToString)
+                    Log(loggingLevel.Fine, "Mainform",
+                        "Starting new server - selected type:" & CBSuperstartServerType.SelectedItem.ToString)
 
                     ALVPlayersPlayers.Items.Clear()
                     ALVGeneralPlayers.Items.Clear()
@@ -438,9 +454,9 @@ Namespace Core
 
                     Select Case CBSuperstartServerType.SelectedIndex
                         Case 0
-                            livebug.write(loggingLevel.Fine, "Mainform", "Starting new bukkit server...")
+                            Log(loggingLevel.Fine, "Mainform", "Starting new bukkit server...")
 
-                            If FileIO.FileSystem.FileExists(TxtSuperstartJavaJarFile.Text) = False Then
+                            If FileSystem.FileExists(TxtSuperstartJavaJarFile.Text) = False Then
                                 MessageBox.Show(
                                     Lr(
                                         "The server could not be started: the .jar file specified could not be found. Please make sure all superstart settings are valid."),
@@ -461,8 +477,8 @@ Namespace Core
 
                                 End If
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "Mainform",
-                                              "Error in bukkit version check/auto update", ex.Message)
+                                Log(loggingLevel.Warning, "Mainform",
+                                    "Error in bukkit version check/auto update", ex.Message)
                                 thds_write_output(
                                     New thds_pass_servermessage(
                                         "[GUI] Error in bukkit version check/auto update. Server continues to start...",
@@ -484,9 +500,9 @@ Namespace Core
                                                       TBSuperstartJavaMaxRam.Value, TxtSuperstartJavaJarFile.Text,
                                                       TxtSuperstartJavaCustomArgs.Text,
                                                       TxtSuperstartJavaCustomSwitch.Text, McInteropType.bukkit)
-                            server.StartServer(ja, McInteropType.bukkit)
+                            StartServer(ja, McInteropType.bukkit)
                         Case 1
-                            livebug.write(loggingLevel.Fine, "Mainform", "Starting new vanilla server...")
+                            Log(loggingLevel.Fine, "Mainform", "Starting new vanilla server...")
                             thds_write_output(
                                 New thds_pass_servermessage(
                                     "[GUI]" & Lr("Starting vanilla server") & " - " & Lr("min. RAM:") &
@@ -498,7 +514,7 @@ Namespace Core
                                                       TBSuperstartJavaMaxRam.Value, TxtSuperstartJavaJarFile.Text,
                                                       TxtSuperstartJavaCustomArgs.Text,
                                                       TxtSuperstartJavaCustomSwitch.Text, McInteropType.vanilla)
-                            server.StartServer(ja, McInteropType.vanilla)
+                            StartServer(ja, McInteropType.vanilla)
                         Case 2
                             thds_write_output(
                                 New thds_pass_servermessage("[GUI]" & Lr("Starting new remote jsonapi server..."),
@@ -513,9 +529,9 @@ Namespace Core
                                 .port = NumSuperstartRemotePort.Value
                             End With
                             rs.Credentials = rcred
-                            server.StartServer(rs)
+                            StartServer(rs)
                         Case 3
-                            livebug.write(loggingLevel.Fine, "Mainform", "Starting new java server...")
+                            Log(loggingLevel.Fine, "Mainform", "Starting new java server...")
                             thds_write_output(
                                 New thds_pass_servermessage(
                                     "[GUI] " & Lr("Starting java server") & " - " & Lr("min. RAM:") &
@@ -529,10 +545,10 @@ Namespace Core
                                                       TBSuperstartJavaMaxRam.Value, TxtSuperstartJavaJarFile.Text,
                                                       TxtSuperstartJavaCustomArgs.Text,
                                                       TxtSuperstartJavaCustomSwitch.Text, McInteropType.java)
-                            server.StartServer(ja, McInteropType.java)
+                            StartServer(ja, McInteropType.java)
 
                         Case 4
-                            livebug.write(loggingLevel.Fine, "Mainform", "Starting new spigot server...")
+                            Log(loggingLevel.Fine, "Mainform", "Starting new spigot server...")
                             thds_write_output(
                                 New thds_pass_servermessage(
                                     "[GUI]" & Lr("Starting spigot server") & " - " & Lr("min. RAM:") &
@@ -543,19 +559,21 @@ Namespace Core
                                     New javaStartArgs(CBSuperstartJavaJRE.SelectedIndex, TBSuperstartJavaMinRam.Value,
                                                       TBSuperstartJavaMaxRam.Value, TxtSuperstartJavaJarFile.Text,
                                                       TxtSuperstartJavaCustomArgs.Text,
-                                                      TxtSuperstartJavaCustomSwitch.Text, McInteropType.spigot) 'spigot type for extra parameter
-                            server.StartServer(ja, McInteropType.bukkit) 'list as bukkit server for other services like plugin manager and parsing output
+                                                      TxtSuperstartJavaCustomSwitch.Text, McInteropType.spigot) _
+                            'spigot type for extra parameter
+                            StartServer(ja, McInteropType.bukkit) _
+                            'list as bukkit server for other services like plugin manager and parsing output
                     End Select
                     TabCtrlMain.SelectedTab = TabGeneral
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "Mainform", "Severe exception at start_server!", ex.Message)
+                    Log(loggingLevel.Severe, "Mainform", "Severe exception at start_server!", ex.Message)
                 End Try
             End If
         End Sub
 
         Private Sub WrongServerTypePopup(currentserver As String, newid As Byte)
-            livebug.write(loggingLevel.Fine, "Mainform", "Wrong server type detected, asking user",
-                          TxtSuperstartJavaJarFile.Text)
+            Log(loggingLevel.Fine, "Mainform", "Wrong server type detected, asking user",
+                TxtSuperstartJavaJarFile.Text)
             Dim server = "bukkit"
             If newid = 1 Then server = "vanilla"
 
@@ -567,16 +585,16 @@ Namespace Core
                     " in the superstart tab. Do you want to fix this automaticly?" _
                     & " A wrong server type might cause the server to misbehave." _
                     , "Wrong server type", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning)
-                Case Windows.Forms.DialogResult.Yes
+                Case DialogResult.Yes
                     CBSuperstartServerType.SelectedIndex = newid
-                    config.write("server", newid, "superstart")
-                    livebug.write(loggingLevel.Fine, "Mainform", "Fixed wrong server type")
+                    write("server", newid, "superstart")
+                    Log(loggingLevel.Fine, "Mainform", "Fixed wrong server type")
                     Exit Sub
-                Case Windows.Forms.DialogResult.No
-                    livebug.write(loggingLevel.Fine, "Mainform", "Cancelling server start")
+                Case DialogResult.No
+                    Log(loggingLevel.Fine, "Mainform", "Cancelling server start")
                     Exit Sub
-                Case Windows.Forms.DialogResult.Cancel
-                    livebug.write(loggingLevel.Fine, "Mainform", "Ignoring server type error")
+                Case DialogResult.Cancel
+                    Log(loggingLevel.Fine, "Mainform", "Ignoring server type error")
             End Select
         End Sub
 
@@ -603,55 +621,56 @@ Namespace Core
 
 
             Dim bukkitVersion As BukkitVersionDetails =
-                    BukkitTools.GetCurrentBukkitVersion(CBSuperstartJavaJRE.SelectedIndex, TxtSuperstartJavaJarFile.Text)
+                    GetCurrentBukkitVersion(CBSuperstartJavaJRE.SelectedIndex, TxtSuperstartJavaJarFile.Text)
             Dim ver As UInt16 = bukkitVersion.Build
             If ver < 1 Then
-                livebug.write(loggingLevel.Warning, "mainform", "Could not retrieve current bukkit version",
-                              "CheckBukkitVersion()")
+                Log(loggingLevel.Warning, "mainform", "Could not retrieve current bukkit version",
+                    "CheckBukkitVersion()")
                 thds_write_output(
                     New thds_pass_servermessage("[GUI] " + Lr("Your current bukkit version couldn't be determined"),
                                                 clrWarning))
                 Exit Sub
             End If
 
-            livebug.write(loggingLevel.Fine, "mainform", "Current bukkit version:" & ver, "CheckBukkitVersion()")
+            Log(loggingLevel.Fine, "mainform", "Current bukkit version:" & ver, "CheckBukkitVersion()")
             thds_write_output(
                 New thds_pass_servermessage(
                     "[GUI] " + Lr("Your current bukkit version is") & " " & bukkitVersion.ToString, clrInfo))
-            If BukkitTools.Fetched Then _
-                livebug.write(loggingLevel.Fine, "mainform",
-                              "Latest recommended build:" & BukkitTools.Recommended_info.build, "CheckBukkitVersion()") _
+            If Fetched Then _
+                Log(loggingLevel.Fine, "mainform",
+                    "Latest recommended build:" & Recommended_info.build, "CheckBukkitVersion()") _
                 Else _
-                livebug.write(loggingLevel.Fine, "mainform",
-                              "Latest recommended build not fetched. Auto update not available", "CheckBukkitVersion()")
+                Log(loggingLevel.Fine, "mainform",
+                    "Latest recommended build not fetched. Auto update not available", "CheckBukkitVersion()")
 
-            If BukkitTools.Fetched AndAlso ver < BukkitTools.Latest_Recommended Then
+            If Fetched AndAlso ver < Latest_Recommended Then
                 thds_write_output(
                     New thds_pass_servermessage(
-                        "[GUI] " + Lr("A new bukkit version is available:") & " #" & BukkitTools.Recommended_info.build &
-                        " : " & BukkitTools.Recommended_info.version, Color.Green))
+                        "[GUI] " + Lr("A new bukkit version is available:") & " #" & Recommended_info.build &
+                        " : " & Recommended_info.version, Color.Green))
 
                 If ChkSuperstartAutoUpdate.Checked Or ChkSuperstartAutoUpdateNotify.Checked Then
                     Dim res As DialogResult
                     If ChkSuperstartAutoUpdateNotify.Checked Then
-                        livebug.write(loggingLevel.Fine, "mainform", "Asking for auto update", "CheckBukkitVersion()")
+                        Log(loggingLevel.Fine, "mainform", "Asking for auto update", "CheckBukkitVersion()")
                         res =
                             MessageBox.Show(
-                                Lr("A new version for bukkit is available: #%1 : %2. Do you want to auto update now?", BukkitTools.Recommended_info.build, BukkitTools.Recommended_info.version), _
+                                Lr("A new version for bukkit is available: #%1 : %2. Do you want to auto update now?",
+                                   Recommended_info.build, Recommended_info.version),
                                 Lr("Bukkit update available"), MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                     End If
 
-                    If ChkSuperstartAutoUpdate.Checked Then res = Windows.Forms.DialogResult.OK
+                    If ChkSuperstartAutoUpdate.Checked Then res = DialogResult.OK
 
-                    If res = Windows.Forms.DialogResult.OK Or res = Windows.Forms.DialogResult.Yes Then
-                        livebug.write(loggingLevel.Fine, "mainform", "Starting auto update", "CheckBukkitVersion()")
+                    If res = DialogResult.OK Or res = DialogResult.Yes Then
+                        Log(loggingLevel.Fine, "mainform", "Starting auto update", "CheckBukkitVersion()")
                         BukkitTools.Download(BukkitVersionType.rb, TxtSuperstartJavaJarFile.Text)
-                        livebug.write(loggingLevel.Fine, "mainform", "Auto update completed, resuming server start",
-                                      "mainform")
+                        Log(loggingLevel.Fine, "mainform", "Auto update completed, resuming server start",
+                            "mainform")
                         thds_write_output(
                             New thds_pass_servermessage(
                                 "[GUI] " + Lr("Bukkit was updated to the latest version:") & " #" &
-                                BukkitTools.Recommended_info.build & " (" & BukkitTools.Recommended_info.version & ")",
+                                Recommended_info.build & " (" & Recommended_info.version & ")",
                                 Color.Green))
                     End If
                 End If
@@ -659,8 +678,9 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Stop the server
+        '''     Stop the server
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub stop_server()
@@ -678,13 +698,13 @@ Namespace Core
                 Dim d As New ContextCallback(AddressOf stop_server)
                 Me.Invoke(d, New Object())
             Else
-                livebug.write(loggingLevel.Fine, "mainform", "Stopping server...", "stop_server()")
+                Log(loggingLevel.Fine, "mainform", "Stopping server...", "stop_server()")
                 thds_write_output(New thds_pass_servermessage("[GUI] " + Lr("Stopping the server..."), clrInfo))
                 Try
-                    If server.CurrentServerType = McInteropType.remote Then
-                        If server.RemoteServerObject IsNot Nothing Then server.RemoteServerObject.Close()
+                    If CurrentServerType = McInteropType.remote Then
+                        If RemoteServerObject IsNot Nothing Then RemoteServerObject.Close()
                     Else
-                        server.SendCommand("stop")
+                        SendCommand("stop")
                         thds_setserverstate(Lr("Stopping server"))
                         BtnGeneralReload.Enabled = False
                         BtnGeneralRestart.Enabled = False
@@ -693,13 +713,14 @@ Namespace Core
                         BtnSuperStartLaunch.Enabled = False
                     End If
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Severe exception at stop_server!", ex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Severe exception at stop_server!", ex.Message)
                 End Try
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Restart the server completely
+        '''     Restart the server completely
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub restart_server() Handles BtnGeneralRestart.Click
@@ -707,30 +728,31 @@ Namespace Core
                 Dim d As New ContextCallback(AddressOf restart_server)
                 Me.Invoke(d, New Object())
             Else
-                livebug.write(loggingLevel.Fine, "mainform", "Restarting server")
+                Log(loggingLevel.Fine, "mainform", "Restarting server")
                 thds_write_output(New thds_pass_servermessage("[GUI] " + Lr("Restarting the server..."), clrInfo))
                 stop_server()
-                AddHandler server.ServerStopped, AddressOf start_server
+                AddHandler ServerStopped, AddressOf start_server
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Reload the server
+        '''     Reload the server
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub reload_server() Handles BtnGeneralReload.Click
-            server.SendCommand("reload", True)
+            SendCommand("reload", True)
             thds_write_output(New thds_pass_servermessage("[GUI] " + Lr("Reloading the server..."), clrInfo))
         End Sub
 
         Private Sub kill_server() Handles BtnGeneralKill.Click
             If _
-                server.host IsNot Nothing AndAlso server.host.HasExited = False AndAlso
+                host IsNot Nothing AndAlso host.HasExited = False AndAlso
                 MessageBox.Show(Lr("Do you really want to kill the server? This can corrupt your data!"),
                                 Lr("Kill server?"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) =
-                Windows.Forms.DialogResult.Yes Then
+                DialogResult.Yes Then
                 Try
-                    server.host.Kill()
+                    host.Kill()
                 Catch ex As Exception
                     MessageBox.Show(Lr("The server couldn't be killed - probably it has been shut down already"),
                                     Lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -747,8 +769,9 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' If enter pressed in textbox, or "send command" button pressed, send command to server
+        '''     If enter pressed in textbox, or "send command" button pressed, send command to server
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub server_send_command_buttonhandler() Handles BtnGeneralSendCmd.Click
@@ -760,7 +783,7 @@ Namespace Core
 
                 server_send_command_override(prefix & Me.TxtGeneralServerIn.Text)  'send command
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at server_send_command!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception at server_send_command!", ex.Message)
             End Try
         End Sub
 
@@ -774,17 +797,18 @@ Namespace Core
                     command = prefix & Me.TxtGeneralServerIn.Text
                 End If
 
-                server.SendCommand(command)  'send command
+                SendCommand(command)  'send command
 
                 TxtGeneralServerIn.AutoCompleteCustomSource.Add(Me.TxtGeneralServerIn.Text) 'add to textbox history
                 Me.TxtGeneralServerIn.Text = "" 'clear textbox
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at server_send_command!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception at server_send_command!", ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' handle starting server
+        '''     handle starting server
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub hnd_server_starting()
@@ -802,14 +826,15 @@ Namespace Core
                     BtnGeneralStartStop.Enabled = False
                     BtnSuperStartLaunch.Enabled = False
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Severe exception at hnd_server_starting!",
-                                  ex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Severe exception at hnd_server_starting!",
+                        ex.Message)
                 End Try
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Handle the started server
+        '''     Handle the started server
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub hnd_server_started()
@@ -821,13 +846,13 @@ Namespace Core
                     thds_setserverstate(Lr("Server started"))
                     thds_write_output(New thds_pass_servermessage("[GUI] " + Lr("Server started..."), clrInfo))
 
-                    Dim ip As String = serverinteraction.external_ip_chache
+                    Dim ip As String = external_ip_chache
 
-                    ServerSettings.LoadSettings()
+                    LoadSettings()
                     Dim motd As String = ""
-                    If Not Common.IsRunningLight Then motd = ServerSettings.MOTD
+                    If Not IsRunningLight Then motd = ServerSettings.MOTD
 
-                    If server.CurrentServerType <> McInteropType.remote Then
+                    If CurrentServerType <> McInteropType.remote Then
                         If motd = "" Then
                             If ip IsNot Nothing AndAlso ip <> "" AndAlso ip.Contains("error") = False Then
                                 thds_setformCaption(_caption & " - " & Lr("Server running") & " - " & ip)
@@ -844,12 +869,12 @@ Namespace Core
                     Else
                         thds_setformCaption(
                             _caption & " - " & Lr("Connected to remote server") & " - " &
-                            config.read("remote_host", "", "superstart"))
+                            read("remote_host", "", "superstart"))
                     End If
 
                     _threadsWork = True
                     'Initialize threads
-                    If server.CurrentServerType <> McInteropType.remote Then
+                    If CurrentServerType <> McInteropType.remote Then
                         _threadReadError = New Thread(AddressOf thd_read_error)
                         _threadReadError.Name = "read_error"
                         _threadReadError.IsBackground = True
@@ -874,13 +899,14 @@ Namespace Core
                     BtnGeneralStartStop.Enabled = True
                     BtnSuperStartLaunch.Enabled = False
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Severe exception at hnd_server_started!", ex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Severe exception at hnd_server_started!", ex.Message)
                 End Try
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Handle the stopped server
+        '''     Handle the stopped server
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub hdn_server_stop()
@@ -889,7 +915,7 @@ Namespace Core
                 Me.Invoke(d, New Object())
             Else
                 Try
-                    livebug.write(loggingLevel.Info, "mainform", "The server has stopped. Updating UI")
+                    Log(loggingLevel.Info, "mainform", "The server has stopped. Updating UI")
                     thds_setserverstate(Lr("Server stopped"))
                     thds_setformCaption(_caption & " - " & Lr("Server stopped"))
 
@@ -907,19 +933,20 @@ Namespace Core
                     BtnSuperStartLaunch.Enabled = True
                     TxtGeneralServerIn.AutoCompleteCustomSource.Clear()
                     thds_write_output(New thds_pass_servermessage("[GUI] " & Lr("The server has stopped..."), clrInfo))
-                    livebug.write(loggingLevel.Info, "mainform", "The server has stopped. Updated UI")
+                    Log(loggingLevel.Info, "mainform", "The server has stopped. Updated UI")
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Severe exception at hnd_server_stop!", ex.Message)
+                    Log(loggingLevel.Severe, "mainform", "Severe exception at hnd_server_stop!", ex.Message)
                 End Try
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Kill the threads that read the server output
+        '''     Kill the threads that read the server output
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub KillThreads()
-            livebug.write(loggingLevel.Fine, "mainform", "Killing threads...")
+            Log(loggingLevel.Fine, "mainform", "Killing threads...")
             If _
                 _threadReadError IsNot Nothing AndAlso _threadReadError.IsAlive AndAlso
                 (_threadReadError.ThreadState = ThreadState.Running Or
@@ -929,7 +956,7 @@ Namespace Core
                     Thread.Sleep(10)
                     _threadReadError = Nothing
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Could not dispose thread_read_Error")
+                    Log(loggingLevel.Severe, "mainform", "Could not dispose thread_read_Error")
                 End Try
             End If
             If _
@@ -941,7 +968,7 @@ Namespace Core
                     Thread.Sleep(10)
                     _threadReadOut = Nothing
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Severe, "mainform", "Could not dispose thread_read_out")
+                    Log(loggingLevel.Severe, "mainform", "Could not dispose thread_read_out")
                 End Try
             End If
 
@@ -950,8 +977,9 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Routine to read StandardOut
+        '''     Routine to read StandardOut
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub thd_read_output()
@@ -960,33 +988,33 @@ Namespace Core
                 Thread.Sleep(50) 'make sure the server is fully started
                 'Actually a pretty small sub
                 'Most of the work is passed to hnd_handle_output, who handles a part of the content, and passes the rest for further handling
-                If server.serverOut Is Nothing Then
+                If serverOut Is Nothing Then
                     Thread.Sleep(50)
-                    If server.serverOut Is Nothing Then _
-                        livebug.write(loggingLevel.Warning, "mainform", "Output thread start aborted...") : Exit Sub
+                    If serverOut Is Nothing Then _
+                        Log(loggingLevel.Warning, "mainform", "Output thread start aborted...") : Exit Sub
                 End If
 
 
-                livebug.write(loggingLevel.Fine, "mainform", "Output thread started...")
-                If server.running = False OrElse server.serverOut Is Nothing Then _
-                    livebug.write(loggingLevel.Warning, "mainform",
-                                  "Output thread stopped, server stopped immediatly...") : Exit Sub
-                Dim sr As New StreamReader(server.serverOut, System.Text.Encoding.GetEncoding(Common.ServerEncoding)) _
+                Log(loggingLevel.Fine, "mainform", "Output thread started...")
+                If running = False OrElse serverOut Is Nothing Then _
+                    Log(loggingLevel.Warning, "mainform",
+                        "Output thread stopped, server stopped immediatly...") : Exit Sub
+                Dim sr As New StreamReader(serverOut, Encoding.GetEncoding(ServerEncoding)) _
                 'ISO-8859-1
                 While _
-                    server.serverOut IsNot Nothing AndAlso server.running AndAlso _threadsWork AndAlso
-                    server.host.HasExited = False
+                    serverOut IsNot Nothing AndAlso running AndAlso _threadsWork AndAlso
+                    host.HasExited = False
                     Dim rc As String = ""
                     Try
                         While _
-                            server.serverOut IsNot Nothing AndAlso server.running AndAlso _threadsWork AndAlso
-                            server.host.HasExited = False AndAlso sr.EndOfStream
+                            serverOut IsNot Nothing AndAlso running AndAlso _threadsWork AndAlso
+                            host.HasExited = False AndAlso sr.EndOfStream
                             Thread.Sleep(100)
                         End While
                         rc = sr.ReadLine() 'rc - received content
                     Catch readex As Exception
-                        livebug.write(loggingLevel.Warning, "mainform", "Could not read from stream at thd_read_output!",
-                                      readex.Message)
+                        Log(loggingLevel.Warning, "mainform", "Could not read from stream at thd_read_output!",
+                            readex.Message)
                     End Try
                     If rc Is Nothing OrElse rc = ">" OrElse rc = "" Then
                     Else
@@ -996,14 +1024,14 @@ Namespace Core
                     End If
                 End While
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at thd_read_output!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception at thd_read_output!", ex.Message)
             End Try
-            livebug.write(loggingLevel.Info, "mainform", "thd_read_output exited")
+            Log(loggingLevel.Info, "mainform", "thd_read_output exited")
         End Sub
 
 
         ''' <summary>
-        ''' Routine to read StandardError
+        '''     Routine to read StandardError
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub thd_read_error()
@@ -1015,28 +1043,28 @@ Namespace Core
                 If server.serverError Is Nothing Then
                     Thread.Sleep(50)
                     If server.serverError Is Nothing Then _
-                        livebug.write(loggingLevel.Warning, "mainform", "Error thread start aborted...") : Exit Sub
+                        Log(loggingLevel.Warning, "mainform", "Error thread start aborted...") : Exit Sub
                 End If
 
-                livebug.write(loggingLevel.Fine, "mainform", "Error thread started...")
-                If server.running = False OrElse server.serverError Is Nothing Then _
-                    livebug.write(loggingLevel.Warning, "mainform", "Error thread stopped, server stopped immediatly...") _
+                Log(loggingLevel.Fine, "mainform", "Error thread started...")
+                If running = False OrElse server.serverError Is Nothing Then _
+                    Log(loggingLevel.Warning, "mainform", "Error thread stopped, server stopped immediatly...") _
                         : Exit Sub
-                Dim sr As New StreamReader(server.serverError, System.Text.Encoding.GetEncoding(Common.ServerEncoding))
+                Dim sr As New StreamReader(server.serverError, Encoding.GetEncoding(ServerEncoding))
                 While _
-                    server.serverError IsNot Nothing AndAlso server.running AndAlso _threadsWork AndAlso
-                    server.host.HasExited = False AndAlso sr IsNot Nothing
+                    server.serverError IsNot Nothing AndAlso running AndAlso _threadsWork AndAlso
+                    host.HasExited = False AndAlso sr IsNot Nothing
                     Dim rc As String = ""
                     Try
                         While _
-                            server.serverOut IsNot Nothing AndAlso server.running AndAlso _threadsWork AndAlso
-                            server.host.HasExited = False AndAlso sr.EndOfStream
+                            serverOut IsNot Nothing AndAlso running AndAlso _threadsWork AndAlso
+                            host.HasExited = False AndAlso sr.EndOfStream
                             Thread.Sleep(100)
                         End While
                         rc = sr.ReadLine() 'rc - received content
                     Catch readex As Exception
-                        livebug.write(loggingLevel.Warning, "mainform", "Could not read from stream at thd_read_error!",
-                                      readex.Message)
+                        Log(loggingLevel.Warning, "mainform", "Could not read from stream at thd_read_error!",
+                            readex.Message)
                     End Try
 
                     If rc Is Nothing OrElse rc = ">" OrElse rc = "" Then
@@ -1046,13 +1074,14 @@ Namespace Core
 
                 End While
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at thd_read_error!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception at thd_read_error!", ex.Message)
             End Try
-            livebug.write(loggingLevel.Info, "mainform", "thd_read_error exited")
+            Log(loggingLevel.Info, "mainform", "thd_read_error exited")
         End Sub
 
+
         ''' <summary>
-        ''' Routine to read StandardError
+        '''     Routine to read StandardError
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub thd_read_remote()
@@ -1060,27 +1089,27 @@ Namespace Core
                 Thread.Sleep(10) 'make sure the server is fully started
                 'Actually a pretty small sub. Identical to thd_read_output, only different stream.
                 'Most of the work is passed to hnd_handle_output, who handles a part of the content, and passes the rest for further handling
-                livebug.write(loggingLevel.Fine, "mainform", "remote reader thread started...")
+                Log(loggingLevel.Fine, "mainform", "remote reader thread started...")
 
                 While _
-                    server.RemoteServerObject IsNot Nothing AndAlso server.running AndAlso _threadsWork AndAlso
-                    server.host.HasExited = False AndAlso server.RemoteServerObject.StandardOut IsNot Nothing
+                    RemoteServerObject IsNot Nothing AndAlso running AndAlso _threadsWork AndAlso
+                    host.HasExited = False AndAlso RemoteServerObject.StandardOut IsNot Nothing
                     If _
-                        server.RemoteServerObject IsNot Nothing AndAlso
-                        server.RemoteServerObject.StandardOut IsNot Nothing AndAlso
-                        server.RemoteServerObject.StandardOut.EOS = False Then
-                        Dim rcv As String = server.RemoteServerObject.StandardOut.read
+                        RemoteServerObject IsNot Nothing AndAlso
+                        RemoteServerObject.StandardOut IsNot Nothing AndAlso
+                        RemoteServerObject.StandardOut.EOS = False Then
+                        Dim rcv As String = RemoteServerObject.StandardOut.read
                         If rcv IsNot Nothing AndAlso rcv.ToLower.Contains("[api call]") = False Then _
                             hnd_handle_output(rcv)
                     End If
                     Thread.Sleep(10)
                 End While
             Catch nulex As NullReferenceException
-                livebug.write(loggingLevel.Warning, "mainform", "Nullreferenceexception at thd_read_remote!",
-                              nulex.Message)
-                If server.running OrElse server.RemoteServerObject IsNot Nothing OrElse _threadsWork Then
-                    livebug.write(loggingLevel.Warning, "mainform",
-                                  "Terminating remote server, due to stopped reader thread!")
+                Log(loggingLevel.Warning, "mainform", "Nullreferenceexception at thd_read_remote!",
+                    nulex.Message)
+                If running OrElse RemoteServerObject IsNot Nothing OrElse _threadsWork Then
+                    Log(loggingLevel.Warning, "mainform",
+                        "Terminating remote server, due to stopped reader thread!")
                     thds_write_output(
                         New thds_pass_servermessage(
                             "[GUI] " & Lr("Killed remote server connection due to an error in remote reader thread."),
@@ -1088,10 +1117,10 @@ Namespace Core
                     StopServer()
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at thd_read_remote!", ex.Message)
-                If server.running OrElse server.RemoteServerObject IsNot Nothing OrElse _threadsWork Then
-                    livebug.write(loggingLevel.Severe, "mainform",
-                                  "Terminating remote server, due to stopped reader thread!")
+                Log(loggingLevel.Severe, "mainform", "Severe exception at thd_read_remote!", ex.Message)
+                If running OrElse RemoteServerObject IsNot Nothing OrElse _threadsWork Then
+                    Log(loggingLevel.Severe, "mainform",
+                        "Terminating remote server, due to stopped reader thread!")
                     thds_write_output(
                         New thds_pass_servermessage(
                             "[GUI] " &
@@ -1103,10 +1132,14 @@ Namespace Core
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Handle output gathered by the read_output and read_error routines
+        '''     Handle output gathered by the read_output and read_error routines
         ''' </summary>
-        ''' <remarks>This routine is called by thd_read_error or thd_read_output. This means it's still on a different thread then the main thread.</remarks>
+        ''' <remarks>
+        '''     This routine is called by thd_read_error or thd_read_output. This means it's still on a different thread then
+        '''     the main thread.
+        ''' </remarks>
         Private Sub hnd_handle_output(ByVal text As String)
             'We don't want high delays on the text output.
             'To reduce the delays, only vital things (like color, modifying,..) are done in this routine
@@ -1117,7 +1150,7 @@ Namespace Core
                     text.Contains("[INFO] Command run by remote user") OrElse text = vbCrLf Then Exit Sub _
                 'check if text is valid
 
-                text = serverOutputHandler.FixJLine(text) 'Fix JLine coolor codes
+                text = FixJLine(text) 'Fix JLine coolor codes
 
                 Debug.WriteLine("Handling text:" & text, "debug")
 
@@ -1126,14 +1159,14 @@ Namespace Core
                 Debug.WriteLine("Fixed 1.7.2:" & text, "debug")
 
                 If _
-                    server.CurrentServerType = McInteropType.remote And
+                    CurrentServerType = McInteropType.remote And
                     text.Contains("[INFO] Command run by remote user") Then Exit Sub _
                 'hide jsonapi, to prevent annoying output every time you connect to a jsonapi server
 
                 Dim Type As MessageType = getMessageType(text) 'get the type of this sentence
 
                 Try 'Create a new thread for parsing output
-                    Dim tpo As New Thread(AddressOf serverOutputHandler.LookupAsync)
+                    Dim tpo As New Thread(AddressOf LookupAsync)
                     tpo.IsBackground = True
                     tpo.Name = "outputhandler_lookupasync"
                     Dim p As New thds_pass_lookup _
@@ -1142,8 +1175,8 @@ Namespace Core
                     p.type = Type
                     tpo.Start(p)
                 Catch thdex As ThreadStartException
-                    livebug.write(loggingLevel.Warning, "mainform", "ThreadStart exception at hnd_handle_output!",
-                                  thdex.Message)
+                    Log(loggingLevel.Warning, "mainform", "ThreadStart exception at hnd_handle_output!",
+                        thdex.Message)
                 End Try
 
 
@@ -1160,7 +1193,7 @@ Namespace Core
                     text.Contains("[INFO] There are ") And text.Contains(" out of maximum ") And
                     text.Contains(" players online.") Then Exit Sub '[INFO] There are 0 out of maximum 8 players online.
 
-                If AdvancedOptions.SpamFilter IsNot Nothing AndAlso AdvancedOptions.SpamFilter.Count > 0 Then _
+                If SpamFilter IsNot Nothing AndAlso SpamFilter.Count > 0 Then _
 'if there are strings in the spamfilter, check for them and hide if needed
                     For Each entry As String In SpamFilter
                         If text.Contains(entry) Then Exit Sub
@@ -1170,12 +1203,12 @@ Namespace Core
                 'Write to output
                 If _
                     Not _
-                    ((Type = MessageType.warning And ErrorManager.Hide_Warnings = True) Or
-                     (Type = MessageType.severe And ErrorManager.Hide_Errors = True) Or
-                     (Type = MessageType.javastacktrace And ErrorManager.Hide_Stacktrace = True)) Then
-                    Dim clr As Color = serverOutputHandler.getMessageColor(Type) 'get the color
+                    ((Type = MessageType.warning And Hide_Warnings = True) Or
+                     (Type = MessageType.severe And Hide_Errors = True) Or
+                     (Type = MessageType.javastacktrace And Hide_Stacktrace = True)) Then
+                    Dim clr As Color = getMessageColor(Type) 'get the color
 
-                    text = serverOutputHandler.rewrite_date(text) 'adjust the date
+                    text = rewrite_date(text) 'adjust the date
                     Dim sm As New thds_pass_servermessage(text, clr) 'create message object
                     thds_write_output(sm) 'print
                 End If
@@ -1191,22 +1224,22 @@ Namespace Core
                 End If
 
                 'Check if the server failed to launch
-                If text.Contains("Perhaps a server is already running on that port") And _
-                    text.ToLower.Contains("[warning]") And (text.ToLower.Contains("[info]")) = False Then
+                If text.Contains("Perhaps a server is already running on that port") And
+                   text.ToLower.Contains("[warning]") And (text.ToLower.Contains("[info]")) = False Then
                     'should not contain [info] to make it chat-proof
 
-                    If server.host IsNot Nothing AndAlso server.host.HasExited = False Then server.host.Kill()
-                    livebug.write(loggingLevel.Fine, "mainform",
-                                  "Server couldn't be started, failed to bind to port. Asking user if java must be killed and restarted.")
+                    If host IsNot Nothing AndAlso host.HasExited = False Then host.Kill()
+                    Log(loggingLevel.Fine, "mainform",
+                        "Server couldn't be started, failed to bind to port. Asking user if java must be killed and restarted.")
                     If _
                         MessageBox.Show(
                             Lr("The server could not be started, reason:") & "Failed to bind to port" & vbCrLf &
                             Lr("This is probably caused by another server that is running already.") & vbCrLf _
                             & Lr("Kill all java instances, and retry to start this server?"),
                             Lr("Server couldn't be started"), MessageBoxButtons.YesNo, MessageBoxIcon.Error) =
-                        Windows.Forms.DialogResult.Yes Then
-                        javaAPI.KillAll() 'kill all
-                        If server.running = False Then start_server() 'restart
+                        DialogResult.Yes Then
+                        KillAll() 'kill all
+                        If running = False Then start_server() 'restart
                     End If
                 End If
 
@@ -1214,7 +1247,7 @@ Namespace Core
                 'tray must be in this routine
                 If ((Not ShowInTaskbar) Or TrayAlways) Then
                     If Type = MessageType.playerjoin And TrayOnPlayerJoin Then
-                        Dim e As PlayerJoinEventArgs = serverOutputHandler.getPlayerJoinArgs(text)
+                        Dim e As PlayerJoinEventArgs = getPlayerJoinArgs(text)
                         Tray.ShowBalloonTip(500, Lr("Player joined"),
                                             e.PlayerJoin.player.name & "(" & e.PlayerJoin.player.IP & ") " &
                                             Lr("logged in to the server"), ToolTipIcon.Info)
@@ -1226,7 +1259,7 @@ Namespace Core
                         Dim e As PlayerDisconnectEventArgs = Nothing
                         Select Case Type
                             Case MessageType.playerleave
-                                e = serverOutputHandler.getPlayerLeaveArgs(text)
+                                e = getPlayerLeaveArgs(text)
                                 Dim pll = CType(e.details, PlayerLeave)
                                 Dim balloontext As String = "Player left"
                                 If pll.reason IsNot Nothing AndAlso pll.reason <> "" Then
@@ -1239,13 +1272,13 @@ Namespace Core
                                                     ToolTipIcon.Info)
 
                             Case MessageType.playerkick
-                                e = serverOutputHandler.getPlayerKickArgs(text)
+                                e = getPlayerKickArgs(text)
                                 Tray.ShowBalloonTip(500, Lr("Player disconnected (Kick)"),
                                                     e.player.name & " " & Lr("disconnected") & ", " & Lr("reason:") &
                                                     " Kicked by " & CType(e.details, PlayerKick).CommandSender.ToString,
                                                     ToolTipIcon.Info)
                             Case MessageType.playerban
-                                e = serverOutputHandler.getPlayerBanArgs(text)
+                                e = getPlayerBanArgs(text)
                                 Tray.ShowBalloonTip(500, Lr("Player disconnected (Ban)"),
                                                     e.player.name & " " & Lr("disconnected") & ", " & Lr("reason:") &
                                                     " Banned by " & CType(e.details, playerBan).CommandSender.ToString,
@@ -1256,7 +1289,7 @@ Namespace Core
 
                     If Type = MessageType.warning And TrayOnWarning Then
                         Tray.BalloonTipIcon = ToolTipIcon.Warning
-                        Tray.BalloonTipText = serverOutputHandler.getWarningArgs(text).message
+                        Tray.BalloonTipText = getWarningArgs(text).message
                         Tray.BalloonTipTitle = Lr("Warning")
                         Tray.ShowBalloonTip(500)
 
@@ -1264,7 +1297,7 @@ Namespace Core
 
                     If Type = MessageType.severe And TrayOnSevere Then
                         Tray.BalloonTipIcon = ToolTipIcon.Error
-                        Tray.BalloonTipText = serverOutputHandler.getSevereArgs(text).message
+                        Tray.BalloonTipText = getSevereArgs(text).message
                         Tray.BalloonTipTitle = Lr("Severe")
                         Tray.ShowBalloonTip(500)
                     End If
@@ -1277,27 +1310,28 @@ Namespace Core
                                 "[GUI] OUT OF MEMORY EXCEPTION! Try running light mode, enable it in the options tab.",
                                 clrSevere))
                     Catch ex As Exception
-                        livebug.write(loggingLevel.Warning, "mainform",
-                                      "hnd_handle_output out of memory. Could not broadcast outofmemory exception to console",
-                                      ex.Message)
+                        Log(loggingLevel.Warning, "mainform",
+                            "hnd_handle_output out of memory. Could not broadcast outofmemory exception to console",
+                            ex.Message)
                     End Try
                 Else
-                    livebug.write(loggingLevel.Warning, "mainform",
-                                  "hnd_handle_output out of memory! (light mode enabled)", memex.Message)
+                    Log(loggingLevel.Warning, "mainform",
+                        "hnd_handle_output out of memory! (light mode enabled)", memex.Message)
                 End If
 
             Catch uaex As UnauthorizedAccessException
-                livebug.write(loggingLevel.Warning, "mainform", "UnauthorizedAccess exception at hnd_handle_output!",
-                              uaex.Message)
-            Catch sex As Security.SecurityException
-                livebug.write(loggingLevel.Warning, "mainform", "Security exception at hnd_handle_output!", sex.Message)
+                Log(loggingLevel.Warning, "mainform", "UnauthorizedAccess exception at hnd_handle_output!",
+                    uaex.Message)
+            Catch sex As SecurityException
+                Log(loggingLevel.Warning, "mainform", "Security exception at hnd_handle_output!", sex.Message)
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at hnd_handle_output!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception at hnd_handle_output!", ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Write server output to the textbox
+        '''     Write server output to the textbox
         ''' </summary>
         ''' <param name="servermsg">The text to write, as a servermessage object</param>
         ''' <remarks></remarks>
@@ -1323,12 +1357,13 @@ Namespace Core
                     ARTXTServerOutput.AppendText(servermsg.fulltext, servermsg.color)
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in thds_write_output", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in thds_write_output", ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Set the server status at the bottom of the page. Status will be translated automaticly
+        '''     Set the server status at the bottom of the page. Status will be translated automaticly
         ''' </summary>
         ''' <param name="state">the state, will be translated</param>
         ''' <remarks></remarks>
@@ -1353,12 +1388,13 @@ Namespace Core
                     Tray.Text = "BukkitGUI - " & Lr(state)
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in thds_setserverstate", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in thds_setserverstate", ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Set the caption of the mainform
+        '''     Set the caption of the mainform
         ''' </summary>
         ''' <param name="caption">The caption to set</param>
         ''' <remarks></remarks>
@@ -1382,7 +1418,7 @@ Namespace Core
                     Me.Text = caption
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in thds_setFormCaption", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in thds_setFormCaption", ex.Message)
             End Try
         End Sub
 
@@ -1391,11 +1427,11 @@ Namespace Core
 
         Private _hndTmrUpdateStatsRamerror As Boolean = False
 
+
         ''' <summary>
-        ''' This routine is called by a timer, to update RAM / CPU / Time running
+        '''     This routine is called by a timer, to update RAM / CPU / Time running
         ''' </summary>
         ''' <remarks></remarks>
-        ''' 
         Private Sub hnd_tmr_update_stats()
             Try
 
@@ -1412,16 +1448,16 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf hnd_tmr_update_stats)
                     Me.Invoke(d, New Object())
                 Else
-                    LblGeneralTimeSinceStartValue.Text = server.timeRunning.ToString
+                    LblGeneralTimeSinceStartValue.Text = timeRunning.ToString
 
 
                     If GuiCpu >= 0 Then
-                        If Performance.GuiCpu <= 100 Then PBGeneralCPUGUI.Value = Performance.GuiCpu
-                        If Performance.TotalCpu <= 100 Then PBGeneralCPUTotal.Value = Performance.TotalCpu
-                        If Performance.ServerCpu <= 100 Then PBGeneralCPUServer.Value = Performance.ServerCpu
-                        lblGeneralCPUGUIValue.Text = Performance.GuiCpu.ToString.PadLeft(3) & "%"
-                        lblGeneralCPUServerValue.Text = Performance.ServerCpu.ToString.PadLeft(3) & "%"
-                        lblGeneralCPUTotalValue.Text = Performance.TotalCpu.ToString.PadLeft(3) & "%"
+                        If GuiCpu <= 100 Then PBGeneralCPUGUI.Value = GuiCpu
+                        If TotalCpu <= 100 Then PBGeneralCPUTotal.Value = TotalCpu
+                        If ServerCpu <= 100 Then PBGeneralCPUServer.Value = ServerCpu
+                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(3) & "%"
+                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(3) & "%"
+                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(3) & "%"
                     Else
                         If _hndTmrUpdateStatsCpuerror = False Then
                             lblGeneralCPUGUIValue.Text = Lr("Unknown")
@@ -1433,15 +1469,15 @@ Namespace Core
                     End If
 
                     If GuiMem >= 0 Then
-                        If Performance.GuiMem <= 100 Then PBGeneralRAMGUI.Value = Performance.GuiMem
-                        If Performance.TotalMem <= 100 Then PBGeneralRAMTotal.Value = Performance.TotalMem
-                        If Performance.ServerMem <= 100 Then PBGeneralRAMServer.Value = Performance.ServerMem
-                        lblGeneralRAMGUIValue.Text = Performance.GuiMem.ToString.PadLeft(3) & "% [" &
-                                                     Performance.GuiMemMbytes & "MB]"
-                        lblGeneralRAMServerValue.Text = Performance.ServerMem.ToString.PadLeft(3) & "% [" &
-                                                        Performance.ServerMemMbytes & "MB]"
-                        lblGeneralRAMTotalValue.Text = Performance.TotalMem.ToString.PadLeft(3) & "% [" &
-                                                       Performance.TotalMemMbytes & "MB]"
+                        If GuiMem <= 100 Then PBGeneralRAMGUI.Value = GuiMem
+                        If TotalMem <= 100 Then PBGeneralRAMTotal.Value = TotalMem
+                        If ServerMem <= 100 Then PBGeneralRAMServer.Value = ServerMem
+                        lblGeneralRAMGUIValue.Text = GuiMem.ToString.PadLeft(3) & "% [" &
+                                                     GuiMemMbytes & "MB]"
+                        lblGeneralRAMServerValue.Text = ServerMem.ToString.PadLeft(3) & "% [" &
+                                                        ServerMemMbytes & "MB]"
+                        lblGeneralRAMTotalValue.Text = TotalMem.ToString.PadLeft(3) & "% [" &
+                                                       TotalMemMbytes & "MB]"
                     Else
                         If _hndTmrUpdateStatsRamerror = False Then
                             lblGeneralRAMGUIValue.Text = Lr("Unknown")
@@ -1455,7 +1491,7 @@ Namespace Core
 
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception at hnd_tmr_update_stats!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception at hnd_tmr_update_stats!", ex.Message)
             End Try
         End Sub
 
@@ -1464,8 +1500,9 @@ Namespace Core
 
 #Region "SuperStart"
 
+
         ''' <summary>
-        ''' Load server settings, prepare UI of this tab
+        '''     Load server settings, prepare UI of this tab
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub superstart_init()
@@ -1473,7 +1510,7 @@ Namespace Core
                 CBSuperstartServerType.SelectedIndex = 0 'set to 0, as this field must always be filled in
                 CBSuperstartJavaJRE.SelectedIndex = 0 'set to 0, as this field must always be filled in
 
-                If Common.IsRunningOnMono = False Then
+                If IsRunningOnMono = False Then
                     TBSuperstartJavaMinRam.Maximum = Math.Round(My.Computer.Info.TotalPhysicalMemory / 1048576)
                     TBSuperstartJavaMaxRam.Maximum = Math.Round(My.Computer.Info.TotalPhysicalMemory / 1048576)
                 Else
@@ -1485,50 +1522,51 @@ Namespace Core
                 If TBSuperstartJavaMaxRam.Maximum < 1024 Then TBSuperstartJavaMaxRam.Maximum = 1024
 
                 '-Load server settings-----------------
-                CBSuperstartJavaJRE.SelectedIndex = CInt(config.read("jre", "0", "superstart"))
-                CBSuperstartServerType.SelectedIndex = CInt(config.read("server", "0", "superstart"))
+                CBSuperstartJavaJRE.SelectedIndex = CInt(read("jre", "0", "superstart"))
+                CBSuperstartServerType.SelectedIndex = CInt(read("server", "0", "superstart"))
                 Try
-                    Dim minval = CInt(config.read("minram", "128", "superstart"))
-                    Dim maxval = CInt(config.read("maxram", "1024", "superstart"))
+                    Dim minval = CInt(read("minram", "128", "superstart"))
+                    Dim maxval = CInt(read("maxram", "1024", "superstart"))
                     If minval <= TBSuperstartJavaMinRam.Maximum And minval >= TBSuperstartJavaMinRam.Minimum Then _
                         TBSuperstartJavaMinRam.Value = minval Else TBSuperstartJavaMinRam.Value = 128
                     If maxval <= TBSuperstartJavaMaxRam.Maximum And maxval >= TBSuperstartJavaMaxRam.Minimum Then _
                         TBSuperstartJavaMaxRam.Value = maxval Else TBSuperstartJavaMaxRam.Value = 1024
                 Catch ex As Exception
-                    livebug.write(loggingLevel.Warning, "mainform",
-                                  "Exception in superstart_init: could not load memory settings", ex.Message)
+                    Log(loggingLevel.Warning, "mainform",
+                        "Exception in superstart_init: could not load memory settings", ex.Message)
                 End Try
 
 
-                TxtSuperstartJavaJarFile.Text = config.read("jar", "", "superstart")
-                TxtSuperstartJavaCustomArgs.Text = config.read("custom_args", "", "superstart")
-                TxtSuperstartJavaCustomSwitch.Text = config.read("custom_switch", "", "superstart")
+                TxtSuperstartJavaJarFile.Text = read("jar", "", "superstart")
+                TxtSuperstartJavaCustomArgs.Text = read("custom_args", "", "superstart")
+                TxtSuperstartJavaCustomSwitch.Text = read("custom_switch", "", "superstart")
 
-                TxtSuperstartRemoteHost.Text = config.read("remote_host", "", "superstart")
-                TxtSuperstartRemoteUsername.Text = config.read("remote_username", "", "superstart")
-                NumSuperstartRemotePort.Value = CInt(config.read("remote_port", "20059", "superstart"))
-                MTxtSuperstartRemotePassword.Text = config.read("remote_password", "", "superstart")
-                MTxtSuperstartRemoteSalt.Text = config.read("remote_salt", "", "superstart")
+                TxtSuperstartRemoteHost.Text = read("remote_host", "", "superstart")
+                TxtSuperstartRemoteUsername.Text = read("remote_username", "", "superstart")
+                NumSuperstartRemotePort.Value = CInt(read("remote_port", "20059", "superstart"))
+                MTxtSuperstartRemotePassword.Text = read("remote_password", "", "superstart")
+                MTxtSuperstartRemoteSalt.Text = read("remote_salt", "", "superstart")
 
-                ChkSuperStartRetrieveCurrent.Checked = config.readAsBool("bukkit_get_version", True, "superstart")
-                ChkSuperstartAutoUpdateNotify.Checked = config.readAsBool("bukkit_auto_update", False, "superstart")
+                ChkSuperStartRetrieveCurrent.Checked = readAsBool("bukkit_get_version", True, "superstart")
+                ChkSuperstartAutoUpdateNotify.Checked = readAsBool("bukkit_auto_update", False, "superstart")
                 '--------------------------------------
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in superstart_init", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in superstart_init", ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Update the UI depending on the selected server. Enable/disable the functions based upon selected server.
+        '''     Update the UI depending on the selected server. Enable/disable the functions based upon selected server.
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub CBSuperstartServerType_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub CBSuperstartServerType_SelectedIndexChanged(sender As Object, e As EventArgs) _
             Handles CBSuperstartServerType.SelectedIndexChanged
             Try
-                livebug.write(loggingLevel.Fine, "mainform",
-                              "Setting User Interface for server type " & CBSuperstartServerType.SelectedItem.ToString)
+                Log(loggingLevel.Fine, "mainform",
+                    "Setting User Interface for server type " & CBSuperstartServerType.SelectedItem.ToString)
 
                 'Enable/disable the needed buttons
                 Select Case CBSuperstartServerType.SelectedIndex _
@@ -1545,25 +1583,25 @@ Namespace Core
                         BtnSuperStartDownloadCustomBuild.Enabled = True
 
                         'bukkit has version info
-                        If BukkitTools.Fetched Then
+                        If Fetched Then
                             lblSuperStartLatestStable.Visible = True
                             lblSuperStartLatestBeta.Visible = True
                             lblSuperStartLatestDev.Visible = True
 
                             lblSuperStartLatestStable.Text = Lr("Latest stable:") & " " &
-                                                             BukkitTools.Recommended_info.version & " (#" &
-                                                             BukkitTools.Recommended_info.build & ")"
-                            lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & BukkitTools.Beta_info.version &
-                                                           " (#" & BukkitTools.Beta_info.build & ")"
-                            lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & BukkitTools.Dev_info.version & " (#" &
-                                                          BukkitTools.Dev_info.build & ")"
+                                                             Recommended_info.version & " (#" &
+                                                             Recommended_info.build & ")"
+                            lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & Beta_info.version &
+                                                           " (#" & Beta_info.build & ")"
+                            lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & Dev_info.version & " (#" &
+                                                          Dev_info.build & ")"
                             Try
-                                NumSuperstartCustomBuild.Maximum = BukkitTools.Latest_Dev _
+                                NumSuperstartCustomBuild.Maximum = Latest_Dev _
                                 'dev build is always the latest
                                 If _
-                                    BukkitTools.Latest_Recommended <= BukkitTools.Latest_Dev AndAlso
-                                    BukkitTools.Latest_Recommended > 1335 Then _
-                                    NumSuperstartCustomBuild.Value = BukkitTools.Latest_Recommended Else _
+                                    Latest_Recommended <= Latest_Dev AndAlso
+                                    Latest_Recommended > 1335 Then _
+                                    NumSuperstartCustomBuild.Value = Latest_Recommended Else _
                                     NumSuperstartCustomBuild.Value = 1335
                             Catch ex As Exception 'if something goes wrong, set these limits. 
                                 NumSuperstartCustomBuild.Maximum = 9999 _
@@ -1575,12 +1613,12 @@ Namespace Core
 
                         ChkSuperStartRetrieveCurrent.Enabled = True
                         ChkSuperstartAutoUpdateNotify.Enabled = True
-                        ChkSuperStartRetrieveCurrent.Checked = config.readAsBool("bukkit_get_version", True,
-                                                                                 "superstart")
-                        ChkSuperstartAutoUpdateNotify.Checked = config.readAsBool("bukkit_auto_update", True,
-                                                                                  "superstart")
-                        ChkSuperstartAutoUpdate.Checked = config.readAsBool("bukkit_auto_update_automatic", False,
-                                                                            "superstart")
+                        ChkSuperStartRetrieveCurrent.Checked = readAsBool("bukkit_get_version", True,
+                                                                          "superstart")
+                        ChkSuperstartAutoUpdateNotify.Checked = readAsBool("bukkit_auto_update", True,
+                                                                           "superstart")
+                        ChkSuperstartAutoUpdate.Checked = readAsBool("bukkit_auto_update_automatic", False,
+                                                                     "superstart")
                         PBSuperStartServerIcon.Image = My.Resources.bukkit_logo
 
                     Case 1 'vanilla
@@ -1676,15 +1714,16 @@ Namespace Core
                         BtnSuperStartDownloadCustomBuild.Enabled = False
 
                 End Select
-                If _initializeCompleted Then config.write("server", CBSuperstartServerType.SelectedIndex, "superstart")
+                If _initializeCompleted Then write("server", CBSuperstartServerType.SelectedIndex, "superstart")
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform",
-                              "Severe exception in CBSuperstartType_SelectedIndexChanged", ex.Message)
+                Log(loggingLevel.Severe, "mainform",
+                    "Severe exception in CBSuperstartType_SelectedIndexChanged", ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Sub to handle event, will be ran when the latest build numbers are downloaded from dl.bukkit.org, to update UI
+        '''     Sub to handle event, will be ran when the latest build numbers are downloaded from dl.bukkit.org, to update UI
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub BukkitVersionFetchComplete() 'this sub handles bukkitTools.BukkitVersionFetchComplete
@@ -1701,20 +1740,20 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf BukkitVersionFetchComplete)
                     Me.Invoke(d, New Object())
                 Else
-                    If BukkitTools.Fetched And CBSuperstartServerType.SelectedIndex = 0 Then
+                    If Fetched And CBSuperstartServerType.SelectedIndex = 0 Then
                         lblSuperStartLatestStable.Text = Lr("Latest stable:") & " " &
-                                                         BukkitTools.Recommended_info.version & " (#" &
-                                                         BukkitTools.Recommended_info.build & ")"
-                        lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & BukkitTools.Beta_info.version & " (#" &
-                                                       BukkitTools.Beta_info.build & ")"
-                        lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & BukkitTools.Dev_info.version & " (#" &
-                                                      BukkitTools.Dev_info.build & ")"
+                                                         Recommended_info.version & " (#" &
+                                                         Recommended_info.build & ")"
+                        lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & Beta_info.version & " (#" &
+                                                       Beta_info.build & ")"
+                        lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & Dev_info.version & " (#" &
+                                                      Dev_info.build & ")"
                         Try
-                            NumSuperstartCustomBuild.Maximum = BukkitTools.Latest_Dev
+                            NumSuperstartCustomBuild.Maximum = Latest_Dev
                             If _
-                                BukkitTools.Latest_Recommended <= BukkitTools.Latest_Dev AndAlso
-                                BukkitTools.Latest_Recommended > 1335 Then _
-                                NumSuperstartCustomBuild.Value = BukkitTools.Latest_Recommended Else _
+                                Latest_Recommended <= Latest_Dev AndAlso
+                                Latest_Recommended > 1335 Then _
+                                NumSuperstartCustomBuild.Value = Latest_Recommended Else _
                                 NumSuperstartCustomBuild.Value = 1335
                         Catch ex As Exception
                             NumSuperstartCustomBuild.Maximum = 2500
@@ -1723,70 +1762,76 @@ Namespace Core
                     End If
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in BukkitVersionFetchComplete",
-                              ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in BukkitVersionFetchComplete",
+                    ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Download latest recommended version
+        '''     Download latest recommended version
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub superstart_DownloadRecommended() Handles BtnSuperStartDownloadRecommended.Click
             Try
                 Select Case CBSuperstartServerType.SelectedIndex
                     Case 0
-                        MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        MessageBox.Show(
+                            "Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers",
+                            "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                         Return
-                        If _
-                            TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
-                            TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
-                            BukkitTools.Download(BukkitVersionType.rb, TxtSuperstartJavaJarFile.Text)
-                        Else
-                            BukkitTools.Download(BukkitVersionType.rb, Common.ServerRoot & "\craftbukkit.jar")
-                            TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "\craftbukkit.jar"
-                        End If
-                        superstart_jar_validate(Nothing, Nothing)
+                        'If _
+                        '    TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
+                        '    TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                        '    Download(BukkitVersionType.rb, TxtSuperstartJavaJarFile.Text)
+                        'Else
+                        '    Download(BukkitVersionType.rb, ServerRoot & "\craftbukkit.jar")
+                        '    TxtSuperstartJavaJarFile.Text = ServerRoot & "\craftbukkit.jar"
+                        'End If
+                        'superstart_jar_validate(Nothing, Nothing)
                     Case 1
                         If _
                             TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
                             TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                             VanillaTools.Download(TxtSuperstartJavaJarFile.Text)
                         Else
-                            VanillaTools.Download(Common.ServerRoot & "\minecraft_server.jar")
-                            TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "\minecraft_server.jar"
+                            VanillaTools.Download(ServerRoot & "\minecraft_server.jar")
+                            TxtSuperstartJavaJarFile.Text = ServerRoot & "\minecraft_server.jar"
                         End If
                     Case 2
                         'not supported
 
-                    case 3 
+                    Case 3
                         'not suported
-                    case 4
-                        If TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                    Case 4
+                        If _
+                            TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
+                            TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                             SpigotTools.Download(TxtSuperstartJavaJarFile.Text)
                         Else
-                            SpigotTools.Download(Common.ServerRoot & "\spigot.jar")
-                            TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "\spigot.jar"
+                            SpigotTools.Download(ServerRoot & "\spigot.jar")
+                            TxtSuperstartJavaJarFile.Text = ServerRoot & "\spigot.jar"
                         End If
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Fine, "mainform", "Severe exception in superstart_DownloadRecommended()",
-                              ex.Message)
+                Log(loggingLevel.Fine, "mainform", "Severe exception in superstart_DownloadRecommended()",
+                    ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Display the current bukkit version
+        '''     Display the current bukkit version
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub BtnSuperStartGetCurrent_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnSuperStartGetCurrent_Click(sender As Object, e As EventArgs) _
             Handles BtnSuperStartGetCurrent.Click
             Try
                 MessageBox.Show(
                     Lr("Your current bukkit version is") & " " &
-                    BukkitTools.GetCurrentBukkitVersion(CBSuperstartJavaJRE.SelectedIndex, TxtSuperstartJavaJarFile.Text) _
+                    GetCurrentBukkitVersion(CBSuperstartJavaJRE.SelectedIndex, TxtSuperstartJavaJarFile.Text) _
                         .ToString, Lr("Bukkit version"), MessageBoxButtons.OK, MessageBoxIcon.Information)
             Catch
                 MessageBox.Show(Lr("Your current bukkit version could not be determined"), Lr("Bukkit version"),
@@ -1794,24 +1839,27 @@ Namespace Core
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Download latest bèta version, ony supported for bukkit
+        '''     Download latest bèta version, ony supported for bukkit
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub superstart_DownloadBeta() Handles BtnSuperStartDownloadBeta.Click
             Select Case CBSuperstartServerType.SelectedIndex
                 Case 0
-                    MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    MessageBox.Show(
+                        "Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers",
+                        "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return
-                    If _
-                        TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
-                        TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
-                        BukkitTools.Download(BukkitVersionType.beta, TxtSuperstartJavaJarFile.Text)
-                    Else
-                        BukkitTools.Download(BukkitVersionType.beta, Common.ServerRoot & "/craftbukkit.jar")
-                        TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "/craftbukkit.jar"
-                    End If
-                    superstart_jar_validate(Nothing, Nothing)
+                    'If _
+                    '    TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
+                    '    TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                    '    Download(BukkitVersionType.beta, TxtSuperstartJavaJarFile.Text)
+                    'Else
+                    '    Download(BukkitVersionType.beta, ServerRoot & "/craftbukkit.jar")
+                    '    TxtSuperstartJavaJarFile.Text = ServerRoot & "/craftbukkit.jar"
+                    'End If
+                    'superstart_jar_validate(Nothing, Nothing)
                 Case 1
                     'not supported
                 Case 2
@@ -1819,25 +1867,28 @@ Namespace Core
             End Select
         End Sub
 
+
         ''' <summary>
-        ''' Download latest dev version, ony supported for bukkit
+        '''     Download latest dev version, ony supported for bukkit
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub superstart_DownloadDev() Handles BtnSuperStartDownloadDev.Click
             Select Case CBSuperstartServerType.SelectedIndex
                 Case 0
-                    MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    MessageBox.Show(
+                        "Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers",
+                        "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return
 
-                    If _
-                        TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
-                        TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
-                        BukkitTools.Download(BukkitVersionType.dev, TxtSuperstartJavaJarFile.Text)
-                    Else
-                        BukkitTools.Download(BukkitVersionType.dev, Common.ServerRoot & "/craftbukkit.jar")
-                        TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "/craftbukkit.jar"
-                    End If
-                    superstart_jar_validate(Nothing, Nothing)
+                    'If _
+                    '    TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
+                    '    TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                    '    Download(BukkitVersionType.dev, TxtSuperstartJavaJarFile.Text)
+                    'Else
+                    '    Download(BukkitVersionType.dev, ServerRoot & "/craftbukkit.jar")
+                    '    TxtSuperstartJavaJarFile.Text = ServerRoot & "/craftbukkit.jar"
+                    'End If
+                    'superstart_jar_validate(Nothing, Nothing)
                 Case 1
                     'not supported, vanilla
                 Case 2
@@ -1846,36 +1897,39 @@ Namespace Core
                     'not supported, generic
                 Case 4
                     If _
-                      TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
-                      TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
-                        SpigotTools.DownloadDev(TxtSuperstartJavaJarFile.Text)
+                        TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
+                        TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
+                        DownloadDev(TxtSuperstartJavaJarFile.Text)
                     Else
-                        SpigotTools.DownloadDev(Common.ServerRoot & "/spigot.jar")
-                        TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "/spigot.jar"
+                        DownloadDev(ServerRoot & "/spigot.jar")
+                        TxtSuperstartJavaJarFile.Text = ServerRoot & "/spigot.jar"
                     End If
                     superstart_jar_validate(Nothing, Nothing)
             End Select
         End Sub
 
+
         ''' <summary>
-        ''' Download a custom version, ony supported for bukkit
+        '''     Download a custom version, ony supported for bukkit
         ''' </summary>
         ''' <remarks></remarks>
-        Private Sub BtnSuperStartDownloadCustomBuild_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnSuperStartDownloadCustomBuild_Click(sender As Object, e As EventArgs) _
             Handles BtnSuperStartDownloadCustomBuild.Click
             Select Case CBSuperstartServerType.SelectedIndex
                 Case 0
-                    MessageBox.Show("Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers", "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    MessageBox.Show(
+                        "Can't download bukkit due to legal reasons (bukkit is not longer available). Consider using bukkitgui2 to get access to more servers",
+                        "download unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return
 
                     If _
                         TxtSuperstartJavaJarFile.Text IsNot Nothing AndAlso
                         TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
-                        BukkitTools.DownloadCustom(NumSuperstartCustomBuild.Value, TxtSuperstartJavaJarFile.Text)
+                        DownloadCustom(NumSuperstartCustomBuild.Value, TxtSuperstartJavaJarFile.Text)
                     Else
-                        BukkitTools.DownloadCustom(NumSuperstartCustomBuild.Value,
-                                                   Common.ServerRoot & "/craftbukkit.jar")
-                        TxtSuperstartJavaJarFile.Text = Common.ServerRoot & "/craftbukkit.jar"
+                        DownloadCustom(NumSuperstartCustomBuild.Value,
+                                       ServerRoot & "/craftbukkit.jar")
+                        TxtSuperstartJavaJarFile.Text = ServerRoot & "/craftbukkit.jar"
                     End If
                 Case 1
                     'not supported
@@ -1884,16 +1938,17 @@ Namespace Core
             End Select
         End Sub
 
+
         ''' <summary>
-        ''' Checks if all necessary field are filled in correctly
+        '''     Checks if all necessary field are filled in correctly
         ''' </summary>
         ''' <param name="warn">Should the function show a messagebox if the settings are invalid</param>
         ''' <returns>True if valid</returns>
         ''' <remarks></remarks>
         Private Function superstart_validate(warn As Boolean) As Boolean
             Try
-                livebug.write(loggingLevel.Fine, "mainform",
-                              "Validating settings for server type " & CBSuperstartServerType.SelectedItem.ToString)
+                Log(loggingLevel.Fine, "mainform",
+                    "Validating settings for server type " & CBSuperstartServerType.SelectedItem.ToString)
                 Dim is_correct As Boolean = True
                 Select Case CBSuperstartServerType.SelectedIndex
                     Case 0 Or 4
@@ -1901,14 +1956,14 @@ Namespace Core
                         If TxtSuperstartJavaJarFile.Text = "" Then is_correct = False : Exit Select
                         If TxtSuperstartJavaJarFile.Text.EndsWith(".jar") = False Then is_correct = False : Exit Select
                         is_correct = is_correct And (TBSuperstartJavaMinRam.Value <= TBSuperstartJavaMaxRam.Value)
-                        If javaAPI.Is32bit(CBSuperstartJavaJRE.SelectedIndex) Then _
+                        If Is32bit(CBSuperstartJavaJRE.SelectedIndex) Then _
                             is_correct = (is_correct And TBSuperstartJavaMaxRam.Value < 1500)
                     Case 1
                         If TxtSuperstartJavaJarFile.Text Is Nothing Then is_correct = False : Exit Select
                         If TxtSuperstartJavaJarFile.Text = "" Then is_correct = False : Exit Select
                         If TxtSuperstartJavaJarFile.Text.EndsWith(".jar") = False Then is_correct = False : Exit Select
                         is_correct = is_correct And (TBSuperstartJavaMinRam.Value <= TBSuperstartJavaMaxRam.Value)
-                        If javaAPI.Is32bit(CBSuperstartJavaJRE.SelectedIndex) Then _
+                        If Is32bit(CBSuperstartJavaJRE.SelectedIndex) Then _
                             is_correct = (is_correct And TBSuperstartJavaMaxRam.Value < 1500)
                     Case 2
                         If TxtSuperstartRemoteHost.Text Is Nothing OrElse TxtSuperstartRemoteHost.Text = "" Then _
@@ -1932,11 +1987,11 @@ Namespace Core
                 If is_correct And (CBSuperstartServerType.SelectedIndex = 0 Or CBSuperstartServerType.SelectedIndex = 1) _
                     Then
                     Dim jarfilesize = GetFileSize(TxtSuperstartJavaJarFile.Text) < 1
-                    livebug.write(loggingLevel.Info, "mainform",
-                                  "Size of server file: " & jarfilesize & " bytes (" &
-                                  Common.ConvertByte(jarfilesize, ByteConverter.size.size_mbyte) & "mb)")
+                    Log(loggingLevel.Info, "mainform",
+                        "Size of server file: " & jarfilesize & " bytes (" &
+                        ConvertByte(jarfilesize, ByteConverter.size.size_mbyte) & "mb)")
                     If (jarfilesize <> False AndAlso jarfilesize < 128) Then
-                        livebug.write(loggingLevel.Warning, "mainform", "Validated settings, result: corrupt file!")
+                        Log(loggingLevel.Warning, "mainform", "Validated settings, result: corrupt file!")
                         If warn Then
                             MessageBox.Show(
                                 Lr(
@@ -1946,208 +2001,223 @@ Namespace Core
                         End If
                         is_correct = False
                     Else
-                        livebug.write(loggingLevel.Info, "mainform", "Size of server file seems ok")
+                        Log(loggingLevel.Info, "mainform", "Size of server file seems ok")
                     End If
                 End If
-                livebug.write(loggingLevel.Fine, "mainform", "Validated settings, result:" & is_correct)
+                Log(loggingLevel.Fine, "mainform", "Validated settings, result:" & is_correct)
                 Return is_correct
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in thds_setserverstate", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in thds_setserverstate", ex.Message)
                 Return False
             End Try
         End Function
 
+
         ''' <summary>
-        ''' Update label on change
+        '''     Update label on change
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub TBSuperstartJavaMinRam_ValueChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub TBSuperstartJavaMinRam_ValueChanged(sender As Object, e As EventArgs) _
             Handles TBSuperstartJavaMinRam.ValueChanged, TBSuperstartJavaMinRam.Scroll
             If TBSuperstartJavaMinRam.Value > TBSuperstartJavaMaxRam.Value Then _
                 TBSuperstartJavaMaxRam.Value = TBSuperstartJavaMinRam.Value
             LblSuperStartMinRam.Text = "Min. Ram: " & TBSuperstartJavaMinRam.Value.ToString & "MB"
         End Sub
 
+
         ''' <summary>
-        ''' Update label on change
+        '''     Update label on change
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub TBSuperstartJavaMaxRam_ValueChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub TBSuperstartJavaMaxRam_ValueChanged(sender As Object, e As EventArgs) _
             Handles TBSuperstartJavaMaxRam.ValueChanged, TBSuperstartJavaMaxRam.Scroll
             If TBSuperstartJavaMinRam.Value > TBSuperstartJavaMaxRam.Value Then _
                 TBSuperstartJavaMinRam.Value = TBSuperstartJavaMaxRam.Value
             lblSuperStartMaxRam.Text = "Max. Ram: " & TBSuperstartJavaMaxRam.Value.ToString & "MB"
         End Sub
 
+
         ''' <summary>
-        ''' Check if valid, if valid save
+        '''     Check if valid, if valid save
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub superstart_jar_validate(sender As System.Object, e As System.EventArgs) _
+        Private Sub superstart_jar_validate(sender As Object, e As EventArgs) _
             Handles TxtSuperstartJavaJarFile.TextChanged
             If TxtSuperstartJavaJarFile.Text Is Nothing OrElse TxtSuperstartJavaJarFile.Text = "" Then
                 ErrProv.SetError(TxtSuperstartJavaJarFile, Lr("You must enter a path to the .jar file"))
             ElseIf Not TxtSuperstartJavaJarFile.Text.EndsWith(".jar") Then
                 ErrProv.SetError(TxtSuperstartJavaJarFile, Lr("Invalid file path, must be a .jar file"))
-            ElseIf Not FileIO.FileSystem.FileExists(TxtSuperstartJavaJarFile.Text) Then
+            ElseIf Not FileSystem.FileExists(TxtSuperstartJavaJarFile.Text) Then
                 ErrProv.SetError(TxtSuperstartJavaJarFile, Lr("File doesn't exist!"))
             Else
                 ErrProv.SetError(TxtSuperstartJavaJarFile, "")
-                config.write("jar", TxtSuperstartJavaJarFile.Text, "superstart")
+                write("jar", TxtSuperstartJavaJarFile.Text, "superstart")
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Browse to jar file
+        '''     Browse to jar file
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub BtnSuperstartJavaJarFileBrowse_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnSuperstartJavaJarFileBrowse_Click(sender As Object, e As EventArgs) _
             Handles BtnSuperstartJavaJarFileBrowse.Click
             Dim ofd As New OpenFileDialog
             ofd.Filter = "*.jar|*.jar"
             ofd.Title = "Select server file"
             ofd.InitialDirectory = My.Application.Info.DirectoryPath
-            If ofd.ShowDialog() = Windows.Forms.DialogResult.OK Then TxtSuperstartJavaJarFile.Text = ofd.FileName
+            If ofd.ShowDialog() = DialogResult.OK Then TxtSuperstartJavaJarFile.Text = ofd.FileName
         End Sub
 
+
         ''' <summary>
-        ''' Check if valid, if valid, save
+        '''     Check if valid, if valid, save
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub TBSuperstartJavaMaxRam_Scroll(sender As System.Object, e As System.EventArgs) _
+        Private Sub TBSuperstartJavaMaxRam_Scroll(sender As Object, e As EventArgs) _
             Handles TBSuperstartJavaMaxRam.Scroll
-            If (TBSuperstartJavaMaxRam.Value > 1024 And javaAPI.Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
+            If (TBSuperstartJavaMaxRam.Value > 1024 And Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
                 Then
                 ErrProv.SetError(TBSuperstartJavaMaxRam, Lr("You can't use more then 1024MB RAM with Java x32"))
             Else
                 ErrProv.SetError(TBSuperstartJavaMaxRam, "")
-                config.write("maxram", TBSuperstartJavaMaxRam.Value, "superstart")
+                write("maxram", TBSuperstartJavaMaxRam.Value, "superstart")
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Check if valid, if valid, save
+        '''     Check if valid, if valid, save
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub TBSuperstartJavaMinRam_Scroll(sender As System.Object, e As System.EventArgs) _
+        Private Sub TBSuperstartJavaMinRam_Scroll(sender As Object, e As EventArgs) _
             Handles TBSuperstartJavaMinRam.Scroll
-            If (TBSuperstartJavaMinRam.Value > 1024 And javaAPI.Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
+            If (TBSuperstartJavaMinRam.Value > 1024 And Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
                 Then
                 ErrProv.SetError(TBSuperstartJavaMinRam, Lr("You can't use more then 1024MB RAM with Java x32"))
             Else
                 ErrProv.SetError(TBSuperstartJavaMinRam, "")
-                config.write("minram", TBSuperstartJavaMinRam.Value, "superstart")
+                write("minram", TBSuperstartJavaMinRam.Value, "superstart")
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Save on change
+        '''     Save on change
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
-        Private Sub CBSuperstartJavaJRE_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub CBSuperstartJavaJRE_SelectedIndexChanged(sender As Object, e As EventArgs) _
             Handles CBSuperstartJavaJRE.SelectedIndexChanged
             If Not _initializeCompleted Then Exit Sub
 
-            config.write("jre", CBSuperstartJavaJRE.SelectedIndex, "superstart")
+            write("jre", CBSuperstartJavaJRE.SelectedIndex, "superstart")
 
-            If (TBSuperstartJavaMinRam.Value > 1024 And javaAPI.Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
+            If (TBSuperstartJavaMinRam.Value > 1024 And Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
                 Then
                 ErrProv.SetError(TBSuperstartJavaMinRam, Lr("You can't use more then 1024MB RAM with Java x32"))
             Else
                 ErrProv.SetError(TBSuperstartJavaMinRam, "")
-                config.write("minram", TBSuperstartJavaMinRam.Value, "superstart")
+                write("minram", TBSuperstartJavaMinRam.Value, "superstart")
             End If
 
-            If (TBSuperstartJavaMaxRam.Value > 1024 And javaAPI.Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
+            If (TBSuperstartJavaMaxRam.Value > 1024 And Is32bit(CBSuperstartJavaJRE.SelectedIndex.ToString)) _
                 Then
                 ErrProv.SetError(TBSuperstartJavaMaxRam, Lr("You can't use more then 1024MB RAM with Java x32"))
             Else
                 ErrProv.SetError(TBSuperstartJavaMaxRam, "")
-                config.write("maxram", TBSuperstartJavaMaxRam.Value, "superstart")
+                write("maxram", TBSuperstartJavaMaxRam.Value, "superstart")
             End If
 
             If CBSuperstartJavaJRE.SelectedIndex = 4 Then
-                javaAPI.SelectAlternativeJava()
+                SelectAlternativeJava()
             End If
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub TxtSuperstartJavaCustomArgs_TextChanged() Handles TxtSuperstartJavaCustomArgs.TextChanged
-            config.write("custom_args", TxtSuperstartJavaCustomArgs.Text, "superstart")
+            write("custom_args", TxtSuperstartJavaCustomArgs.Text, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub TxtSuperstartJavaCustomswitch_TextChanged() Handles TxtSuperstartJavaCustomSwitch.TextChanged
-            config.write("custom_switch", TxtSuperstartJavaCustomSwitch.Text, "superstart")
+            write("custom_switch", TxtSuperstartJavaCustomSwitch.Text, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub NumSuperstartRemotePort_LostFocus() Handles NumSuperstartRemotePort.LostFocus
-            config.write("remote_port", NumSuperstartRemotePort.Value.ToString, "superstart")
+            write("remote_port", NumSuperstartRemotePort.Value.ToString, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub TxtSuperstartRemotehost_LostFocus() Handles TxtSuperstartRemoteHost.LostFocus
-            config.write("remote_host", TxtSuperstartRemoteHost.Text, "superstart")
+            write("remote_host", TxtSuperstartRemoteHost.Text, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub TxtSuperstartRemoteUsername_LostFocus() Handles TxtSuperstartRemoteUsername.LostFocus
-            config.write("remote_username", TxtSuperstartRemoteUsername.Text, "superstart")
+            write("remote_username", TxtSuperstartRemoteUsername.Text, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub MTxtSuperstartRemotepassword_LostFocus() Handles MTxtSuperstartRemotePassword.LostFocus
-            config.write("remote_password", MTxtSuperstartRemotePassword.Text, "superstart")
+            write("remote_password", MTxtSuperstartRemotePassword.Text, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub MTxtSuperstartRemoteSalt_LostFocus() Handles MTxtSuperstartRemoteSalt.LostFocus
-            config.write("remote_salt", MTxtSuperstartRemoteSalt.Text, "superstart")
+            write("remote_salt", MTxtSuperstartRemoteSalt.Text, "superstart")
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
-        Private Sub ChkSuperStartRetrieveCurrent_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkSuperStartRetrieveCurrent_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkSuperStartRetrieveCurrent.CheckedChanged
-            config.writeAsBool("bukkit_get_version", ChkSuperStartRetrieveCurrent.Checked, "superstart")
+            writeAsBool("bukkit_get_version", ChkSuperStartRetrieveCurrent.Checked, "superstart")
             If ChkSuperStartRetrieveCurrent.Checked = False Then
                 ChkSuperstartAutoUpdateNotify.Checked = False
                 ChkSuperstartAutoUpdateNotify.Enabled = False
@@ -2163,13 +2233,14 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
-        Private Sub ChkSuperstartAutoUpdateNotify_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkSuperstartAutoUpdateNotify_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkSuperstartAutoUpdateNotify.CheckedChanged
-            config.writeAsBool("bukkit_auto_update", ChkSuperstartAutoUpdateNotify.Checked, "superstart")
+            writeAsBool("bukkit_auto_update", ChkSuperstartAutoUpdateNotify.Checked, "superstart")
 
             If ChkSuperStartRetrieveCurrent.Checked = False Then
                 ChkSuperstartAutoUpdateNotify.Checked = False
@@ -2186,13 +2257,14 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' save field on change
+        '''     save field on change
         ''' </summary>
         ''' <remarks></remarks>
-        Private Sub ChkSuperstartAutoUpdate_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkSuperstartAutoUpdate_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkSuperstartAutoUpdate.CheckedChanged
-            config.writeAsBool("bukkit_auto_update_automatic", ChkSuperstartAutoUpdateNotify.Checked, "superstart")
+            writeAsBool("bukkit_auto_update_automatic", ChkSuperstartAutoUpdateNotify.Checked, "superstart")
             If ChkSuperStartRetrieveCurrent.Checked = False Then
                 ChkSuperstartAutoUpdateNotify.Checked = False
                 ChkSuperstartAutoUpdateNotify.Enabled = False
@@ -2208,8 +2280,9 @@ Namespace Core
             End If
         End Sub
 
+
         ''' <summary>
-        ''' Open the portforwarding dialog
+        '''     Open the portforwarding dialog
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
@@ -2224,22 +2297,24 @@ Namespace Core
 
 #Region "Playerlist"
 
+
         ''' <summary>
-        ''' Handle the event, add the player
+        '''     Handle the event, add the player
         ''' </summary>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
         Private Sub hnd_PlayerJoin(ByVal e As PlayerJoinEventArgs)
             If e Is Nothing OrElse e.PlayerJoin Is Nothing OrElse e.PlayerJoin.player Is Nothing Then _
-                livebug.write(loggingLevel.Warning, "Mainform", "Player joined - invalid PlayerJoinEventArgs passed!") _
-                  : Exit Sub
-            livebug.write(loggingLevel.Fine, "Mainform",
-                          "Player joined, event catched by UI. Player:" & e.PlayerJoin.player.name)
+                Log(loggingLevel.Warning, "Mainform", "Player joined - invalid PlayerJoinEventArgs passed!") _
+                    : Exit Sub
+            Log(loggingLevel.Fine, "Mainform",
+                "Player joined, event catched by UI. Player:" & e.PlayerJoin.player.name)
             AddPlayer(e.PlayerJoin.player)
         End Sub
 
+
         ''' <summary>
-        ''' Add a player to the listviews + start routine to get more details (location, avatar,...)
+        '''     Add a player to the listviews + start routine to get more details (location, avatar,...)
         ''' </summary>
         ''' <param name="p"></param>
         ''' <remarks></remarks>
@@ -2254,7 +2329,7 @@ Namespace Core
                     ALVGeneralPlayers.Items.Add(GetGeneralPlayersLVI(p))
                     ALVPlayersPlayers.Items.Add(GetPlayersPlayersLVI(p))
 
-                    server.playerList.Add(p)
+                    playerList.Add(p)
 
                     Dim t As New Thread(AddressOf thd_playerlist_getDataAsync)
                     t.IsBackground = True
@@ -2265,24 +2340,26 @@ Namespace Core
 
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "Mainform", "Severe exception at AddPlayer(p as player)!",
-                              ex.Message)
+                Log(loggingLevel.Warning, "Mainform", "Severe exception at AddPlayer(p as player)!",
+                    ex.Message)
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Handle the event on a player disconnect, remove it from the listviews
+        '''     Handle the event on a player disconnect, remove it from the listviews
         ''' </summary>
         ''' <param name="e"></param>
         ''' <remarks></remarks>
         Private Sub hnd_PlayerDisconnect(ByVal e As PlayerDisconnectEventArgs)
-            livebug.write(loggingLevel.Fine, "mainform",
-                          "Player disconnected, event catched by UI. Player:" & e.player.name, "hnd_PlayerDisconnect()")
+            Log(loggingLevel.Fine, "mainform",
+                "Player disconnected, event catched by UI. Player:" & e.player.name, "hnd_PlayerDisconnect()")
             RemovePlayer(e.player.name)
         End Sub
 
+
         ''' <summary>
-        ''' Remove a player from the listviews based upon the player name
+        '''     Remove a player from the listviews based upon the player name
         ''' </summary>
         ''' <param name="name"></param>
         ''' <remarks></remarks>
@@ -2293,23 +2370,23 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf RemovePlayer)
                     Me.Invoke(d, New Object() {name})
                 Else
-                    If server.playerList Is Nothing Then Exit Sub
+                    If playerList Is Nothing Then Exit Sub
 
-                    For Each Player As Player In server.playerList
+                    For Each Player As Player In playerList
                         If Player.name = name Then
-                            server.playerList.Remove(Player)
+                            playerList.Remove(Player)
                             Exit For
                         End If
                     Next
 
-                    livebug.write(loggingLevel.Fine, "Mainform", "Removed player from player list")
+                    Log(loggingLevel.Fine, "Mainform", "Removed player from player list")
 
                     For Each item As ListViewItem In ALVGeneralPlayers.Items 'remove from listview
                         If item.SubItems(0).Text = name Then
                             item.Remove()
                         End If
                     Next
-                    livebug.write(loggingLevel.Fine, "Mainform", "Removed player from UI general player list")
+                    Log(loggingLevel.Fine, "Mainform", "Removed player from UI general player list")
 
                     For Each item As ListViewItem In ALVPlayersPlayers.Items 'remove from listview
                         If item.SubItems(0).Text = name Then
@@ -2317,20 +2394,21 @@ Namespace Core
                         End If
                     Next
 
-                    livebug.write(loggingLevel.Fine, "Mainform", "Removed player from UI players player list")
+                    Log(loggingLevel.Fine, "Mainform", "Removed player from UI players player list")
                     If ImgListPlayerAvatars.Images.ContainsKey(name) Then ImgListPlayerAvatars.Images.RemoveByKey(name) _
                     'remove unneeded images from the list, reduce memory!
-                    livebug.write(loggingLevel.Fine, "Mainform", "Removed player avatar from imagelist")
+                    Log(loggingLevel.Fine, "Mainform", "Removed player avatar from imagelist")
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Fine, "mainform", "Severe exception at RemovePlayer(name as string)!",
-                              ex.Message)
+                Log(loggingLevel.Fine, "mainform", "Severe exception at RemovePlayer(name as string)!",
+                    ex.Message)
             End Try
-            livebug.write(loggingLevel.Fine, "Mainform", "Finished player removal")
+            Log(loggingLevel.Fine, "Mainform", "Finished player removal")
         End Sub
 
+
         ''' <summary>
-        ''' Build the ListViewItem for the players tab players list.
+        '''     Build the ListViewItem for the players tab players list.
         ''' </summary>
         ''' <param name="p">The player details as a player object</param>
         ''' <returns></returns>
@@ -2345,8 +2423,9 @@ Namespace Core
             Return player_item
         End Function
 
+
         ''' <summary>
-        ''' Build the listviewitem for the general tab players list
+        '''     Build the listviewitem for the general tab players list
         ''' </summary>
         ''' <param name="p">The player details as a player object</param>
         ''' <returns></returns>
@@ -2360,61 +2439,64 @@ Namespace Core
 
         ' These routines could also be changed to take the player object.
         '
+
         ''' <summary>
-        ''' Get additiol data about a player, async
+        '''     Get additiol data about a player, async
         ''' </summary>
         ''' <param name="player">the player in the server.playerlist</param>
         ''' <remarks></remarks>
         Private Sub thd_playerlist_getDataAsync(ByVal player As Player)
             Try
-                If server.playerList Is Nothing Then Exit Sub
+                If playerList Is Nothing Then Exit Sub
 
-                Dim id As UInt16 = server.playerList.IndexOf(player)
+                Dim id As UInt16 = playerList.IndexOf(player)
                 If id < 0 Then Exit Sub
 
-                If server.playerList.Count - 1 < id Then Exit Sub
+                If playerList.Count - 1 < id Then Exit Sub
 
                 If player Is Nothing Then Exit Sub
                 If player.name Is Nothing Then Exit Sub
                 If player.IP Is Nothing Then Exit Sub
 
-                livebug.write(loggingLevel.Fine, "mainform",
-                              "Getting additional details for player " & player.name & "(" & id & ")")
+                Log(loggingLevel.Fine, "mainform",
+                    "Getting additional details for player " & player.name & "(" & id & ")")
 
-                Dim a As Image = serverinteraction.getPlayerMinotar(player.name) ' get data
+                Dim a As Image = getPlayerMinotar(player.name) ' get data
 
-                If server.playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
-                If id > server.playerList.Count - 1 OrElse Not server.playerList(id).Equals(player) Then _
-                    id = server.playerList.IndexOf(player) 'if invalid id refresh
+                If playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
+                If id > playerList.Count - 1 OrElse Not playerList(id).Equals(player) Then _
+                    id = playerList.IndexOf(player) 'if invalid id refresh
                 If id < 0 Then Exit Sub 'if still invalid exit
                 If id >= 0 AndAlso a IsNot Nothing Then 'if valid update
                     player.avatar = a
-                    server.playerList(id).avatar = player.avatar
+                    playerList(id).avatar = player.avatar
                 End If
-                livebug.write(loggingLevel.Fine, "Mainform", "Avatar loaded")
-                Dim l As String = serverinteraction.getPlayerLocation(player.IP)
+                Log(loggingLevel.Fine, "Mainform", "Avatar loaded")
+                Dim l As String = getPlayerLocation(player.IP)
                 'Dim l As String = "unavailable"
 
-                If server.playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
-                If id > server.playerList.Count - 1 OrElse Not server.playerList(id).Equals(player) Then _
-                    id = server.playerList.IndexOf(player)
+                If playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
+                If id > playerList.Count - 1 OrElse Not playerList(id).Equals(player) Then _
+                    id = playerList.IndexOf(player)
                 If id < 0 Then Exit Sub
                 If id >= 0 Then
                     player.location = l
-                    If server.playerList IsNot Nothing AndAlso id < server.playerList.Count Then _
-                        server.playerList(id).location = player.location
+                    If playerList IsNot Nothing AndAlso id < playerList.Count Then _
+                        playerList(id).location = player.location
                 End If
-                livebug.write(loggingLevel.Fine, "Mainform", "Location loaded")
+                Log(loggingLevel.Fine, "Mainform", "Location loaded")
                 Update_player(player)
-                livebug.write(loggingLevel.Fine, "Mainform", "Player updated")
+                Log(loggingLevel.Fine, "Mainform", "Player updated")
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "mainform", "Severe exception at thd_playerlist_getDataAsync!",
-                              ex.Message) 'Lowered logging level to prevent "send report" on internet issues.
+                Log(loggingLevel.Warning, "mainform", "Severe exception at thd_playerlist_getDataAsync!",
+                    ex.Message) 'Lowered logging level to prevent "send report" on internet issues.
             End Try
         End Sub
 
+
         ''' <summary>
-        ''' Update a player in the listviews, given it's current player data. New data will be loaded from server.Playerlist(id)
+        '''     Update a player in the listviews, given it's current player data. New data will be loaded from
+        '''     server.Playerlist(id)
         ''' </summary>
         ''' <param name="player">The player Item</param>
         ''' <remarks></remarks>
@@ -2427,45 +2509,45 @@ Namespace Core
                     If player Is Nothing Then Exit Sub
                     If player.name Is Nothing Then Exit Sub
                     If player.IP Is Nothing Then Exit Sub
-                    livebug.write(loggingLevel.Fine, "Mainform", "Updating player " & player.name & "  in listviews")
+                    Log(loggingLevel.Fine, "Mainform", "Updating player " & player.name & "  in listviews")
 
                     Dim id As UInt16
 
                     'For security, preventing crashes or errors. This part returns always to check if the object/id are still valid, and to see if the player didn't disconnect
-                    If server.playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
-                    If id > server.playerList.Count - 1 OrElse Not server.playerList(id).Equals(player) Then _
-                        id = server.playerList.IndexOf(player)
+                    If playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
+                    If id > playerList.Count - 1 OrElse Not playerList(id).Equals(player) Then _
+                        id = playerList.IndexOf(player)
                     If id < 0 Then Exit Sub
 
 
                     If _
                         ALVPlayersPlayers.Items.Count - 1 < id OrElse ALVGeneralPlayers.Items.Count - 1 < id OrElse
-                        server.playerList Is Nothing OrElse server.playerList.Count - 1 < id Then
-                        livebug.write(loggingLevel.Warning, "Mainform", "Invalid ID! cancelling", "Update_player")
+                        playerList Is Nothing OrElse playerList.Count - 1 < id Then
+                        Log(loggingLevel.Warning, "Mainform", "Invalid ID! cancelling", "Update_player")
                         Exit Sub
                     End If
 
                     Dim item As ListViewItem
 
-                    If server.playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
-                    If id > server.playerList.Count - 1 OrElse Not server.playerList(id).Equals(player) Then _
-                        id = server.playerList.IndexOf(player)
+                    If playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
+                    If id > playerList.Count - 1 OrElse Not playerList(id).Equals(player) Then _
+                        id = playerList.IndexOf(player)
                     If id < 0 Then Exit Sub
 
                     Try
                         If ImgListPlayerAvatars IsNot Nothing AndAlso ImgListPlayerAvatars.Images IsNot Nothing Then _
                             ImgListPlayerAvatars.Images.Add(player.name, player.avatar)
                     Catch ex As Exception
-                        livebug.write(loggingLevel.Warning, "Mainform", "Couldn't add player face to imagelist !",
-                                      ex.Message)
+                        Log(loggingLevel.Warning, "Mainform", "Couldn't add player face to imagelist !",
+                            ex.Message)
                     End Try
 
                     If _
                         ALVPlayersPlayers.Items.Count - 1 < id OrElse ALVGeneralPlayers.Items.Count - 1 < id OrElse
-                        server.playerList Is Nothing OrElse server.playerList.Count - 1 < id Then Exit Sub
-                    If server.playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
-                    If id > server.playerList.Count - 1 OrElse Not server.playerList(id).Equals(player) Then _
-                        id = server.playerList.IndexOf(player)
+                        playerList Is Nothing OrElse playerList.Count - 1 < id Then Exit Sub
+                    If playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
+                    If id > playerList.Count - 1 OrElse Not playerList(id).Equals(player) Then _
+                        id = playerList.IndexOf(player)
                     If id < 0 Then Exit Sub
 
                     Try
@@ -2475,16 +2557,16 @@ Namespace Core
                         item.ImageKey = player.name
                         item.Tag = player.name
                     Catch ex As Exception
-                        livebug.write(loggingLevel.Severe, "Mainform", "Couldn't update player in general listview!",
-                                      ex.Message)
+                        Log(loggingLevel.Severe, "Mainform", "Couldn't update player in general listview!",
+                            ex.Message)
                     End Try
 
                     If _
                         ALVPlayersPlayers.Items.Count - 1 < id OrElse ALVGeneralPlayers.Items.Count - 1 < id OrElse
-                        server.playerList Is Nothing OrElse server.playerList.Count - 1 < id Then Exit Sub
-                    If server.playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
-                    If id > server.playerList.Count - 1 OrElse Not server.playerList(id).Equals(player) Then _
-                        id = server.playerList.IndexOf(player)
+                        playerList Is Nothing OrElse playerList.Count - 1 < id Then Exit Sub
+                    If playerList.Count = 0 OrElse playerList.Contains(player) = False Then Exit Sub
+                    If id > playerList.Count - 1 OrElse Not playerList(id).Equals(player) Then _
+                        id = playerList.IndexOf(player)
                     If id < 0 Then Exit Sub
                     Try
                         item = ALVPlayersPlayers.Items(id)
@@ -2492,79 +2574,79 @@ Namespace Core
                         item.ImageKey = player.name
                         item.Tag = player.name
                     Catch ex As Exception
-                        livebug.write(loggingLevel.Severe, "Mainform", "Couldn't update player in players listview!",
-                                      ex.Message)
+                        Log(loggingLevel.Severe, "Mainform", "Couldn't update player in players listview!",
+                            ex.Message)
                     End Try
                 Catch genex As Exception
-                    livebug.write(loggingLevel.Severe, "Mainform", "Severe exception at Update_Player!", genex.Message)
+                    Log(loggingLevel.Severe, "Mainform", "Severe exception at Update_Player!", genex.Message)
                 End Try
             End If
         End Sub
 
-        Private Sub BtnCMenuPlayerListOp_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListOp_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListOp.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = CmenuPlayerList.SourceControl
+            Dim ctrl As AdvancedListView = CmenuPlayerList.SourceControl
             If ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse ctrl.SelectedItems(0) Is Nothing _
                 Then Exit Sub
-            server.SendCommand("op " & ctrl.SelectedItems(0).Text)
+            SendCommand("op " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListDeop_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListDeop_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListDeop.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = CmenuPlayerList.SourceControl
+            Dim ctrl As AdvancedListView = CmenuPlayerList.SourceControl
             If ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse ctrl.SelectedItems(0) Is Nothing _
                 Then Exit Sub
-            server.SendCommand("deop " & ctrl.SelectedItems(0).Text)
+            SendCommand("deop " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListKick_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListKick_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListKick.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = CmenuPlayerList.SourceControl
+            Dim ctrl As AdvancedListView = CmenuPlayerList.SourceControl
             If ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse ctrl.SelectedItems(0) Is Nothing _
                 Then Exit Sub
-            server.SendCommand("kick " & ctrl.SelectedItems(0).Text)
+            SendCommand("kick " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListBan_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListBan_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListBan.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = CmenuPlayerList.SourceControl
+            Dim ctrl As AdvancedListView = CmenuPlayerList.SourceControl
             If ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse ctrl.SelectedItems(0) Is Nothing _
                 Then Exit Sub
-            server.SendCommand("ban " & ctrl.SelectedItems(0).Text)
+            SendCommand("ban " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListGamemodeSurvival_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListGamemodeSurvival_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListGamemodeSurvival.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = ALVGeneralPlayers
+            Dim ctrl As AdvancedListView = ALVGeneralPlayers
             If ALVPlayersPlayers.Focused Then ctrl = ALVPlayersPlayers
             If _
                 ctrl Is Nothing OrElse ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse
                 ctrl.SelectedItems(0) Is Nothing Then Exit Sub
-            server.SendCommand("gamemode 0 " & ctrl.SelectedItems(0).Text)
+            SendCommand("gamemode 0 " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListGamemodeCreative_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListGamemodeCreative_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListGamemodeCreative.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = ALVGeneralPlayers
+            Dim ctrl As AdvancedListView = ALVGeneralPlayers
             If ALVPlayersPlayers.Focused Then ctrl = ALVPlayersPlayers
             If _
                 ctrl Is Nothing OrElse ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse
                 ctrl.SelectedItems(0) Is Nothing Then Exit Sub
-            server.SendCommand("gamemode 1 " & ctrl.SelectedItems(0).Text)
+            SendCommand("gamemode 1 " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListGamemodeAdventure_Click(sender As System.Object, e As System.EventArgs)
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = ALVGeneralPlayers
+        Private Sub BtnCMenuPlayerListGamemodeAdventure_Click(sender As Object, e As EventArgs)
+            Dim ctrl As AdvancedListView = ALVGeneralPlayers
             If ALVPlayersPlayers.Focused Then ctrl = ALVPlayersPlayers
             If _
                 ctrl Is Nothing OrElse ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse
                 ctrl.SelectedItems(0) Is Nothing Then Exit Sub
-            server.SendCommand("gamemode 2 " & ctrl.SelectedItems(0).Text)
+            SendCommand("gamemode 2 " & ctrl.SelectedItems(0).Text)
         End Sub
 
-        Private Sub BtnCMenuPlayerListGive_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuPlayerListGive_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuPlayerListGive.Click
-            Dim ctrl As Net.Bertware.Controls.AdvancedListView = CmenuPlayerList.SourceControl
+            Dim ctrl As AdvancedListView = CmenuPlayerList.SourceControl
             If ctrl.SelectedItems Is Nothing OrElse ctrl.SelectedItems.Count < 1 OrElse ctrl.SelectedItems(0) Is Nothing _
                 Then Exit Sub
             TxtGeneralServerIn.Text = "give " & ctrl.SelectedItems(0).SubItems(0).Text & " "
@@ -2572,21 +2654,23 @@ Namespace Core
             TxtGeneralServerIn.Focus()
         End Sub
 
-        Private Sub BtnCmenuPlayerListRefresh_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuPlayerListRefresh_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuPlayerListRefresh.Click
-            If server.running Then server.SendCommand("list", True)
+            If running Then SendCommand("list", True)
         End Sub
 
+
         ''' <summary>
-        ''' Change the display mode for the players list view.
+        '''     Change the display mode for the players list view.
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub TBPlayersPlayersView_Scroll() Handles TBPlayersPlayersView.Scroll
             ALVPlayersPlayers.View = TBPlayersPlayersView.Value
         End Sub
 
+
         ''' <summary>
-        ''' Compare the playerlist in the UI to the playerlist in the GUI code (server class)
+        '''     Compare the playerlist in the UI to the playerlist in the GUI code (server class)
         ''' </summary>
         ''' <param name="onlineplayers">List of actual amount of online players right now</param>
         ''' <remarks></remarks>
@@ -2608,9 +2692,9 @@ Namespace Core
                             Next
 
                             If found = False Then
-                                livebug.write(loggingLevel.Fine, "mainform",
-                                              "Player registered but not shown! " & Player)
-                                Dim p As Player = server.GetPlayerByName(Player)
+                                Log(loggingLevel.Fine, "mainform",
+                                    "Player registered but not shown! " & Player)
+                                Dim p As Player = GetPlayerByName(Player)
                                 If p Is Nothing Then p = New Player(Player, "unknown")
                                 AddPlayer(p)
                             End If
@@ -2620,9 +2704,9 @@ Namespace Core
 
                         For Each item As ListViewItem In ALVGeneralPlayers.Items
                             If onlineplayers.Contains(item.SubItems(0).Text) = False Then _
-                                livebug.write(loggingLevel.Fine, "mainform",
-                                              "Player shown but not registered! " & item.SubItems(0).Text) _
-                                  : RemovePlayer(item.SubItems(0).Text)
+                                Log(loggingLevel.Fine, "mainform",
+                                    "Player shown but not registered! " & item.SubItems(0).Text) _
+                                    : RemovePlayer(item.SubItems(0).Text)
                         Next
 
                     End If
@@ -2653,23 +2737,23 @@ Namespace Core
 
 #End Region
 
-        Private Sub BtnGeneralClearOutput_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnGeneralClearOutput_Click(sender As Object, e As EventArgs) _
             Handles BtnGeneralClearOutput.Click
             ARTXTServerOutput.Text = ""
         End Sub
 
-        Private Sub BtnCmenuGeneralOutputCopy_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuGeneralOutputCopy_Click(sender As Object, e As EventArgs) _
             Handles BtnBrowseOutput.Click
             Try
                 Dim outbrowser As New OutputBrowser(ARTXTServerOutput)
                 outbrowser.Show()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "Mainform", "Couldn't open output browse dialog", ex.Message)
+                Log(loggingLevel.Warning, "Mainform", "Couldn't open output browse dialog", ex.Message)
             End Try
         End Sub
 
-        Private Sub ARTXTServerOutput_LinkClicked(sender As System.Object,
-                                                  e As System.Windows.Forms.LinkClickedEventArgs) _
+        Private Sub ARTXTServerOutput_LinkClicked(sender As Object,
+                                                  e As LinkClickedEventArgs) _
             Handles ARTXTServerOutput.LinkClicked
             If e.LinkText.Contains("http") Then
                 Dim p As New Process
@@ -2685,8 +2769,8 @@ Namespace Core
 
         Private Sub pluginmanager_install_init()
             Try
-                livebug.write(loggingLevel.Fine, "mainform", "Loading plugin installer items")
-                Dim lst As List(Of String) = BukGetAPI.GetPluginCategories()
+                Log(loggingLevel.Fine, "mainform", "Loading plugin installer items")
+                Dim lst As List(Of String) = GetPluginCategories()
 
                 CBInstallPluginsCategory.Items.Clear()
                 CBInstallPluginsCategory.Items.Add("All")
@@ -2697,7 +2781,7 @@ Namespace Core
                     CBInstallPluginsCategory.Items.Add(item.Replace("_", " "))
                 Next
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "mainform", "Couldn't load plugin categories!", ex.Message)
+                Log(loggingLevel.Warning, "mainform", "Couldn't load plugin categories!", ex.Message)
 
                 CBInstallPluginsCategory.Items.Clear()
                 CBInstallPluginsCategory.Items.Add("All")
@@ -2708,64 +2792,64 @@ Namespace Core
             End Try
         End Sub
 
-        Private Sub TabCtrlMain_IndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub TabCtrlMain_IndexChanged(sender As Object, e As EventArgs) _
             Handles TabCtrlMain.SelectedIndexChanged
             If TabCtrlMain.SelectedTab.Equals(TabServerOptions) Then Server_settings_refresh_UI()
-            If TabCtrlMain.SelectedTab.Equals(TabPlugins) And BukGetAPI.IsPluginListLoaded = False Then _
-                BukGetAPI.LoadMostPopularPluginsAsync()
+            If TabCtrlMain.SelectedTab.Equals(TabPlugins) And IsPluginListLoaded = False Then _
+                LoadMostPopularPluginsAsync()
         End Sub
 
-        Private Sub CBInstallPluginsCategory_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub CBInstallPluginsCategory_SelectedIndexChanged(sender As Object, e As EventArgs) _
             Handles CBInstallPluginsCategory.SelectedIndexChanged
             If _initializeCompleted = False Then Exit Sub
             If CBInstallPluginsCategory.SelectedItem.ToString = "All" Then
-                BukGetAPI.LoadAllPluginsAsync() 'event will update UI
+                LoadAllPluginsAsync() 'event will update UI
             ElseIf CBInstallPluginsCategory.SelectedItem.ToString = "Popular" Then
-                BukGetAPI.LoadMostPopularPluginsAsync() 'event will update UI
+                LoadMostPopularPluginsAsync() 'event will update UI
             Else
-                BukGetAPI.GetPluginsByCategoryAsync(CBInstallPluginsCategory.SelectedItem.ToString) _
+                GetPluginsByCategoryAsync(CBInstallPluginsCategory.SelectedItem.ToString) _
                 'event will update UI
             End If
         End Sub
 
-        Private Sub TxtInstallPluginsFilter_TextChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub TxtInstallPluginsFilter_TextChanged(sender As Object, e As EventArgs) _
             Handles BtnInstallPluginsSearch.Click
             ALVBukGetPlugins.Items.Clear()
             Dim Searchtext = TxtInstallPluginsFilter.Text.ToLower
             If Searchtext = "" Then
-                BukGetAPI.LoadMostPopularPluginsAsync()
+                LoadMostPopularPluginsAsync()
             Else
                 GetPluginSearchOnlineAsync(Searchtext)
             End If
         End Sub
 
-        Private Sub btnCMenuBukGetPluginsMoreInfo_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub btnCMenuBukGetPluginsMoreInfo_Click(sender As Object, e As EventArgs) _
             Handles btnCMenuBukGetPluginsMoreInfo.Click
             If ALVBukGetPlugins.SelectedItems Is Nothing OrElse ALVBukGetPlugins.SelectedItems.Count < 1 Then Exit Sub
             For Each item As ListViewItem In ALVBukGetPlugins.SelectedItems
-                BukGetAPI.ShowPluginDialogByNamespace(item.Tag)
+                ShowPluginDialogByNamespace(item.Tag)
             Next
         End Sub
 
-        Private Sub BtnCMenuBukGetPluginsInstallPlugin_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuBukGetPluginsInstallPlugin_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuBukGetPluginsInstallPlugin.Click
             If ALVBukGetPlugins.SelectedItems Is Nothing OrElse ALVBukGetPlugins.SelectedItems.Count < 1 Then Exit Sub
             For Each item As ListViewItem In ALVBukGetPlugins.SelectedItems
-                BukGetAPI.InstallPlugin(BukGetAPI.GetPluginInfoByNamespace(item.Tag))
+                InstallPlugin(GetPluginInfoByNamespace(item.Tag))
             Next
         End Sub
 
-        Private Sub BtnCMenuBukGetPluginsProjectPage_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuBukGetPluginsProjectPage_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuBukGetPluginsProjectPage.Click
             If ALVBukGetPlugins.SelectedItems Is Nothing OrElse ALVBukGetPlugins.SelectedItems.Count < 1 Then Exit Sub
             For Each item As ListViewItem In ALVBukGetPlugins.SelectedItems
-                BukGetAPI.OpenProjectPageByNamespace(item.Tag)
+                OpenProjectPageByNamespace(item.Tag)
             Next
         End Sub
 
-        Private Sub BtnCMenuBukGetPluginsRefresh_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuBukGetPluginsRefresh_Click(sender As Object, e As EventArgs) _
             Handles BtnCMenuBukGetPluginsRefresh.Click
-            BukGetAPI.LoadAllPluginsAsync()
+            LoadAllPluginsAsync()
         End Sub
 
         Private Sub thds_SetBukGetPlugins(ByVal lst As List(Of SimpleBukgetPlugin))
@@ -2783,8 +2867,8 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf thds_SetBukGetPlugins)
                     Me.Invoke(d, New Object() {lst})
                 Else
-                    livebug.write(loggingLevel.Fine, "mainform", "Adding " & lst.Count & " Items to BukGet Plugin list",
-                                  "thds_SetBukgetPlugins")
+                    Log(loggingLevel.Fine, "mainform", "Adding " & lst.Count & " Items to BukGet Plugin list",
+                        "thds_SetBukgetPlugins")
                     Me.LblInstallPluginsLoading.Visible = False
                     ALVBukGetPlugins.Items.Clear()
                     If lst Is Nothing OrElse lst.Count = 0 Then
@@ -2826,19 +2910,19 @@ Namespace Core
                                                  Lr("plugins")
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in thd_SetBukgetPlugins!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in thd_SetBukgetPlugins!", ex.Message)
             End Try
         End Sub
 
 
-        Private Sub ALVBukGetPlugins_MouseDoubleClick(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) _
+        Private Sub ALVBukGetPlugins_MouseDoubleClick(sender As Object, e As MouseEventArgs) _
             Handles ALVBukGetPlugins.MouseDoubleClick
 
             If ALVBukGetPlugins.SelectedItems Is Nothing OrElse ALVBukGetPlugins.SelectedItems.Count < 1 Then Exit Sub
 
             Dim _
                 plugindialog As _
-                    New BukgetPluginDialog(BukGetAPI.GetPluginInfoByNamespace(ALVBukGetPlugins.SelectedItems(0).Tag))
+                    New BukgetPluginDialog(GetPluginInfoByNamespace(ALVBukGetPlugins.SelectedItems(0).Tag))
             plugindialog.Show()
         End Sub
 
@@ -2855,7 +2939,7 @@ Namespace Core
             plugindialog.Show()
         End Sub
 
-        Private Sub CmenuInstalledPluginsViewVersions_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub CmenuInstalledPluginsViewVersions_Click(sender As Object, e As EventArgs) _
             Handles CmenuInstalledPluginsViewVersions.Click
             If ALVInstalledPlugins.SelectedItems Is Nothing OrElse ALVInstalledPlugins.SelectedItems.Count < 1 Then _
                 Exit Sub
@@ -2865,7 +2949,7 @@ Namespace Core
             plugindialog.Show()
         End Sub
 
-        Private Sub CmenuInstalledPluginsUpdate_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub CmenuInstalledPluginsUpdate_Click(sender As Object, e As EventArgs) _
             Handles CmenuInstalledPluginsUpdate.Click
             If ALVInstalledPlugins.SelectedItems Is Nothing OrElse ALVInstalledPlugins.SelectedItems.Count < 1 Then _
                 Exit Sub
@@ -2884,7 +2968,7 @@ Namespace Core
             If ud.Updated Then RefreshAllInstalledPluginsAsync()
         End Sub
 
-        Private Sub CmenuInstalledPluginsProjectPage_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub CmenuInstalledPluginsProjectPage_Click(sender As Object, e As EventArgs) _
             Handles CmenuInstalledPluginsProjectPage.Click
             If ALVInstalledPlugins.SelectedItems Is Nothing OrElse ALVInstalledPlugins.SelectedItems.Count < 1 Then _
                 Exit Sub
@@ -2892,7 +2976,7 @@ Namespace Core
             OpenProjectPageByFileName(item.Tag)
         End Sub
 
-        Private Sub CmenuInstalledPluginsRemove_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub CmenuInstalledPluginsRemove_Click(sender As Object, e As EventArgs) _
             Handles CmenuInstalledPluginsRemove.Click
             If ALVInstalledPlugins.SelectedItems Is Nothing OrElse ALVInstalledPlugins.SelectedItems.Count < 1 Then _
                 Exit Sub
@@ -2902,15 +2986,15 @@ Namespace Core
             Next
         End Sub
 
-        Private Sub RefreshListToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub RefreshListToolStripMenuItem_Click(sender As Object, e As EventArgs) _
             Handles CmenuInstalledPluginsRefresh.Click
-            InstalledPluginManager.ClearPluginCache()
-            InstalledPluginManager.InitAsync()
+            ClearPluginCache()
+            InitAsync()
         End Sub
 
-        Private Sub CmenuInstalledPluginsOpenFolder_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub CmenuInstalledPluginsOpenFolder_Click(sender As Object, e As EventArgs) _
             Handles CmenuInstalledPluginsOpenFolder.Click
-            InstalledPluginManager.ShowPluginsFolder()
+            ShowPluginsFolder()
         End Sub
 
         Private Sub LoadInstalledPlugins(l As Dictionary(Of String, plugindescriptor))
@@ -2931,11 +3015,11 @@ Namespace Core
                     Try
                         ALVInstalledPlugins.Items.Clear()
                         If l Is Nothing Then _
-                            livebug.write(loggingLevel.Fine, "mainform",
-                                          "Refreshing installed plugins: NULL dictionary passed!",
-                                          "mainform-pluginmanager") : Exit Sub
-                        livebug.write(loggingLevel.Fine, "mainform", "Refreshing installed plugins... (" & l.Count & ")",
-                                      "mainform-pluginmanager")
+                            Log(loggingLevel.Fine, "mainform",
+                                "Refreshing installed plugins: NULL dictionary passed!",
+                                "mainform-pluginmanager") : Exit Sub
+                        Log(loggingLevel.Fine, "mainform", "Refreshing installed plugins... (" & l.Count & ")",
+                            "mainform-pluginmanager")
                         If l.Count > 0 Then
                             Dim lvc As UInt32 = l.Values.Count
                             For i As UInt16 = 0 To lvc - 1
@@ -2943,27 +3027,27 @@ Namespace Core
                                     Dim lvi As ListViewItem = CreateInstalledPluginLVI(l.Values(i))
                                     If lvi IsNot Nothing Then ALVInstalledPlugins.Items.Add(lvi)
                                 Catch ex As Exception
-                                    livebug.write(loggingLevel.Warning, "mainform-pluginmanager",
-                                                  "Could not add plugin to plugin list, id:" & i, ex.Message)
+                                    Log(loggingLevel.Warning, "mainform-pluginmanager",
+                                        "Could not add plugin to plugin list, id:" & i, ex.Message)
                                 End Try
                             Next
                         Else
-                            livebug.write(loggingLevel.Fine, "mainform", "No plugins found, nothing added to list",
-                                          "mainform-pluginmanager")
+                            Log(loggingLevel.Fine, "mainform", "No plugins found, nothing added to list",
+                                "mainform-pluginmanager")
                         End If
                         ALVInstalledPlugins.Refresh()
-                        livebug.write(loggingLevel.Fine, "mainform", "Updated installed plugins list",
-                                      "mainform-pluginmanager")
+                        Log(loggingLevel.Fine, "mainform", "Updated installed plugins list",
+                            "mainform-pluginmanager")
                         lblinstalledpluginsInfo.Text = Lr("Loaded") & " " & l.Values.Count & " " & Lr("plugins") & ". " &
                                                        Lr(
                                                            "Right click for options, double click for details. Ctrl+click or Shift+click to select multiple items.")
                     Catch ex As Exception
-                        livebug.write(loggingLevel.Severe, "mainform",
-                                      "An exception occured when trying to load installed plugins:" & ex.Message)
+                        Log(loggingLevel.Severe, "mainform",
+                            "An exception occured when trying to load installed plugins:" & ex.Message)
                     End Try
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in LoadInstalledPlugins!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in LoadInstalledPlugins!", ex.Message)
             End Try
         End Sub
 
@@ -3010,22 +3094,22 @@ Namespace Core
                 If pld.FileCreationDate.Year > 2005 Then
                     lvi =
                         New ListViewItem(
-                            {pld.name, pld.version, Common.Serialize(pld.authors), pld.description,
+                            {pld.name, pld.version, Serialize(pld.authors), pld.description,
                              pld.FileCreationDate.Year.ToString.PadLeft(4, "0") & "/" &
                              pld.FileCreationDate.Month.ToString.PadLeft(2, "0") & "/" &
                              pld.FileCreationDate.Day.ToString.PadLeft(2, "0")})
                 Else
                     lvi =
                         New ListViewItem(
-                            {pld.name, pld.version, Common.Serialize(pld.authors), pld.description, "unknown"})
+                            {pld.name, pld.version, Serialize(pld.authors), pld.description, "unknown"})
                 End If
 
                 lvi.Tag = pld.filename
                 lvi.ToolTipText = Lr("Double click for more information. Right Click for options.")
                 Return lvi
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in CreateInstalledPluginLVI",
-                              ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in CreateInstalledPluginLVI",
+                    ex.Message)
                 Return Nothing
             End Try
         End Function
@@ -3039,7 +3123,7 @@ Namespace Core
 #Region "info"
 
         Private Sub info_load()
-            livebug.write(loggingLevel.Fine, "mainform", "Loading info items")
+            Log(loggingLevel.Fine, "mainform", "Loading info items")
             lblInfoAppName.Text = Lr("Name:") & " " & My.Application.Info.AssemblyName
             lblInfoAppAuthors.Text = Lr("Author(s):") & " Bertware"
             lblInfoAppVersion.Text = Lr("Version:") & " " & My.Application.Info.Version.ToString
@@ -3047,8 +3131,8 @@ Namespace Core
             ALlblInfoAppWeb.Text = Lr("Web:") & " http://dev.bukkit.org/projects/bukkitGUI"
 
             LblInfoComputerComputerName.Text = Lr("Computer name:") & " " & My.Computer.Name
-            LblInfoComputerCPU.Text = Lr("CPU:") & " " & WMI.GetprocessorInfo(WMI.processorprop.Name)
-            If Common.IsRunningOnMono = False Then
+            LblInfoComputerCPU.Text = Lr("CPU:") & " " & GetprocessorInfo(WMI.processorprop.Name)
+            If IsRunningOnMono = False Then
                 LblInfoComputerRAM.Text = Lr("RAM:") & " " & Math.Round(My.Computer.Info.TotalPhysicalMemory / 1024 / 1024) &
                                           "MB"
                 LblInfoComputerOS.Text = Lr("OS:") & " " & My.Computer.Info.OSFullName
@@ -3057,9 +3141,9 @@ Namespace Core
                 LblInfoComputerOS.Text = Lr("OS:") & " Mono"
             End If
 
-            LblInfoComputerLocIP.Text = Lr("Local IP:") & " " & WMI.GetInternalIP
+            LblInfoComputerLocIP.Text = Lr("Local IP:") & " " & GetInternalIP
 
-            Dim t As New Thread(AddressOf serverinteraction.getIp)
+            Dim t As New Thread(AddressOf getIp)
             t.Name = "info_get_external_ip"
             t.IsBackground = True
             t.Start()
@@ -3082,11 +3166,11 @@ Namespace Core
                     LblInfoComputerExtIP.Text = Lr("Ext. IP:") & " " & ip
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "Mainform", "External IP cannot be shown!", ex.Message)
+                Log(loggingLevel.Warning, "Mainform", "External IP cannot be shown!", ex.Message)
             End Try
         End Sub
 
-        Private Sub hnd_last_version_loaded(upd As Bertware.Get.UpdateInfo)
+        Private Sub hnd_last_version_loaded(upd As UpdateInfo)
             Try
                 If Me.Created = False Then
                     Dim i As Byte = 0
@@ -3104,16 +3188,16 @@ Namespace Core
                         lblInfoAppLatest.Text = Lr("Latest version:") & " " & upd.Version
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "Mainform", "Latest version cannot be shown!", ex.Message)
+                Log(loggingLevel.Warning, "Mainform", "Latest version cannot be shown!", ex.Message)
             End Try
         End Sub
 
-        Private Sub BtnInfoAppUpdater_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnInfoAppUpdater_Click(sender As Object, e As EventArgs) _
             Handles BtnInfoAppUpdater.Click
             Try
-                Net.Bertware.Get.ShowUpdater()
+                ShowUpdater()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "Mainform", "Can't open updater!", ex.Message)
+                Log(loggingLevel.Warning, "Mainform", "Can't open updater!", ex.Message)
             End Try
         End Sub
 
@@ -3121,37 +3205,37 @@ Namespace Core
 
 #Region "Tray and sound settings"
 
-        Private Sub ChkInfoTrayMinimize_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoTrayMinimize_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoTrayMinimize.CheckedChanged
             TrayMinimize = ChkInfoTrayMinimize.Checked
         End Sub
 
-        Private Sub ChkInfoTrayAlways_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoTrayAlways_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoTrayAlways.CheckedChanged
             TrayAlways = ChkInfoTrayAlways.Checked
         End Sub
 
-        Private Sub ChkInfoTrayOnJoin_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoTrayOnJoin_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoTrayOnJoin.CheckedChanged
             TrayOnPlayerJoin = ChkInfoTrayOnJoin.Checked
         End Sub
 
-        Private Sub OnLeave_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub OnLeave_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoTrayOnLeave.CheckedChanged
             TrayOnPlayerDisconnect = ChkInfoTrayOnLeave.Checked
         End Sub
 
-        Private Sub ChkInfoTrayOnWarning_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoTrayOnWarning_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoTrayOnWarning.CheckedChanged
             TrayOnWarning = ChkInfoTrayOnWarning.Checked
         End Sub
 
-        Private Sub ChkInfoTrayOnSevere_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoTrayOnSevere_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoTrayOnSevere.CheckedChanged
             TrayOnSevere = ChkInfoTrayOnSevere.Checked
         End Sub
 
-        Private Sub btnCmenuTrayClose_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub btnCmenuTrayClose_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuTrayExit.Click
             Me.Close()
         End Sub
@@ -3169,7 +3253,7 @@ Namespace Core
                 Return _trayOnPlayerJoin
             End Get
             Set(value As Boolean)
-                config.writeAsBool("join", value, "tray")
+                writeAsBool("join", value, "tray")
                 _trayOnPlayerJoin = value
             End Set
         End Property
@@ -3179,7 +3263,7 @@ Namespace Core
                 Return _trayOnplayerDisconnect
             End Get
             Set(value As Boolean)
-                config.writeAsBool("disconnect", value, "tray")
+                writeAsBool("disconnect", value, "tray")
                 _trayOnPlayerJoin = value
             End Set
         End Property
@@ -3189,7 +3273,7 @@ Namespace Core
                 Return _trayOnWarning
             End Get
             Set(value As Boolean)
-                config.writeAsBool("warning", value, "tray")
+                writeAsBool("warning", value, "tray")
                 _trayOnPlayerJoin = value
             End Set
         End Property
@@ -3199,7 +3283,7 @@ Namespace Core
                 Return _trayOnsevere
             End Get
             Set(value As Boolean)
-                config.writeAsBool("severe", value, "tray")
+                writeAsBool("severe", value, "tray")
                 _trayOnPlayerJoin = value
             End Set
         End Property
@@ -3209,7 +3293,7 @@ Namespace Core
                 Return _trayMinimize
             End Get
             Set(value As Boolean)
-                config.writeAsBool("minimize", value, "tray")
+                writeAsBool("minimize", value, "tray")
                 _trayMinimize = value
             End Set
         End Property
@@ -3219,7 +3303,7 @@ Namespace Core
                 Return _trayAlways
             End Get
             Set(value As Boolean)
-                config.writeAsBool("always", value, "tray")
+                writeAsBool("always", value, "tray")
                 _trayAlways = value
             End Set
         End Property
@@ -3229,19 +3313,19 @@ Namespace Core
                 Return _trayShowTime
             End Get
             Set(value As UInt16)
-                config.write("time", value.ToString, "tray")
+                write("time", value.ToString, "tray")
                 _trayShowTime = value
             End Set
         End Property
 
         Public Sub tray_sound_init()
-            _trayShowTime = CInt(config.read("time", "500", "tray"))
-            _trayOnPlayerJoin = config.readAsBool("join", False, "tray")
-            _trayOnplayerDisconnect = config.readAsBool("disconnect", False, "tray")
-            _trayOnWarning = config.readAsBool("warning", False, "tray")
-            _trayOnsevere = config.readAsBool("severe", False, "tray")
-            _trayAlways = config.readAsBool("always", False, "tray")
-            _trayMinimize = config.readAsBool("minimize", False, "tray")
+            _trayShowTime = CInt(read("time", "500", "tray"))
+            _trayOnPlayerJoin = readAsBool("join", False, "tray")
+            _trayOnplayerDisconnect = readAsBool("disconnect", False, "tray")
+            _trayOnWarning = readAsBool("warning", False, "tray")
+            _trayOnsevere = readAsBool("severe", False, "tray")
+            _trayAlways = readAsBool("always", False, "tray")
+            _trayMinimize = readAsBool("minimize", False, "tray")
 
             ChkInfoTrayMinimize.Checked = TrayMinimize
             ChkInfoTrayAlways.Checked = TrayAlways
@@ -3250,35 +3334,37 @@ Namespace Core
             ChkInfoTrayOnWarning.Checked = TrayOnWarning
             ChkInfoTrayOnSevere.Checked = TrayOnSevere
 
-            ChkInfoSoundOnJoin.Checked = SoundNotificator.onPlayerJoin
-            ChkInfoSoundOnLeave.Checked = SoundNotificator.onPlayerDisconnect
-            ChkInfoSoundOnWarning.Checked = SoundNotificator.onWarning
-            ChkInfoSoundOnSevere.Checked = SoundNotificator.onSevere
+            ChkInfoSoundOnJoin.Checked = onPlayerJoin
+            ChkInfoSoundOnLeave.Checked = onPlayerDisconnect
+            ChkInfoSoundOnWarning.Checked = onWarning
+            ChkInfoSoundOnSevere.Checked = onSevere
         End Sub
 
+
         ''' <summary>
-        ''' Minimize the GUI to tray
+        '''     Minimize the GUI to tray
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub SendToTray()
-            livebug.write(loggingLevel.Fine, "Mainform", "Sending GUI to tray...")
+            Log(loggingLevel.Fine, "Mainform", "Sending GUI to tray...")
             WindowState = FormWindowState.Minimized
             ShowInTaskbar = False
             Visible = False
 
             If _tmrUpdateStats Is Nothing Then _tmrUpdateStats.Enabled = False 'don't update those stats while hidden
 
-            Common.MainWindowHandle = Me.Handle 'we need this to write text and execute actions while hidden
+            MainWindowHandle = Me.Handle 'we need this to write text and execute actions while hidden
 
-            livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
+            Log(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
-            livebug.write(loggingLevel.Fine, "Mainform", "GUI minimized to tray...")
+            Log(loggingLevel.Fine, "Mainform", "GUI minimized to tray...")
 
             RaiseEvent ToTray()
         End Sub
 
+
         ''' <summary>
-        ''' Maximize the GUI from tray
+        '''     Maximize the GUI from tray
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub ShowFromTray()
@@ -3287,7 +3373,7 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf ShowFromTray)
                     Me.Invoke(d)
                 Else
-                    livebug.write(loggingLevel.Fine, "Mainform", "Showing GUI from tray...")
+                    Log(loggingLevel.Fine, "Mainform", "Showing GUI from tray...")
                     Visible = True
                     ShowInTaskbar = True
 
@@ -3302,18 +3388,18 @@ Namespace Core
                     ARTXTServerOutput.SelectedText = " "
                     ARTXTServerOutput.SelectedText = ""
 
-                    Common.MainWindowHandle = Me.Handle 'we need this to execute task actions
+                    MainWindowHandle = Me.Handle 'we need this to execute task actions
 
                     If _tmrUpdateStats Is Nothing Then _tmrUpdateStats.Enabled = True 'start updating stats again
 
-                    livebug.write(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
+                    Log(loggingLevel.Fine, "mainform", "Mainform window handle saved!")
 
-                    livebug.write(loggingLevel.Fine, "Mainform", "Showed GUI from tray...")
+                    Log(loggingLevel.Fine, "Mainform", "Showed GUI from tray...")
 
                     RaiseEvent FromTray()
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Mainform", "Error while showing GUI from tray!", ex.Message)
+                Log(loggingLevel.Severe, "Mainform", "Error while showing GUI from tray!", ex.Message)
             End Try
         End Sub
 
@@ -3325,24 +3411,24 @@ Namespace Core
             End Get
         End Property
 
-        Private Sub ChkInfoSoundOnJoin_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoSoundOnJoin_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoSoundOnJoin.CheckedChanged
-            SoundNotificator.onPlayerJoin = CType(sender, CheckBox).Checked
+            onPlayerJoin = CType(sender, CheckBox).Checked
         End Sub
 
-        Private Sub ChkInfoSoundOnLeave_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoSoundOnLeave_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoSoundOnLeave.CheckedChanged
-            SoundNotificator.onPlayerDisconnect = CType(sender, CheckBox).Checked
+            onPlayerDisconnect = CType(sender, CheckBox).Checked
         End Sub
 
-        Private Sub ChkInfoSoundOnWarning_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoSoundOnWarning_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoSoundOnWarning.CheckedChanged
-            SoundNotificator.onWarning = CType(sender, CheckBox).Checked
+            onWarning = CType(sender, CheckBox).Checked
         End Sub
 
-        Private Sub ChkInfoSoundOnSevere_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkInfoSoundOnSevere_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkInfoSoundOnSevere.CheckedChanged
-            SoundNotificator.onSevere = CType(sender, CheckBox).Checked
+            onSevere = CType(sender, CheckBox).Checked
         End Sub
 
 
@@ -3354,12 +3440,12 @@ Namespace Core
             Dim faking As Boolean = _initializeCompleted
             _initializeCompleted = False
 
-            ChkOptionsLightMode.Checked = Common.IsRunningLight
+            ChkOptionsLightMode.Checked = IsRunningLight
 
-            If Not Common.IsRunningLight Then
-                Dim current As String = language.CurrentLanguage
+            If Not IsRunningLight Then
+                Dim current As String = CurrentLanguage
                 CBInfoSettingsLanguage.Items.Clear()
-                For Each lang As String In language.Languages
+                For Each lang As String In Languages
                     CBInfoSettingsLanguage.Items.Add(lang)
                     If lang = current Then
                         CBInfoSettingsLanguage.SelectedIndex = CBInfoSettingsLanguage.Items.IndexOf(lang)
@@ -3380,18 +3466,18 @@ Namespace Core
             CBInfoSettingsFileLocation.Enabled = False
 #End If
 
-            ChkOptionsCheckUpdates.Checked = config.readAsBool("auto_update", "true", "options")
-            ChkOptionsTabplayers.Checked = config.readAsBool("enable_tabplayers", True, "options")
+            ChkOptionsCheckUpdates.Checked = readAsBool("auto_update", "true", "options")
+            ChkOptionsTabplayers.Checked = readAsBool("enable_tabplayers", True, "options")
             ChkOptionsTabplayers_CheckedChanged(ChkOptionsTabplayers, Nothing)
 
-            If Not Common.IsRunningLight Then
-                ChkOptionsTaberrors.Checked = config.readAsBool("enable_taberrorlogging", True, "options")
+            If Not IsRunningLight Then
+                ChkOptionsTaberrors.Checked = readAsBool("enable_taberrorlogging", True, "options")
                 ChkOptionsTaberrors_CheckedChanged(ChkOptionsTaberrors, Nothing)
-                ChkOptionsTabTaskManager.Checked = config.readAsBool("enable_tabtaskmanager", True, "options")
+                ChkOptionsTabTaskManager.Checked = readAsBool("enable_tabtaskmanager", True, "options")
                 ChkOptionsTabTaskManager_CheckedChanged(ChkOptionsTabTaskManager, Nothing)
-                ChkOptionsTabPlugins.Checked = config.readAsBool("enable_tabplugins", True, "options")
+                ChkOptionsTabPlugins.Checked = readAsBool("enable_tabplugins", True, "options")
                 ChkOptionsTabPlugins_CheckedChanged(ChkOptionsTabPlugins, Nothing)
-                ChkOptionsTabServeroptions.Checked = config.readAsBool("enable_tabserveroptions", True, "options")
+                ChkOptionsTabServeroptions.Checked = readAsBool("enable_tabserveroptions", True, "options")
                 ChkOptionsTabServeroptions_CheckedChanged(ChkOptionsTabServeroptions, Nothing)
             Else
                 ChkOptionsTaberrors.Enabled = False
@@ -3402,7 +3488,7 @@ Namespace Core
 
 
             Try
-                Dim regKey As Microsoft.Win32.RegistryKey
+                Dim regKey As RegistryKey
                 regKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", False)
                 Dim res = regKey.GetValue(My.Application.Info.AssemblyName)
                 If res IsNot Nothing Then
@@ -3412,13 +3498,13 @@ Namespace Core
                 End If
                 regKey.Close()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "mainform", "Couldn't load autostart settings", ex.Message)
+                Log(loggingLevel.Warning, "mainform", "Couldn't load autostart settings", ex.Message)
             End Try
 
             If faking Then _initializeCompleted = True
         End Sub
 
-        Private Sub CBInfoSettingsLanguage_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub CBInfoSettingsLanguage_SelectedIndexChanged(sender As Object, e As EventArgs) _
             Handles CBInfoSettingsLanguage.SelectedIndexChanged
             If Not _initializeCompleted Then Exit Sub
 
@@ -3434,7 +3520,7 @@ Namespace Core
             End If
         End Sub
 
-        Private Sub CBInfoSettingsFileLocation_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub CBInfoSettingsFileLocation_SelectedIndexChanged(sender As Object, e As EventArgs) _
             Handles CBInfoSettingsFileLocation.SelectedIndexChanged
 #If Not Debug Then
 
@@ -3448,14 +3534,14 @@ Namespace Core
 #End If
         End Sub
 
-        Private Sub ChkOptionsTabplayers_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkOptionsTabplayers_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkOptionsTabplayers.CheckedChanged
             Dim chk As CheckBox = CType(sender, CheckBox)
             Dim tab As TabPage = TabPlayers
             Dim i As Byte = 1
 
             If chk.Checked Then
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     Exit Sub
                 Else
@@ -3463,7 +3549,7 @@ Namespace Core
                 End If
 
             Else
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     TabCtrlMain.TabPages.Remove(tab)
                 Else
@@ -3473,13 +3559,13 @@ Namespace Core
             End If
         End Sub
 
-        Private Sub ChkOptionsTaberrors_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkOptionsTaberrors_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkOptionsTaberrors.CheckedChanged
             Dim chk As CheckBox = CType(sender, CheckBox)
             Dim tab As TabPage = TabErrorLogging
 
             If chk.Checked Then
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     Exit Sub
                 Else
@@ -3487,7 +3573,7 @@ Namespace Core
                 End If
 
             Else
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     TabCtrlMain.TabPages.Remove(tab)
                 Else
@@ -3497,13 +3583,13 @@ Namespace Core
             End If
         End Sub
 
-        Private Sub ChkOptionsTabTaskManager_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkOptionsTabTaskManager_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkOptionsTabTaskManager.CheckedChanged
             Dim chk As CheckBox = CType(sender, CheckBox)
             Dim tab As TabPage = TabTaskManager
 
             If chk.Checked Then
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     Exit Sub
                 Else
@@ -3511,7 +3597,7 @@ Namespace Core
                 End If
 
             Else
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     TabCtrlMain.TabPages.Remove(tab)
                 Else
@@ -3521,13 +3607,13 @@ Namespace Core
             End If
         End Sub
 
-        Private Sub ChkOptionsTabPlugins_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkOptionsTabPlugins_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkOptionsTabPlugins.CheckedChanged
             Dim chk As CheckBox = CType(sender, CheckBox)
             Dim tab As TabPage = TabPlugins
 
             If chk.Checked Then
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     Exit Sub
                 Else
@@ -3535,7 +3621,7 @@ Namespace Core
                 End If
 
             Else
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     TabCtrlMain.TabPages.Remove(tab)
                 Else
@@ -3545,13 +3631,13 @@ Namespace Core
             End If
         End Sub
 
-        Private Sub ChkOptionsTabServeroptions_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkOptionsTabServeroptions_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkOptionsTabServeroptions.CheckedChanged
             Dim chk As CheckBox = CType(sender, CheckBox)
             Dim tab As TabPage = TabServerOptions
 
             If chk.Checked Then
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     Exit Sub
                 Else
@@ -3559,7 +3645,7 @@ Namespace Core
                 End If
 
             Else
-                If _initializeCompleted Then config.writeAsBool("enable_" & tab.Name, chk.Checked, "options")
+                If _initializeCompleted Then writeAsBool("enable_" & tab.Name, chk.Checked, "options")
                 If TabCtrlMain.TabPages.Contains(tab) Then
                     TabCtrlMain.TabPages.Remove(tab)
                 Else
@@ -3572,29 +3658,30 @@ Namespace Core
         Private Sub LightModeChanged() Handles ChkOptionsLightMode.Click
             MessageBox.Show(Lr("These changes will take effect the next time you start the GUI"), Lr("Restart required"),
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
-            config.writeAsBool("LightMode", ChkOptionsLightMode.Checked)
+            writeAsBool("LightMode", ChkOptionsLightMode.Checked)
         End Sub
 
 
-        Private Sub ChkOptionsCheckUpdates_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChkOptionsCheckUpdates.CheckedChanged
-            config.writeAsBool("auto_update", ChkOptionsCheckUpdates.Checked, "options")
+        Private Sub ChkOptionsCheckUpdates_CheckedChanged(sender As Object, e As EventArgs) _
+            Handles ChkOptionsCheckUpdates.CheckedChanged
+            writeAsBool("auto_update", ChkOptionsCheckUpdates.Checked, "options")
         End Sub
 
-        Private Sub chkAutoStartWindows_CheckedChanged(sender As System.Object, e As System.EventArgs) _
-          Handles ChkAutoStartWindows.CheckedChanged
+        Private Sub chkAutoStartWindows_CheckedChanged(sender As Object, e As EventArgs) _
+            Handles ChkAutoStartWindows.CheckedChanged
             Try
-                Dim regKey As Microsoft.Win32.RegistryKey
+                Dim regKey As RegistryKey
                 regKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Run", True)
 
                 If ChkAutoStartWindows.Checked Then
                     regKey.SetValue(My.Application.Info.AssemblyName,
                                     My.Application.Info.DirectoryPath & "\" & My.Application.Info.AssemblyName & ".exe")
                     regKey.Close()
-                    livebug.write(loggingLevel.Fine, "mainform", "Enabled windows Autostart")
+                    Log(loggingLevel.Fine, "mainform", "Enabled windows Autostart")
                 Else
                     regKey.DeleteValue(My.Application.Info.AssemblyName, False)
                     regKey.Close()
-                    livebug.write(loggingLevel.Fine, "mainform", "Disabled windows Autostart")
+                    Log(loggingLevel.Fine, "mainform", "Disabled windows Autostart")
                 End If
             Catch ex As Exception
                 MessageBox.Show(Lr("Can't access autostart functions! Are you running this as administrator?"),
@@ -3602,24 +3689,24 @@ Namespace Core
             End Try
         End Sub
 
-        Private Sub ChkRunServerOnGUIStart_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkRunServerOnGUIStart_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkRunServerOnGUIStart.CheckedChanged
-            config.writeAsBool("autostart", ChkRunServerOnGUIStart.Checked)
+            writeAsBool("autostart", ChkRunServerOnGUIStart.Checked)
         End Sub
 
         Private Sub autoserverstart_check()
-            ChkRunServerOnGUIStart.Checked = config.readAsBool("autostart", False)
+            ChkRunServerOnGUIStart.Checked = readAsBool("autostart", False)
             If ChkRunServerOnGUIStart.Checked Then start_server()
         End Sub
 
 
-        Private Sub BtnOptionsResetAll_Click(sender As System.Object, e As System.EventArgs) Handles BtnOptionsResetAll.Click
+        Private Sub BtnOptionsResetAll_Click(sender As Object, e As EventArgs) Handles BtnOptionsResetAll.Click
             If _
                 MessageBox.Show(Lr("Do you really want to reset all GUI settings?"), Lr("Reset settings"),
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.No Then _
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then _
                 Exit Sub
-            livebug.write(loggingLevel.Fine, "Mainform", "Resetting GUI!")
-            If server.running Then
+            Log(loggingLevel.Fine, "Mainform", "Resetting GUI!")
+            If running Then
                 Dim ssd As New ServerStopDialog
                 ssd.ShowDialog()
             End If
@@ -3627,7 +3714,7 @@ Namespace Core
                 Lr("All settings will be resetted. You need to restart the GUI in order for the changes to take effect"),
                 Lr("Reset settings"), MessageBoxButtons.OK, MessageBoxIcon.Information)
             livebug.dispose(True)
-            Common.Reset()
+            Reset()
             Me.Close()
         End Sub
 
@@ -3641,35 +3728,35 @@ Namespace Core
 
         Private Sub text_options_init()
             Try
-                ChkShowTime.Checked = serverOutputHandler.Show_time
-                ChkShowDate.Checked = serverOutputHandler.Show_date
+                ChkShowTime.Checked = Show_time
+                ChkShowDate.Checked = Show_date
                 ARTXTServerOutput.Font = Usedfont
 
-                TxtSettingsTextColorInfo.BackColor = serverOutputHandler.clrInfo
-                TxtSettingsTextColorPlayer.BackColor = serverOutputHandler.clrPlayerEvent
-                TxtSettingsTextColorWarning.BackColor = serverOutputHandler.clrWarning
-                TxtSettingsTextColorSevere.BackColor = serverOutputHandler.clrSevere
-                TxtSettingsTextColorUnknown.BackColor = serverOutputHandler.clrUnknown
+                TxtSettingsTextColorInfo.BackColor = clrInfo
+                TxtSettingsTextColorPlayer.BackColor = clrPlayerEvent
+                TxtSettingsTextColorWarning.BackColor = clrWarning
+                TxtSettingsTextColorSevere.BackColor = clrSevere
+                TxtSettingsTextColorUnknown.BackColor = clrUnknown
 
                 CBTextOptionsFont.Populate(True)
 
-                Dim Fname As String = config.read("font_name", "arial", "output").ToString
-                Dim Fsize As Integer = CInt(config.read("font_size", "9", "output"))
-                ChkTextUTF8.Checked = config.readAsBool("utf_8_compatibility", False, "output")
+                Dim Fname As String = read("font_name", "arial", "output").ToString
+                Dim Fsize As Integer = CInt(read("font_size", "9", "output"))
+                ChkTextUTF8.Checked = readAsBool("utf_8_compatibility", False, "output")
                 CBTextOptionsFont.SelectedIndex = CBTextOptionsFont.FindStringExact(Fname)
                 NumTextOptionsFontSize.Value = Fsize
                 Usedfont = New Font(Fname, Fsize)
 
                 SetFont(Usedfont)
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Could not initialize fonts", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Could not initialize fonts", ex.Message)
             End Try
         End Sub
 
 
-        Private Sub ChkTextChineseCompatibility_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkTextChineseCompatibility_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkTextUTF8.CheckedChanged
-            config.writeAsBool("utf_8_compatibility", ChkTextUTF8.Checked, "output")
+            writeAsBool("utf_8_compatibility", ChkTextUTF8.Checked, "output")
         End Sub
 
         Private Sub SetFont(font As Font)
@@ -3682,101 +3769,101 @@ Namespace Core
             ALVGeneralPlayers.Font = font
         End Sub
 
-        Private Sub ChkShowTime_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkShowTime_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkShowTime.CheckedChanged
-            serverOutputHandler.Show_time = ChkShowTime.Checked
+            Show_time = ChkShowTime.Checked
         End Sub
 
-        Private Sub ChkShowDate_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkShowDate_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkShowDate.CheckedChanged
-            serverOutputHandler.Show_date = ChkShowDate.Checked
+            Show_date = ChkShowDate.Checked
         End Sub
 
-        Private Sub CBTextOptionsFont_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub CBTextOptionsFont_SelectedIndexChanged(sender As Object, e As EventArgs) _
             Handles CBTextOptionsFont.SelectedIndexChanged
             If Not _initializeCompleted Then Exit Sub
             Dim fname As String = CBTextOptionsFont.SelectedItem.ToString
             Dim fsize As Integer = NumTextOptionsFontSize.Value
             Usedfont = New Font(fname, fsize)
             SetFont(Usedfont)
-            config.write("font_name", fname, "output")
-            config.write("font_size", fsize, "output")
+            write("font_name", fname, "output")
+            write("font_size", fsize, "output")
         End Sub
 
-        Private Sub NumTextOptionsFontSize_ValueChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub NumTextOptionsFontSize_ValueChanged(sender As Object, e As EventArgs) _
             Handles NumTextOptionsFontSize.ValueChanged
             If Not _initializeCompleted Then Exit Sub
             Dim fname As String = CBTextOptionsFont.SelectedItem.ToString
             Dim fsize As Integer = NumTextOptionsFontSize.Value
             Usedfont = New Font(fname, fsize)
             SetFont(Usedfont)
-            config.write("font_name", fname, "output")
-            config.write("font_size", fsize, "output")
+            write("font_name", fname, "output")
+            write("font_size", fsize, "output")
         End Sub
 
 
-        Private Sub TxtSettingsTextColorInfo_click(sender As System.Object, e As System.EventArgs) _
+        Private Sub TxtSettingsTextColorInfo_click(sender As Object, e As EventArgs) _
             Handles TxtSettingsTextColorInfo.Click
             Dim cd As New ColorDialog
             cd.FullOpen = True
             cd.AnyColor = True
             cd.AllowFullOpen = True
             cd.SolidColorOnly = False
-            If cd.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If cd.ShowDialog() = DialogResult.OK Then
                 CType(sender, TextBox).BackColor = cd.Color
-                serverOutputHandler.clrInfo = cd.Color
+                clrInfo = cd.Color
             End If
         End Sub
 
-        Private Sub TxtSettingsTextColorPlayer_click(sender As System.Object, e As System.EventArgs) _
+        Private Sub TxtSettingsTextColorPlayer_click(sender As Object, e As EventArgs) _
             Handles TxtSettingsTextColorPlayer.Click
             Dim cd As New ColorDialog
             cd.FullOpen = True
             cd.AnyColor = True
             cd.AllowFullOpen = True
             cd.SolidColorOnly = False
-            If cd.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If cd.ShowDialog() = DialogResult.OK Then
                 CType(sender, TextBox).BackColor = cd.Color
-                serverOutputHandler.clrPlayerEvent = cd.Color
+                clrPlayerEvent = cd.Color
             End If
         End Sub
 
-        Private Sub TxtSettingsTextColorWarning_click(sender As System.Object, e As System.EventArgs) _
+        Private Sub TxtSettingsTextColorWarning_click(sender As Object, e As EventArgs) _
             Handles TxtSettingsTextColorWarning.Click
             Dim cd As New ColorDialog
             cd.FullOpen = True
             cd.AnyColor = True
             cd.AllowFullOpen = True
             cd.SolidColorOnly = False
-            If cd.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If cd.ShowDialog() = DialogResult.OK Then
                 CType(sender, TextBox).BackColor = cd.Color
-                serverOutputHandler.clrWarning = cd.Color
+                clrWarning = cd.Color
             End If
         End Sub
 
-        Private Sub TxtSettingsTextColorSevere_click(sender As System.Object, e As System.EventArgs) _
+        Private Sub TxtSettingsTextColorSevere_click(sender As Object, e As EventArgs) _
             Handles TxtSettingsTextColorSevere.Click
             Dim cd As New ColorDialog
             cd.FullOpen = True
             cd.AnyColor = True
             cd.AllowFullOpen = True
             cd.SolidColorOnly = False
-            If cd.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If cd.ShowDialog() = DialogResult.OK Then
                 CType(sender, TextBox).BackColor = cd.Color
-                serverOutputHandler.clrSevere = cd.Color
+                clrSevere = cd.Color
             End If
         End Sub
 
-        Private Sub TxtSettingsTextColorUnknown_click(sender As System.Object, e As System.EventArgs) _
+        Private Sub TxtSettingsTextColorUnknown_click(sender As Object, e As EventArgs) _
             Handles TxtSettingsTextColorUnknown.Click
             Dim cd As New ColorDialog
             cd.FullOpen = True
             cd.AnyColor = True
             cd.AllowFullOpen = True
             cd.SolidColorOnly = False
-            If cd.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If cd.ShowDialog() = DialogResult.OK Then
                 CType(sender, TextBox).BackColor = cd.Color
-                serverOutputHandler.clrUnknown = cd.Color
+                clrUnknown = cd.Color
             End If
         End Sub
 
@@ -3790,60 +3877,60 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf TaskManager_UpdateUI)
                     Me.Invoke(d, New Object())
                 Else
-                    If TaskManager.tasks Is Nothing Then Exit Sub
+                    If tasks Is Nothing Then Exit Sub
                     ALVTaskPlanner.Items.Clear()
-                    For Each task As TaskManager.task In TaskManager.tasks
+                    For Each task As task In tasks
                         ALVTaskPlanner.Items.Add(GetTaskListLVI(task))
                     Next
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in TaskManager_UpdateUI!", ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in TaskManager_UpdateUI!", ex.Message)
             End Try
         End Sub
 
-        Private Function GetTaskListLVI(t As TaskManager.task) As ListViewItem
+        Private Function GetTaskListLVI(t As task) As ListViewItem
             Dim lvi As New ListViewItem(
-                        {t.name, t.trigger_type.ToString.Replace("_", " "), t.trigger_parameters.ToString,
-                         t.action_type.ToString.Replace("_", " "), t.action_parameters.ToString,
-                         t.IsEnabled.ToString.ToLower})
+                {t.name, t.trigger_type.ToString.Replace("_", " "), t.trigger_parameters.ToString,
+                 t.action_type.ToString.Replace("_", " "), t.action_parameters.ToString,
+                 t.IsEnabled.ToString.ToLower})
             lvi.Tag = t.name
             lvi.Checked = t.IsEnabled
             Return lvi
         End Function
 
-        Private Sub BtnTaskManagerAdd_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnTaskManagerAdd_Click(sender As Object, e As EventArgs) _
             Handles BtnTaskManagerAdd.Click
             Dim td As New TaskDialog
             td.ShowDialog()
         End Sub
 
-        Private Sub BtnTaskManagerEdit_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnTaskManagerEdit_Click(sender As Object, e As EventArgs) _
             Handles BtnTaskManagerEdit.Click, ALVTaskPlanner.DoubleClick
             If _
                 ALVTaskPlanner.SelectedItems Is Nothing OrElse ALVTaskPlanner.SelectedItems.Count < 1 OrElse
                 ALVTaskPlanner.SelectedItems(0) Is Nothing Then Exit Sub
-            Dim t As TaskManager.task = TaskManager.GetTaskByName(ALVTaskPlanner.SelectedItems(0).SubItems(0).Text)
+            Dim t As task = GetTaskByName(ALVTaskPlanner.SelectedItems(0).SubItems(0).Text)
             Dim td As New TaskDialog
             td.task = t
             td.ShowDialog()
         End Sub
 
-        Private Sub BtnTaskManagerRemove_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnTaskManagerRemove_Click(sender As Object, e As EventArgs) _
             Handles BtnTaskManagerRemove.Click
             If _
                 ALVTaskPlanner.SelectedItems Is Nothing OrElse ALVTaskPlanner.SelectedItems.Count < 1 OrElse
                 ALVTaskPlanner.SelectedItems(0) Is Nothing Then Exit Sub
             For Each item As ListViewItem In ALVTaskPlanner.SelectedItems
-                TaskManager.deleteTask(item.SubItems(0).Text)
+                deleteTask(item.SubItems(0).Text)
             Next
         End Sub
 
-        Private Sub BtnTaskManagerImport_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnTaskManagerImport_Click(sender As Object, e As EventArgs) _
             Handles BtnTaskManagerImport.Click
             TaskManager.import()
         End Sub
 
-        Private Sub BtnTaskManagerExport_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnTaskManagerExport_Click(sender As Object, e As EventArgs) _
             Handles BtnTaskManagerExport.Click
             If _
                 ALVTaskPlanner.SelectedItems Is Nothing OrElse ALVTaskPlanner.SelectedItems.Count < 1 OrElse
@@ -3860,12 +3947,12 @@ Namespace Core
             End If
         End Sub
 
-        Private Sub BtnTaskManagerTest_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnTaskManagerTest_Click(sender As Object, e As EventArgs) _
             Handles BtnTaskManagerTest.Click
             If _
                 ALVTaskPlanner.SelectedItems Is Nothing OrElse ALVTaskPlanner.SelectedItems.Count < 1 OrElse
                 ALVTaskPlanner.SelectedItems(0) Is Nothing Then Exit Sub
-            TaskManager.GetTaskByName(ALVTaskPlanner.SelectedItems(0).SubItems(0).Text).Execute()
+            GetTaskByName(ALVTaskPlanner.SelectedItems(0).SubItems(0).Text).Execute()
         End Sub
 
         '  Private Sub ALVTaskPlanner_CheckChanged(s As Object, e As ItemCheckEventArgs) 'Handles ALVTaskPlanner.ItemCheck
@@ -3896,39 +3983,39 @@ Namespace Core
         End Sub
 
         Private Sub ErrorManager_InitUI()
-            ChkErrorsHideWarning.Checked = ErrorManager.Hide_Warnings
-            ChkErrorsHideError.Checked = ErrorManager.Hide_Errors
-            ChkErrorsHideStackTrace.Checked = ErrorManager.Hide_Stacktrace
+            ChkErrorsHideWarning.Checked = Hide_Warnings
+            ChkErrorsHideError.Checked = Hide_Errors
+            ChkErrorsHideStackTrace.Checked = Hide_Stacktrace
         End Sub
 
-        Private Sub ChkErrorsHideWarning_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkErrorsHideWarning_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkErrorsHideWarning.CheckedChanged
-            ErrorManager.Hide_Warnings = ChkErrorsHideWarning.Checked
+            Hide_Warnings = ChkErrorsHideWarning.Checked
         End Sub
 
-        Private Sub ChkErrorsHideError_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkErrorsHideError_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkErrorsHideError.CheckedChanged
-            ErrorManager.Hide_Errors = ChkErrorsHideError.Checked
+            Hide_Errors = ChkErrorsHideError.Checked
         End Sub
 
-        Private Sub ChkErrorsHideStackTrace_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+        Private Sub ChkErrorsHideStackTrace_CheckedChanged(sender As Object, e As EventArgs) _
             Handles ChkErrorsHideStackTrace.CheckedChanged
-            ErrorManager.Hide_Stacktrace = ChkErrorsHideStackTrace.Checked
+            Hide_Stacktrace = ChkErrorsHideStackTrace.Checked
         End Sub
 
-        Private Sub BtnErrorLoggingDetails_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnErrorLoggingDetails_Click(sender As Object, e As EventArgs) _
             Handles BtnErrorLoggingDetails.Click, ALVErrors.DoubleClick
             If ALVErrors.SelectedItems.Count < 1 Then Exit Sub
             Dim _
                 ed As _
-                    New ErrorDiagnose(serverOutputHandler.ParseMessageType(ALVErrors.SelectedItems(0).SubItems(1).Text),
+                    New ErrorDiagnose(ParseMessageType(ALVErrors.SelectedItems(0).SubItems(1).Text),
                                       ALVErrors.SelectedItems(0).SubItems(2).Text,
-                                      ErrorAnalyzer.GetCause(ALVErrors.SelectedItems(0).SubItems(3).Text))
+                                      GetCause(ALVErrors.SelectedItems(0).SubItems(3).Text))
             ed.ShowDialog()
         End Sub
 
 
-        Private Sub BtnErrorLoggingCopy_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnErrorLoggingCopy_Click(sender As Object, e As EventArgs) _
             Handles BtnErrorLoggingCopy.Click
             If ALVErrors.SelectedItems.Count < 1 Then Exit Sub
             Dim clipboardtext As String = ""
@@ -3949,139 +4036,139 @@ Namespace Core
                     Dim d As New ContextCallback(AddressOf Server_settings_refresh_UI)
                     Me.Invoke(d, New Object())
                 Else
-                    ServerSettings.LoadSettings()
+                    LoadSettings()
 
                     ALVServerSettings.Items.Clear()
-                    If ServerSettings.settings IsNot Nothing Then
-                        For Each setting In ServerSettings.settings
+                    If settings IsNot Nothing Then
+                        For Each setting In settings
                             ALVServerSettings.Items.Add(New ListViewItem({setting.Key, setting.Value}))
                         Next
                     End If
 
-                    ServerSettings.LoadLists()
+                    LoadLists()
 
                     ALVServerSettingsWhiteList.Items.Clear()
-                    If ServerSettings.whitelist IsNot Nothing Then
-                        For Each p As String In ServerSettings.whitelist
+                    If whitelist IsNot Nothing Then
+                        For Each p As String In whitelist
                             If p.StartsWith("#") = False And p <> "" Then _
                                 ALVServerSettingsWhiteList.Items.Add(New ListViewItem({p}))
                         Next
                     End If
 
                     ALVServerSettingsOPs.Items.Clear()
-                    If ServerSettings.ops IsNot Nothing Then
-                        For Each p As String In ServerSettings.ops
+                    If ops IsNot Nothing Then
+                        For Each p As String In ops
                             If p.StartsWith("#") = False And p <> "" Then _
                                 ALVServerSettingsOPs.Items.Add(New ListViewItem({p}))
                         Next
                     End If
 
                     ALVServerSettingsBannedPlayer.Items.Clear()
-                    If ServerSettings.Playerbans IsNot Nothing Then
-                        For Each p As String In ServerSettings.Playerbans
+                    If Playerbans IsNot Nothing Then
+                        For Each p As String In Playerbans
                             If p.StartsWith("#") = False And p <> "" Then _
                                 ALVServerSettingsBannedPlayer.Items.Add(New ListViewItem({p}))
                         Next
                     End If
 
                     ALVServerSettingsBannedIP.Items.Clear()
-                    If ServerSettings.IPBans IsNot Nothing Then
-                        For Each p As String In ServerSettings.IPBans
+                    If IPBans IsNot Nothing Then
+                        For Each p As String In IPBans
                             If p.StartsWith("#") = False And p <> "" Then _
                                 ALVServerSettingsBannedIP.Items.Add(New ListViewItem({p}))
                         Next
                     End If
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform", "Severe exception in Server_Settings_Refresh_UI!",
-                              ex.Message)
+                Log(loggingLevel.Severe, "mainform", "Severe exception in Server_Settings_Refresh_UI!",
+                    ex.Message)
             End Try
         End Sub
 
         Private Sub BtnServerSettingsAddWhitelist_Click() _
             Handles BtnServerSettingsAddWhitelist.Click, TxtServerSettingsAddWhitelist.KeyPressEnter
-            ServerSettings.AddWhitelist(TxtServerSettingsAddWhitelist.Text)
+            AddWhitelist(TxtServerSettingsAddWhitelist.Text)
             TxtServerSettingsAddWhitelist.Text = ""
             Server_settings_refresh_UI()
         End Sub
 
         Private Sub BtnServerSettingsAddOP_Click() _
             Handles BtnServerSettingsAddOP.Click, TxtServerSettingsAddOP.KeyPressEnter
-            ServerSettings.AddOp(TxtServerSettingsAddOP.Text)
+            AddOp(TxtServerSettingsAddOP.Text)
             TxtServerSettingsAddOP.Text = ""
             Server_settings_refresh_UI()
         End Sub
 
         Private Sub BtnServerSettingsAddPlayerBan_Click() _
             Handles BtnServerSettingsAddPlayerBan.Click, TxtServerSettingsAddPlayerBan.KeyPressEnter
-            ServerSettings.AddPlayerBan(TxtServerSettingsAddPlayerBan.Text)
+            AddPlayerBan(TxtServerSettingsAddPlayerBan.Text)
             TxtServerSettingsAddPlayerBan.Text = ""
             Server_settings_refresh_UI()
         End Sub
 
         Private Sub BtnServerSettingsAddIPBan_Click() _
             Handles BtnServerSettingsAddIPBan.Click, TxtServerSettingsAddIPBan.KeyPressEnter
-            ServerSettings.AddIpBan(TxtServerSettingsAddIPBan.Text)
+            AddIpBan(TxtServerSettingsAddIPBan.Text)
             TxtServerSettingsAddIPBan.Text = ""
             Server_settings_refresh_UI()
         End Sub
 
-        Private Sub BtnCMenuServerListsRemove_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCMenuServerListsRemove_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuServerListsRemove.Click
-            Dim lv As Net.Bertware.Controls.AdvancedListView = CType(CmenuServerLists.SourceControl, 
-                                                                     Net.Bertware.Controls.AdvancedListView)
+            Dim lv As AdvancedListView = CType(CmenuServerLists.SourceControl, 
+                                               AdvancedListView)
             If lv.SelectedItems Is Nothing OrElse lv.SelectedItems.Count < 1 Then Exit Sub
 
             If lv.Equals(ALVServerSettingsWhiteList) Then
-                ServerSettings.RemoveWhitelist(lv.SelectedItems(0).SubItems(0).Text)
+                RemoveWhitelist(lv.SelectedItems(0).SubItems(0).Text)
             ElseIf lv.Equals(ALVServerSettingsOPs) Then
-                ServerSettings.RemoveOp(lv.SelectedItems(0).SubItems(0).Text)
+                RemoveOp(lv.SelectedItems(0).SubItems(0).Text)
             ElseIf lv.Equals(ALVServerSettingsBannedPlayer) Then
-                ServerSettings.RemovePlayerBan(lv.SelectedItems(0).SubItems(0).Text)
+                RemovePlayerBan(lv.SelectedItems(0).SubItems(0).Text)
             ElseIf lv.Equals(ALVServerSettingsBannedIP) Then
-                ServerSettings.RemoveIpBan(lv.SelectedItems(0).SubItems(0).Text)
+                RemoveIpBan(lv.SelectedItems(0).SubItems(0).Text)
             End If
             Thread.Sleep(100) 'So files can be changed if server is running
             Server_settings_refresh_UI()
             Server_settings_refresh_UI()
         End Sub
 
-        Private Sub BtnCmenuServerSettingsAdd_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuServerSettingsAdd_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuServerSettingsAdd.Click
             Dim sd As New ServerSettingDialog
             sd.NameReadOnly = False
-            If sd.ShowDialog <> Windows.Forms.DialogResult.OK Then Exit Sub
-            ServerSettings.AddSetting(sd.setting, sd.value)
+            If sd.ShowDialog <> DialogResult.OK Then Exit Sub
+            AddSetting(sd.setting, sd.value)
             Server_settings_refresh_UI()
         End Sub
 
-        Private Sub BtnCmenuServerSettingsEdit_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuServerSettingsEdit_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuServerSettingsEdit.Click, ALVServerSettings.DoubleClick
             If ALVServerSettings.SelectedItems Is Nothing OrElse ALVServerSettings.SelectedItems.Count < 1 Then Exit Sub
             Dim sd As New ServerSettingDialog
             sd.setting = ALVServerSettings.SelectedItems(0).SubItems(0).Text
             sd.value = ALVServerSettings.SelectedItems(0).SubItems(1).Text
-            If sd.ShowDialog <> Windows.Forms.DialogResult.OK Then Exit Sub
-            ServerSettings.SetSetting(sd.setting, sd.value)
+            If sd.ShowDialog <> DialogResult.OK Then Exit Sub
+            SetSetting(sd.setting, sd.value)
             Server_settings_refresh_UI()
         End Sub
 
-        Private Sub BtnCmenuServerSettingsRemove_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuServerSettingsRemove_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuServerSettingsRemove.Click
             If ALVServerSettings.SelectedItems Is Nothing OrElse ALVServerSettings.SelectedItems.Count < 1 Then Exit Sub
-            ServerSettings.RemoveSetting(ALVServerSettings.SelectedItems(0).SubItems(0).Text)
+            RemoveSetting(ALVServerSettings.SelectedItems(0).SubItems(0).Text)
             Server_settings_refresh_UI()
         End Sub
 
-        Private Sub BtnCmenuServerListRefresh_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuServerListRefresh_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuServerListRefresh.Click
-            ServerSettings.LoadLists()
+            LoadLists()
             Server_settings_refresh_UI()
         End Sub
 
-        Private Sub BtnCmenuServerSettingsRefresh_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnCmenuServerSettingsRefresh_Click(sender As Object, e As EventArgs) _
             Handles BtnCmenuServerSettingsRefresh.Click
-            ServerSettings.LoadSettings()
+            LoadSettings()
             Server_settings_refresh_UI()
         End Sub
 
@@ -4097,54 +4184,54 @@ Namespace Core
                     Me.Invoke(d, New Object())
                 Else
                     ALVBackups.Items.Clear()
-                    For Each bs As BackupSetting In BackupManager.backups
+                    For Each bs As BackupSetting In backups
                         ALVBackups.Items.Add(
                             New ListViewItem(
-                                {bs.name, Common.Serialize(bs.folders, ","), bs.destination, bs.compression.ToString}))
+                                {bs.name, Serialize(bs.folders, ","), bs.destination, bs.compression.ToString}))
                     Next
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "mainform",
-                              "Severe exception in Backupmanager_UpdateUI! " & ex.Message, "mainform")
+                Log(loggingLevel.Severe, "mainform",
+                    "Severe exception in Backupmanager_UpdateUI! " & ex.Message, "mainform")
             End Try
         End Sub
 
-        Private Sub BtnBackupAdd_Click(sender As System.Object, e As System.EventArgs) Handles BtnBackupAdd.Click
+        Private Sub BtnBackupAdd_Click(sender As Object, e As EventArgs) Handles BtnBackupAdd.Click
             Dim bd As New BackupDialog()
-            If bd.ShowDialog() = Windows.Forms.DialogResult.OK Then BackupManager.addBackup(bd.backup)
+            If bd.ShowDialog() = DialogResult.OK Then addBackup(bd.backup)
         End Sub
 
-        Private Sub BtnBackupEdit_Click(sender As System.Object, e As System.EventArgs) Handles BtnBackupEdit.Click
+        Private Sub BtnBackupEdit_Click(sender As Object, e As EventArgs) Handles BtnBackupEdit.Click
             If _
                 ALVBackups.SelectedItems Is Nothing OrElse ALVBackups.SelectedItems.Count < 1 OrElse
                 ALVBackups.SelectedItems(0) Is Nothing Then Exit Sub
-            Dim bs As BackupSetting = BackupManager.GetBackupByName(ALVBackups.SelectedItems(0).SubItems(0).Text)
+            Dim bs As BackupSetting = GetBackupByName(ALVBackups.SelectedItems(0).SubItems(0).Text)
             Dim bd As New BackupDialog(bs)
-            If bd.ShowDialog() = Windows.Forms.DialogResult.OK Then BackupManager.saveBackup(bs, bd.backup)
+            If bd.ShowDialog() = DialogResult.OK Then saveBackup(bs, bd.backup)
         End Sub
 
-        Private Sub BtnBackupRemove_Click(sender As System.Object, e As System.EventArgs) Handles BtnBackupRemove.Click
+        Private Sub BtnBackupRemove_Click(sender As Object, e As EventArgs) Handles BtnBackupRemove.Click
             If _
                 ALVBackups.SelectedItems Is Nothing OrElse ALVBackups.SelectedItems.Count < 1 OrElse
                 ALVBackups.SelectedItems(0) Is Nothing Then Exit Sub
-            Dim bs As BackupSetting = BackupManager.GetBackupByName(ALVBackups.SelectedItems(0).SubItems(0).Text)
-            BackupManager.deleteBackup(bs)
+            Dim bs As BackupSetting = GetBackupByName(ALVBackups.SelectedItems(0).SubItems(0).Text)
+            deleteBackup(bs)
         End Sub
 
-        Private Sub BtnBackupExecute_Click(sender As System.Object, e As System.EventArgs) _
+        Private Sub BtnBackupExecute_Click(sender As Object, e As EventArgs) _
             Handles BtnBackupExecute.Click
             If _
                 ALVBackups.SelectedItems Is Nothing OrElse ALVBackups.SelectedItems.Count < 1 OrElse
                 ALVBackups.SelectedItems(0) Is Nothing Then Exit Sub
-            Dim bs As BackupSetting = BackupManager.GetBackupByName(ALVBackups.SelectedItems(0).SubItems(0).Text)
+            Dim bs As BackupSetting = GetBackupByName(ALVBackups.SelectedItems(0).SubItems(0).Text)
             bs.execute(True)
         End Sub
 
-        Private Sub BtnBackupImport_Click(sender As System.Object, e As System.EventArgs) Handles BtnBackupImport.Click
+        Private Sub BtnBackupImport_Click(sender As Object, e As EventArgs) Handles BtnBackupImport.Click
             BackupManager.import()
         End Sub
 
-        Private Sub BtnBackupExport_Click(sender As System.Object, e As System.EventArgs) Handles BtnBackupExport.Click
+        Private Sub BtnBackupExport_Click(sender As Object, e As EventArgs) Handles BtnBackupExport.Click
             If _
                 ALVBackups.SelectedItems Is Nothing OrElse ALVBackups.SelectedItems.Count < 1 OrElse
                 ALVBackups.SelectedItems(0) Is Nothing Then Exit Sub
@@ -4162,13 +4249,13 @@ Namespace Core
 
 #End Region
 
-        Private Sub BtnFeedback_Click(sender As System.Object, e As System.EventArgs) Handles BtnFeedback.Click
+        Private Sub BtnFeedback_Click(sender As Object, e As EventArgs) Handles BtnFeedback.Click
             Dim fbd As New FeedBackDialog
             fbd.ShowDialog()
         End Sub
 
-        Private Sub LblInfoComputerLocIP_LinkClicked(sender As System.Object,
-                                                     e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) _
+        Private Sub LblInfoComputerLocIP_LinkClicked(sender As Object,
+                                                     e As LinkLabelLinkClickedEventArgs) _
             Handles LblInfoComputerLocIP.LinkClicked
             Try
                 My.Computer.Clipboard.SetText(LblInfoComputerLocIP.Text.Split(":")(1).Trim)
@@ -4177,8 +4264,8 @@ Namespace Core
             End Try
         End Sub
 
-        Private Sub LblInfoComputerExtIP_LinkClicked(sender As System.Object,
-                                                     e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) _
+        Private Sub LblInfoComputerExtIP_LinkClicked(sender As Object,
+                                                     e As LinkLabelLinkClickedEventArgs) _
             Handles LblInfoComputerExtIP.LinkClicked
             Try
                 My.Computer.Clipboard.SetText(LblInfoComputerExtIP.Text.Split(":")(1).Trim)
@@ -4186,7 +4273,6 @@ Namespace Core
                 MessageBox.Show(Lr("Couldn't copy your IP!"), Lr("Failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
-
     End Class
 End Namespace
 

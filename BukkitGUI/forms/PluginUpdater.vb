@@ -1,27 +1,29 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
+﻿Imports System.Threading
+Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.MCInterop
-Imports System.Threading
 
 Public Class PluginUpdater
-    ''' <summary>
-    ''' The list of plugins to update
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public plugins As List(Of plugindescriptor)
+''' <summary>
+'''     The list of plugins to update
+''' </summary>
+''' <remarks></remarks>
+                          Public plugins As List(Of plugindescriptor)
 
-    ''' <summary>
-    ''' Dictionarry that links every plugin to a bukget object.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private dc As IDictionary(Of plugindescriptor, BukgetPlugin)
+                          
+                          ''' <summary>
+                          '''     Dictionarry that links every plugin to a bukget object.
+                          ''' </summary>
+                          ''' <remarks></remarks>
+                          Private dc As IDictionary(Of plugindescriptor, BukgetPlugin)
 
     Private _updated As Boolean = False
 
-    ''' <summary>
-    ''' Immediatly update the plugins when the form is loaded. 
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public UpdateOnLoad As Boolean = False
+                          
+                          ''' <summary>
+                          '''     Immediatly update the plugins when the form is loaded.
+                          ''' </summary>
+                          ''' <remarks></remarks>
+                          Public UpdateOnLoad As Boolean = False
 
     Public ReadOnly Property Updated As Boolean
         Get
@@ -69,13 +71,14 @@ Public Class PluginUpdater
         ' Add any initialization after the InitializeComponent() call.
     End Sub
 
-    ''' <summary>
-    ''' Init the form + start  async load of data.
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Private Sub PluginUpdater_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+                          
+                          ''' <summary>
+                          '''     Init the form + start  async load of data.
+                          ''' </summary>
+                          ''' <param name="sender"></param>
+                          ''' <param name="e"></param>
+                          ''' <remarks></remarks>
+                          Private Sub PluginUpdater_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If plugins Is Nothing OrElse plugins.Count < 1 Then Exit Sub
         If UpdateOnLoad = True Then
@@ -91,11 +94,12 @@ Public Class PluginUpdater
         t.Start()
     End Sub
 
-    ''' <summary>
-    ''' Load all plugin data async.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub LoadAsync()
+                          
+                          ''' <summary>
+                          '''     Load all plugin data async.
+                          ''' </summary>
+                          ''' <remarks></remarks>
+                          Private Sub LoadAsync()
         Try
             If plugins Is Nothing Then Exit Sub
 
@@ -105,15 +109,15 @@ Public Class PluginUpdater
                 Dim plugin As plugindescriptor = plugins(i)
                 If plugin IsNot Nothing AndAlso plugin.name IsNot Nothing Then
                     Me.SetStatus(lr("Loading plugin data:") & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
-                    livebug.write(loggingLevel.Fine, "PluginUpdater",
-                                  "Loading plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
+                    Log(loggingLevel.Fine, "PluginUpdater",
+                        "Loading plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     If dc.ContainsKey(plugin) = False Then
-                        dc.Add(plugin, BukGetAPI.GetPluginInfoByNamespace(plugin.main, False))
-                        livebug.write(loggingLevel.Fine, "PluginUpdater",
-                                      "Added plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
+                        dc.Add(plugin, GetPluginInfoByNamespace(plugin.main, False))
+                        Log(loggingLevel.Fine, "PluginUpdater",
+                            "Added plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     Else
-                        livebug.write(loggingLevel.Fine, "PluginUpdater",
-                                      "Discarded plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
+                        Log(loggingLevel.Fine, "PluginUpdater",
+                            "Discarded plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     End If
 
                     Dim tmpp As Double = Math.Round(100*((i + 1)/plugins.Count))
@@ -122,18 +126,19 @@ Public Class PluginUpdater
 
                 End If
             Next
-            livebug.write(loggingLevel.Fine, "PluginUpdater", "Loaded plugin data (" & plugins.Count & ")")
+            Log(loggingLevel.Fine, "PluginUpdater", "Loaded plugin data (" & plugins.Count & ")")
             LoadUI()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "PluginUpdater", "Severe exception in LoadAsync routine!", ex.Message)
+            Log(loggingLevel.Severe, "PluginUpdater", "Severe exception in LoadAsync routine!", ex.Message)
         End Try
     End Sub
 
-    ''' <summary>
-    ''' Load the user interface with the listview items, once all data is loaded.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub LoadUI()
+                          
+                          ''' <summary>
+                          '''     Load the user interface with the listview items, once all data is loaded.
+                          ''' </summary>
+                          ''' <remarks></remarks>
+                          Private Sub LoadUI()
         Try
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf LoadUI)
@@ -141,7 +146,7 @@ Public Class PluginUpdater
             Else
                 If dc Is Nothing Then Exit Sub
                 Me.SetStatus(lr("Loading plugin data to screen..."))
-                livebug.write(loggingLevel.Fine, "PluginUpdater", "Loading UI data (" & dc.Count & ")")
+                Log(loggingLevel.Fine, "PluginUpdater", "Loading UI data (" & dc.Count & ")")
                 For Each entry As KeyValuePair(Of plugindescriptor, BukgetPlugin) In dc
                     Try
                         Dim lvi As New ListViewItem
@@ -163,9 +168,9 @@ Public Class PluginUpdater
                                 lvi =
                                     New ListViewItem(
                                         {entry.Key.name, entry.Key.version, entry.Value.versions(0).version,
-                                         common.Serialize(entry.Value.versions(0).builds, ",")})
+                                         Serialize(entry.Value.versions(0).builds, ",")})
                                 lvi.Tag = "TRUE"
-                                If common.CheckVersion(entry.Key.version, entry.Value.versions(0).version) = 1 Then
+                                If CheckVersion(entry.Key.version, entry.Value.versions(0).version) = 1 Then
                                     lvi.Checked = True
                                 Else
                                     lvi.Checked = False
@@ -175,10 +180,10 @@ Public Class PluginUpdater
                         ALVPlugins.Items.Add(lvi)
                     Catch ex As Exception
                         If entry.Key IsNot Nothing AndAlso entry.Key.name IsNot Nothing Then
-                            livebug.write(loggingLevel.Warning, "PluginUpdater",
-                                          "Couldn't load plugin:" & entry.Key.name, ex.Message)
+                            Log(loggingLevel.Warning, "PluginUpdater",
+                                "Couldn't load plugin:" & entry.Key.name, ex.Message)
                         Else
-                            livebug.write(loggingLevel.Warning, "PluginUpdater", "Couldn't load plugin", ex.Message)
+                            Log(loggingLevel.Warning, "PluginUpdater", "Couldn't load plugin", ex.Message)
                         End If
                     End Try
                 Next
@@ -186,15 +191,16 @@ Public Class PluginUpdater
             End If
             If UpdateOnLoad Then Plugins_Update()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "PluginUpdater", "Severe exception in LoadUI routine!", ex.Message)
+            Log(loggingLevel.Severe, "PluginUpdater", "Severe exception in LoadUI routine!", ex.Message)
         End Try
     End Sub
 
-    ''' <summary>
-    ''' Close the form, prevent cross thread exceptions.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub CloseThisForm() Handles BtnClose.Click
+                          
+                          ''' <summary>
+                          '''     Close the form, prevent cross thread exceptions.
+                          ''' </summary>
+                          ''' <remarks></remarks>
+                          Private Sub CloseThisForm() Handles BtnClose.Click
         If Me.InvokeRequired Then
             Dim d As New ContextCallback(AddressOf CloseThisForm)
             Me.Invoke(d, New Object() {})
@@ -221,17 +227,18 @@ Public Class PluginUpdater
         End If
     End Sub
 
-    ''' <summary>
-    ''' Update each plugin, if it's checked
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub Plugins_Update() Handles BtnUpdate.Click
+                          
+                          ''' <summary>
+                          '''     Update each plugin, if it's checked
+                          ''' </summary>
+                          ''' <remarks></remarks>
+                          Private Sub Plugins_Update() Handles BtnUpdate.Click
         Try
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf Plugins_Update)
                 If Not (Me.Disposing Or Me.IsDisposed) Then Me.Invoke(d, New Object() {})
             Else
-                livebug.write(loggingLevel.Info, "PluginUpdater", "Starting plugins update")
+                Log(loggingLevel.Info, "PluginUpdater", "Starting plugins update")
                 If ALVPlugins.CheckedItems.Count < 1 Then Exit Sub
                 Dim i As UInt16 = 1
                 For Each item As ListViewItem In ALVPlugins.CheckedItems
@@ -249,13 +256,13 @@ Public Class PluginUpdater
                                             lr("Updating plugin") & " " & pair.Key.name & " " & lr("to version") & " " &
                                             pair.Value.versions(0).version & " (" & (i) & "/" &
                                             ALVPlugins.CheckedItems.Count & ")")
-                                    livebug.write(loggingLevel.Fine, "PluginUpdater", "Updating plugin:" & pair.Key.name)
+                                    Log(loggingLevel.Fine, "PluginUpdater", "Updating plugin:" & pair.Key.name)
                                     UpdatePluginToVersion(pair.Key, pair.Value.versions(0), False)
                                     Exit For
                                 End If
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "PluginUpdater",
-                                              "Exception in Update routine for " & pair.Key.name, ex.Message)
+                                Log(loggingLevel.Warning, "PluginUpdater",
+                                    "Exception in Update routine for " & pair.Key.name, ex.Message)
                             End Try
                         Next
                     Else
@@ -265,7 +272,7 @@ Public Class PluginUpdater
                             Me.SetStatus(
                                 lr("Skipping plugin") & " " & item.SubItems(0).Text & " - " & lr("cannot update") & "(" &
                                 i + 1 & " / " & dc.Count & ")")
-                        livebug.write(loggingLevel.Fine, "PluginUpdater", "Skipping plugin:" & item.SubItems(0).Text)
+                        Log(loggingLevel.Fine, "PluginUpdater", "Skipping plugin:" & item.SubItems(0).Text)
                     End If
                     Dim tmpp As Double = Math.Round(100*((i + 1)/dc.Count))
                     If tmpp > 100 Then tmpp = 100
@@ -278,17 +285,17 @@ Public Class PluginUpdater
                 If _
                     Me IsNot Nothing AndAlso BtnClose IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) AndAlso
                     Not (BtnClose.Disposing Or BtnClose.IsDisposed) Then BtnClose.Enabled = True
-                InstalledPluginManager.RefreshAllInstalledPluginsAsync()
+                RefreshAllInstalledPluginsAsync()
                 If Me IsNot Nothing AndAlso Not (Me.Disposing Or Me.IsDisposed) Then Me.Close()
             End If
         Catch ex As Exception
             MessageBox.Show(lr("Something went wrong while updating. Please check if all plugins are updated."),
                             lr("Something went wrong"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-            livebug.write(loggingLevel.Warning, "PluginUpdater", "Severe exception in Update routine!", ex.Message)
+            Log(loggingLevel.Warning, "PluginUpdater", "Severe exception in Update routine!", ex.Message)
         End Try
     End Sub
 
-    Private Sub ChkCheckAll_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub ChkCheckAll_CheckedChanged(sender As Object, e As EventArgs) _
         Handles ChkCheckAll.CheckedChanged
         If ChkCheckAll.Checked Then
             For Each item As ListViewItem In ALVPlugins.Items

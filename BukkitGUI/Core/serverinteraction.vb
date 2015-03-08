@@ -1,5 +1,6 @@
 ﻿'module to handle ALL interaction with bertware.net
 'from Bukkitgui v1.0, server interaction is done in XML. This is in order to allow extensions, without breaking older versions. 
+Imports System.IO
 Imports System.Net
 Imports Net.Bertware.BukkitGUI.Utilities
 
@@ -28,8 +29,9 @@ Version.ToString & " DEBUG/" & mail
 
         Private _ip As String
 
+        
         ''' <summary>
-        ''' The IP that was retrieved on the last GetIP. If cache is emtpy, GetIP() wil be ran.
+        '''     The IP that was retrieved on the last GetIP. If cache is emtpy, GetIP() wil be ran.
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -52,24 +54,24 @@ Version.ToString & " DEBUG/" & mail
 
         Public Function getIp() As String
             Try
-                Dim ip = AdvancedWebClient.downloadstring(geoip_api & "me")
+                Dim ip = downloadstring(geoip_api & "me")
                 If ip Is Nothing Then ip = "unknown"
                 _ip = ip
                 Return ip
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerInteraction", "Exception at getIP! " & ex.Message)
+                Log(loggingLevel.Warning, "ServerInteraction", "Exception at getIP! " & ex.Message)
                 Return "error"
             End Try
         End Function
 
         Public Function getPlayerLocation(ip As String) As String
             Try
-                Dim result = AdvancedWebClient.downloadstring(geoip_api & ip)
+                Dim result = downloadstring(geoip_api & ip)
                 If result Is Nothing Then result = "unknown"
                 Return result
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerInteraction", "Severe exception at getPlayerLocation!",
-                              ex.Message)
+                Log(loggingLevel.Severe, "ServerInteraction", "Severe exception at getPlayerLocation!",
+                    ex.Message)
                 Return "error"
             End Try
         End Function
@@ -79,21 +81,21 @@ Version.ToString & " DEBUG/" & mail
             'Send request, and get the image from the stream
             'using bertware.net as a compatibility layer towards minotar.net
 
-            livebug.write(loggingLevel.Fine, "ServerInteraction", "Getting minotar for " & player)
-            Dim img As System.Drawing.Image = My.Resources.player_face
+            Log(loggingLevel.Fine, "ServerInteraction", "Getting minotar for " & player)
+            Dim img As Image = My.Resources.player_face
 
             If My.Computer.Network.IsAvailable = False Then
-                livebug.write(loggingLevel.Warning, "ServerInteraction",
-                              "Error: could not get Minotar. No internet available. Returning default")
+                Log(loggingLevel.Warning, "ServerInteraction",
+                    "Error: could not get Minotar. No internet available. Returning default")
                 img = My.Resources.player_face 'use default
                 Return img
                 Exit Function
             End If
 
             Try
-                Dim url As String = AdvancedOptions.MinotarSource & "/helm/" & player & "/" &
-                                    AdvancedOptions.MinotarSize & ".png"
-                livebug.write(loggingLevel.Fine, "ServerInteraction", "Minotar Url: " & url)
+                Dim url As String = MinotarSource & "/helm/" & player & "/" &
+                                    MinotarSize & ".png"
+                Log(loggingLevel.Fine, "ServerInteraction", "Minotar Url: " & url)
 
                 Dim webreq As HttpWebRequest
 
@@ -106,31 +108,31 @@ Version.ToString & " DEBUG/" & mail
                 Dim resp As WebResponse = webreq.GetResponse() 'get the response from the server
 
                 If resp Is Nothing Then
-                    livebug.write(loggingLevel.Warning, "ServerInteraction",
-                                  "Could not get Minotar.Returned response is null")
+                    Log(loggingLevel.Warning, "ServerInteraction",
+                        "Could not get Minotar.Returned response is null")
                     img = My.Resources.player_face 'use default
                     Return img
                     Exit Function
                 End If
 
-                Dim imgstream As IO.Stream = resp.GetResponseStream()
+                Dim imgstream As Stream = resp.GetResponseStream()
 
-                If imgstream Is Nothing OrElse imgstream.Equals(IO.Stream.Null) Then
-                    livebug.write(loggingLevel.Warning, "ServerInteraction",
-                                  "Could not get Minotar.Returned stream is null")
+                If imgstream Is Nothing OrElse imgstream.Equals(Stream.Null) Then
+                    Log(loggingLevel.Warning, "ServerInteraction",
+                        "Could not get Minotar.Returned stream is null")
                     img = My.Resources.player_face 'use default
                     Return img
                     Exit Function
                 End If
 
-                img = System.Drawing.Image.FromStream(imgstream) 'Get image from file
+                img = Image.FromStream(imgstream) 'Get image from file
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerInteraction",
-                              "Could not get Minotar. Probably no internet is available, or an invalid image was received. " &
-                              ex.Message)
+                Log(loggingLevel.Warning, "ServerInteraction",
+                    "Could not get Minotar. Probably no internet is available, or an invalid image was received. " &
+                    ex.Message)
                 img = My.Resources.player_face 'use default
             End Try
-            livebug.write(loggingLevel.Fine, "ServerInteraction", "Function done... Returning result")
+            Log(loggingLevel.Fine, "ServerInteraction", "Function done... Returning result")
             Trace.Unindent()
             Return img
         End Function
@@ -139,7 +141,7 @@ Version.ToString & " DEBUG/" & mail
         Public Function Contact(sender As String, subject As String, content As String) As Boolean
             Try
                 Dim res As String =
-                        AdvancedWebClient.downloadstring(
+                        downloadstring(
                             bukkitgui_api & "?action=contact&mail=" & sender & "&subject=" & subject & "&msg=" & content)
                 Return True
             Catch ex As Exception
@@ -160,28 +162,28 @@ Version.ToString & " DEBUG/" & mail
                 Try
                     If url.StartsWith("http://") Then baseURL = url.Substring(7).Split("/").First Else _
                         baseURL = url.Split("/").First
-                    livebug.write(loggingLevel.Fine, "AdvancedWebClient", "Retrieving contents from " & baseURL)
+                    Log(loggingLevel.Fine, "AdvancedWebClient", "Retrieving contents from " & baseURL)
                 Catch logex As Exception
                     baseURL = url
                 End Try
 
 
                 If My.Computer.Network.IsAvailable = False Then
-                    livebug.write(loggingLevel.Fine, "AdvancedWebClient",
-                                  "Request to " & baseURL & " cancelled, no internet available or page not available")
+                    Log(loggingLevel.Fine, "AdvancedWebClient",
+                        "Request to " & baseURL & " cancelled, no internet available or page not available")
                     Return ""
                     Exit Function
                 End If
 
                 If silent = True Then baseURL = "[silent url]" 'hide silent url's
 
-                Dim httpreq As System.Net.HttpWebRequest
+                Dim httpreq As HttpWebRequest
                 httpreq = HttpWebRequest.Create(url)
                 httpreq.Timeout = 10000
                 httpreq.Proxy = Nothing
                 httpreq.UserAgent = UA
                 Dim responseStr = ""
-                Using sr As IO.StreamReader = New IO.StreamReader(httpreq.GetResponse.GetResponseStream)
+                Using sr As StreamReader = New StreamReader(httpreq.GetResponse.GetResponseStream)
                     responseStr = sr.ReadToEnd
                 End Using
                 Return responseStr
@@ -191,30 +193,30 @@ Version.ToString & " DEBUG/" & mail
                 'webc.Headers.Add(HttpRequestHeader.UserAgent, UA)
                 'Return webc.DownloadString(url)
             Catch tm As TimeoutException
-                livebug.write(loggingLevel.Warning, "AdvancedWebClient",
-                              "Could not download data from " & url & " : Timed Out : " & tm.Message)
+                Log(loggingLevel.Warning, "AdvancedWebClient",
+                    "Could not download data from " & url & " : Timed Out : " & tm.Message)
                 Return ""
             Catch webex As WebException
                 If webex.Message.Contains("503") Then
-                    livebug.write(loggingLevel.Warning, "AdvancedWebClient",
-                                  "Could not download data from " & url & " : WebException/503 : " & webex.Message)
+                    Log(loggingLevel.Warning, "AdvancedWebClient",
+                        "Could not download data from " & url & " : WebException/503 : " & webex.Message)
                     Return ""
                 ElseIf webex.Message.Contains("502") Then
-                    livebug.write(loggingLevel.Warning, "AdvancedWebClient",
-                                  "Could not download data from " & url & " : WebException/502 : " & webex.Message)
+                    Log(loggingLevel.Warning, "AdvancedWebClient",
+                        "Could not download data from " & url & " : WebException/502 : " & webex.Message)
                     Return ""
                 ElseIf webex.Message.Contains("timed out") Then
-                    livebug.write(loggingLevel.Warning, "AdvancedWebClient",
-                                  "Could not download data from " & url & " : WebException/TimedOut : " & webex.Message)
+                    Log(loggingLevel.Warning, "AdvancedWebClient",
+                        "Could not download data from " & url & " : WebException/TimedOut : " & webex.Message)
                     Return ""
                 Else
-                    livebug.write(loggingLevel.Warning, "AdvancedWebClient",
-                                  "Could not download data from " & url & " : WebException/Unknown : " & webex.Message)
+                    Log(loggingLevel.Warning, "AdvancedWebClient",
+                        "Could not download data from " & url & " : WebException/Unknown : " & webex.Message)
                     Return ""
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerInteraction",
-                              "Could not download data from " & url & " : " & ex.Message)
+                Log(loggingLevel.Warning, "ServerInteraction",
+                    "Could not download data from " & url & " : " & ex.Message)
                 Return ""
             End Try
         End Function

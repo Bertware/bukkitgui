@@ -5,14 +5,14 @@ Imports Net.Bertware.BukkitGUI.Utilities
 Public Class ErrorDiagnose
     Private type As serverOutputHandler.MessageType, time As String, cause As ErrorCause
 
-    Public Sub New(type As serverOutputHandler.MessageType, time As String, cause As ErrorCause)
+    Public Sub New(type As MessageType, time As String, cause As ErrorCause)
         Me.type = type
         Me.time = time
         Me.cause = cause
         InitializeComponent()
     End Sub
 
-    Private Sub ErrorDiagnose_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub ErrorDiagnose_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
             If cause IsNot Nothing AndAlso cause.description IsNot Nothing Then LblCause.Text += " " & cause.description
             If cause IsNot Nothing AndAlso cause.text IsNot Nothing Then lblText.Text += " " & cause.text
@@ -44,12 +44,12 @@ Public Class ErrorDiagnose
             End Select
 
         Catch ex As Exception
-            livebug.write(livebug.loggingLevel.Severe, "ErrorDiagnose",
-                          "Severe Exception while loading error analyzer dialog", ex.Message)
+            Log(livebug.loggingLevel.Severe, "ErrorDiagnose",
+                "Severe Exception while loading error analyzer dialog", ex.Message)
         End Try
     End Sub
 
-    Private Sub BtnApply_Click(sender As System.Object, e As System.EventArgs) Handles BtnApply.Click
+    Private Sub BtnApply_Click(sender As Object, e As EventArgs) Handles BtnApply.Click
         Try
             If LVsolutions.SelectedItems Is Nothing OrElse LVsolutions.SelectedItems.Count < 1 Then Exit Sub
             Dim solution As String = LVsolutions.SelectedItems(0).Tag
@@ -70,21 +70,21 @@ Public Class ErrorDiagnose
                     MessageBox.Show(lr("Couldn't find plugin!"), lr("Failed"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Error)
             ElseIf solution.StartsWith("setting:set") Then
-                ServerSettings.SetSetting(solution.Split(":")(2).Trim(":"), solution.Split(":")(3).Trim(":"))
+                SetSetting(solution.Split(":")(2).Trim(":"), solution.Split(":")(3).Trim(":"))
             Else
                 MessageBox.Show(lr("This isn't a valid solution."), lr("Invalid solution"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error)
             End If
-            Me.DialogResult = Windows.Forms.DialogResult.OK
+            Me.DialogResult = DialogResult.OK
             Me.Close()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "ErrorDiagnose", "Severe Exception while aplying fix for error(s)",
-                          ex.Message)
+            Log(loggingLevel.Severe, "ErrorDiagnose", "Severe Exception while aplying fix for error(s)",
+                ex.Message)
         End Try
     End Sub
 
-    Private Sub BtnCancel_Click(sender As System.Object, e As System.EventArgs) Handles BtnCancel.Click
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 End Class

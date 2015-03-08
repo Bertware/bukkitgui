@@ -1,6 +1,7 @@
-﻿Imports Net.Bertware.BukkitGUI.Core
-Imports Net.Bertware.BukkitGUI.Utilities
+﻿Imports System.Text.RegularExpressions
 Imports System.Threading
+Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.Utilities
 
 Public Class PortForwarder
     Public Event MappingUpdateReceived(mapping As List(Of PortMappingEntry))
@@ -61,7 +62,7 @@ Public Class PortForwarder
     Private Sub BtnAdd_Click(sender As Object, e As EventArgs) Handles BtnAdd.Click
         Dim protocol As UPnP.Protocol
         If CBProtocol.SelectedIndex = 1 Then protocol = UPnP.Protocol.UDP Else protocol = UPnP.Protocol.TCP
-        If Not System.Text.RegularExpressions.Regex.IsMatch(TxtIp.Text, "(\d{1,3}\.){3}\d{1,3}") Then
+        If Not Regex.IsMatch(TxtIp.Text, "(\d{1,3}\.){3}\d{1,3}") Then
             MessageBox.Show(
                 lr("The IP address you entered is invalid. It should be something like for example 192.168.1.2"),
                 lr("Invalid inpunt"), MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -74,7 +75,7 @@ Public Class PortForwarder
     Private Function available() As Boolean
         Return New UPnP().UPnPEnabled
     End Function
-    
+
     Private Function forward(name As String, port As UInteger, ip As String,
                              Optional ByVal protocol As UPnP.Protocol = UPnP.Protocol.TCP,
                              Optional ByVal async As Boolean = True) As Boolean
@@ -97,7 +98,7 @@ Public Class PortForwarder
                 Return True
             End If
         Catch ex As Exception
-            livebug.write(loggingLevel.Warning, "PortForwarder", "Couldn't forward ports", ex.InnerException.Message)
+            Log(loggingLevel.Warning, "PortForwarder", "Couldn't forward ports", ex.InnerException.Message)
             MessageBox.Show(
                 lr("This port couldn't be forwarded. Something went wrong while communicating with your router"),
                 lr("Can't forward"), MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -121,7 +122,10 @@ Public Class PortForwarder
             Me.LastMapping = pnp
 
             If pnp Is Nothing Then
-                MessageBox.Show(Lr("Port forwarding requires Plug-and-play support from your router. This function seems unavailable. Ensure your router supports uPnP, and that uPnP is enabled."), Lr("Unavailable"), MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(
+                    Lr(
+                        "Port forwarding requires Plug-and-play support from your router. This function seems unavailable. Ensure your router supports uPnP, and that uPnP is enabled."),
+                    Lr("Unavailable"), MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return Nothing
             End If
 
@@ -129,7 +133,7 @@ Public Class PortForwarder
             RaiseEvent MappingUpdateReceived(mapping)
             Return mapping
         Catch ex As Exception
-            livebug.write(loggingLevel.Warning, "PortForwarder", "Error while loading mapping: " & ex.Message)
+            Log(loggingLevel.Warning, "PortForwarder", "Error while loading mapping: " & ex.Message)
             RaiseEvent MappingUpdateReceived(New List(Of PortMappingEntry))
             Return New List(Of PortMappingEntry)
         End Try
@@ -139,7 +143,7 @@ Public Class PortForwarder
         Try
             LastMapping.Add(fwi.ip, fwi.port, fwi.protocol, fwi.name)
         Catch ex As Exception
-            livebug.write(loggingLevel.Warning, "PortForwarder", "Error while loading mapping: " & ex.Message)
+            Log(loggingLevel.Warning, "PortForwarder", "Error while loading mapping: " & ex.Message)
         End Try
         RaiseEvent PortForwardApplied()
     End Sub

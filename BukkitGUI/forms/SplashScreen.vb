@@ -1,8 +1,9 @@
 ﻿'the splash screen loads the application, it initializes all modules.
 Imports System.Threading
-Imports Net.Bertware.BukkitGUI.MCInterop
 Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.MCInterop
 Imports Net.Bertware.BukkitGUI.Utilities
+Imports Net.Bertware.Get
 
 Public Class SplashScreen
     Dim ThdLoad As Thread
@@ -51,7 +52,7 @@ Public Class SplashScreen
         'initialize filelocation module, which determines wether files should be stored in appdata or local
 
         If filelocation.location = filelocation.filelocation.global_files Then _
-            'NO TRANSLATIONS! TRANSLATIONS AREN'T INITIALIZED YET
+'NO TRANSLATIONS! TRANSLATIONS AREN'T INITIALIZED YET
             If Process.GetProcessesByName("BukkitGUI").Length > 1 Then
                 MessageBox.Show(
                     "You cannot run multiple instances of the GUI while the files are saved in appdata. Change in ""Options and Settings"" and try again.",
@@ -75,10 +76,10 @@ Public Class SplashScreen
         If InitCount > 5 Then Me.CloseForm() : Exit Sub
 
         'Don't log before livebug is initialized
-        livebug.write(loggingLevel.Fine, "Splashscreen", "Initializing application") 'log to livebug
+        Log(loggingLevel.Fine, "Splashscreen", "Initializing application") 'log to livebug
         If Not Inet Then _
-            livebug.write(loggingLevel.Warning, "Splashscreen",
-                          "No network connection available. Skipping initialization for network dependent items.")
+            Log(loggingLevel.Warning, "Splashscreen",
+                "No network connection available. Skipping initialization for network dependent items.")
 
         InitCount = InitCount + 1 'maximum 3
         If InitCount > 5 Then Me.CloseForm() : Exit Sub
@@ -95,21 +96,21 @@ Public Class SplashScreen
             config.init() _
             'initialize the config module, needed to read settings from config.XML, Must be initiated after livebug, so other modules can initiate properly.
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Config")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Config")
         End Try
 
         InitCount = InitCount + 1 'maximum 5
         If InitCount > 6 Then Me.CloseForm() : Exit Sub
 
-        common.isRunningLight = config.readAsBool("LightMode", False)
+        IsRunningLight = readAsBool("LightMode", False)
 
         setload("running update check...", 30)
         Try
-            If Inet And config.readAsBool("auto_update", True, "options") Then _
-                Thread.Sleep(100) : Net.Bertware.Get.api.RunUpdateCheck(True, False) : Thread.Sleep(100) _
+            If Inet And readAsBool("auto_update", True, "options") Then _
+                Thread.Sleep(100) : RunUpdateCheck(True, False) : Thread.Sleep(100) _
             'Make sure the requests are spread so the server doesn't block
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Updater", ex.Message)
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Updater", ex.Message)
         End Try
 
         InitCount = InitCount + 1 'maximum 6
@@ -117,10 +118,10 @@ Public Class SplashScreen
 
         setload("Initializing localization", 50) 'set UI (text and progress %)
         Try
-            If Not common.isRunningLight Then language.Init() _
+            If Not IsRunningLight Then language.Init() _
             'Initialize the localization module, this allows translations of the GUI.
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Language")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Language")
         End Try
 
         InitCount = InitCount + 1 'maximum 7
@@ -139,10 +140,10 @@ Public Class SplashScreen
 
         'some small async tasks can start here too
         Try
-            If Inet Then BukkitTools.FetchLatestVersionsAsync()
-            If Not common.isRunningLight Then SoundNotificator.init()
+            If Inet Then FetchLatestVersionsAsync()
+            If Not IsRunningLight Then SoundNotificator.init()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: SoundNotificator")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: SoundNotificator")
         End Try
 
         InitCount = InitCount + 1 'maximum 8
@@ -152,10 +153,10 @@ Public Class SplashScreen
 
         setload("Initializing performance", 60) 'set UI (text and progress %)
         Try
-            If common.IsRunningOnMono = False AndAlso Not common.isRunningLight Then performance.Init() _
+            If IsRunningOnMono = False AndAlso Not IsRunningLight Then performance.Init() _
             'Initialize the performance module, this allows CPU and RAM measurement.
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Performance")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Performance")
         End Try
 
         InitCount = InitCount + 1 'maximum 9
@@ -165,7 +166,7 @@ Public Class SplashScreen
         Try
             serverOutputHandler.init()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: ServerOutputHandler")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: ServerOutputHandler")
         End Try
 
         InitCount = InitCount + 1 'maximum 10
@@ -173,10 +174,10 @@ Public Class SplashScreen
 
         setload("Initializing plugin manager", 75)
         Try
-            If Not common.isRunningLight Then InstalledPluginManager.InitAsync()
-            If Not common.isRunningLight And Inet Then LoadMostPopularPluginsAsync()
+            If Not IsRunningLight Then InitAsync()
+            If Not IsRunningLight And Inet Then LoadMostPopularPluginsAsync()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Pluginmanager")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: Pluginmanager")
         End Try
 
         InitCount = InitCount + 1 'maximum 11
@@ -184,9 +185,9 @@ Public Class SplashScreen
 
         setload("Initializing server settings...", 85)
         Try
-            If Not common.isRunningLight Then ServerSettings.init()
+            If Not IsRunningLight Then ServerSettings.init()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: ServerSettings")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: ServerSettings")
         End Try
 
         InitCount = InitCount + 1 'maximum 12
@@ -194,9 +195,9 @@ Public Class SplashScreen
 
         setload("Initializing error manager...", 85)
         Try
-            If Not common.isRunningLight Then ErrorManager.init()
+            If Not IsRunningLight Then ErrorManager.init()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: ErrorManager")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: ErrorManager")
         End Try
 
         InitCount = InitCount + 1 'maximum 13
@@ -204,9 +205,9 @@ Public Class SplashScreen
 
         setload("Initializing task manager...", 90)
         Try
-            If Not common.isRunningLight Then TaskManager.init()
+            If Not IsRunningLight Then TaskManager.init()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: TaskManager")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: TaskManager")
         End Try
 
         InitCount = InitCount + 1 'maximum 14
@@ -214,9 +215,9 @@ Public Class SplashScreen
 
         setload("Initializing backup manager...", 90)
         Try
-            If Not common.isRunningLight Then BackupManager.init()
+            If Not IsRunningLight Then BackupManager.init()
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: BackupManager")
+            Log(loggingLevel.Severe, "Splashscreen", "Failed to initialize module: BackupManager")
         End Try
 
         InitCount = InitCount + 1 'maximum 15
@@ -227,7 +228,7 @@ Public Class SplashScreen
         '======================= END OF INITIALIZATION ======================='
 
         CloseForm()
-        livebug.write(loggingLevel.Fine, "Splashscreen", "Application initialized, Closing splashscreen") _
+        Log(loggingLevel.Fine, "Splashscreen", "Application initialized, Closing splashscreen") _
         'log to livebug
 
         If IsRunningOnMono Then
@@ -239,7 +240,7 @@ Public Class SplashScreen
 #Region "Private Methods"
 
     Private Sub setload(text As String, progress As Byte) 'set both description and percent.
-        livebug.write(loggingLevel.Fine, "Splashscreen", "Loading:" & text & "(" & progress & "%)")
+        Log(loggingLevel.Fine, "Splashscreen", "Loading:" & text & "(" & progress & "%)")
         SetLoadAction(text)
         SetLoadPercent(progress)
     End Sub

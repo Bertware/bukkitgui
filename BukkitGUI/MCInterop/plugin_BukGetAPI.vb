@@ -1,21 +1,22 @@
 ﻿
-Imports Jayrock.Json.Conversion
-Imports Jayrock.Json
-Imports Net.Bertware.BukkitGUI.Core
 Imports System.Threading
+Imports Jayrock.Json
+Imports Jayrock.Json.Conversion
+Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
     Public Module BukGetAPI
         ' base api: http://api.bukget.org/3/
-
+        
         ''' <summary>
-        ''' Those are the info fields we want for a simpleBukgetPlugin, minimal data
+        '''     Those are the info fields we want for a simpleBukgetPlugin, minimal data
         ''' </summary>
         ''' <remarks></remarks>
         Const FIELDS As String = "slug,plugin_name,description,versions.version,versions.game_versions,main"
 
+        
         ''' <summary>
-        ''' Those are the info fields we want for a BukgetPlugin object, including all data
+        '''     Those are the info fields we want for a BukgetPlugin object, including all data
         ''' </summary>
         ''' <remarks></remarks>
         Const FIELDS_ALL As String =
@@ -23,60 +24,69 @@ Namespace MCInterop
 
         Const API_BUKGET_BASE As String = "http://api.bukget.org/3/" 'Base address
 
+        
         ''' <summary>
-        ''' Get most popular plugins (list)
+        '''     Get most popular plugins (list)
         ''' </summary>
         ''' <remarks></remarks>
         Const API_PLUGINLIST As String = API_BUKGET_BASE & "plugins?fields=" & FIELDS & "&sort=-popularity.weekly" _
         'Get a whole plugin list
 
+        
         ''' <summary>
-        ''' Get plugins in category. Append category
+        '''     Get plugins in category. Append category
         ''' </summary>
         ''' <remarks></remarks>
         Const API_CATEGORY As String = API_BUKGET_BASE & "categories/" 'Category should be added
 
+        
         ''' <summary>
-        ''' URL to get plugin info. Append slug
+        '''     URL to get plugin info. Append slug
         ''' </summary>
         ''' <remarks></remarks>
         Const API_PLUGIN As String = API_BUKGET_BASE & "plugins/bukkit/" 'Plugin name should be added
 
+        
         ''' <summary>
-        ''' url to search by namespace. Append namespace
+        '''     url to search by namespace. Append namespace
         ''' </summary>
         ''' <remarks></remarks>
         Const API_SEARCHBYNAMESPACE As String = API_BUKGET_BASE & "search/main/=/"
 
+        
         ''' <summary>
-        ''' url to search by name. Append name
+        '''     url to search by name. Append name
         ''' </summary>
         ''' <remarks></remarks>
         Const API_SEARCHBYNAME As String = API_BUKGET_BASE & "search/plugin_name/=/"
 
+        
         ''' <summary>
-        ''' url to search by name, without exact match. Append name
+        '''     url to search by name, without exact match. Append name
         ''' </summary>
         ''' <remarks></remarks>
         Const API_SEARCHBYNAMELIKE As String = API_BUKGET_BASE & "search/plugin_name/like/"
 
+        
         ''' <summary>
-        ''' url to search by namespace. Append namespace
+        '''     url to search by namespace. Append namespace
         ''' </summary>
         ''' <remarks></remarks>
         Const API_POPULAR_SETSIZE As String = API_BUKGET_BASE & "plugins?fields=" & FIELDS &
                                               "&sort=-popularity.weekly&start=0&size="
 
+        
         ''' <summary>
-        ''' URL for top 20 most popular plugins.
+        '''     URL for top 20 most popular plugins.
         ''' </summary>
         ''' <remarks></remarks>
         Const API_POPULAR As String = API_POPULAR_SETSIZE & "20"
 
         Public pluginlist As List(Of SimpleBukgetPlugin)
 
+        
         ''' <summary>
-        ''' A list of plugins has been loaded
+        '''     A list of plugins has been loaded
         ''' </summary>
         ''' <param name="e">list of the SimpleBukgetPlguins items</param>
         ''' <remarks>can be for category, most popular, all, or search result</remarks>
@@ -84,8 +94,9 @@ Namespace MCInterop
 
         Public IsPluginListLoaded As Boolean = False
 
+        
         ''' <summary>
-        ''' The plugin status on bukkitdev
+        '''     The plugin status on bukkitdev
         ''' </summary>
         ''' <remarks></remarks>
         Enum PluginStatus
@@ -101,10 +112,10 @@ Namespace MCInterop
 #Region "Loading"
 
         Public Function GetPluginCategories() As List(Of String)
-            livebug.write(livebug.loggingLevel.Fine, "BukGetAPI", "Getting categories")
+            Log(livebug.loggingLevel.Fine, "BukGetAPI", "Getting categories")
             Dim l As New List(Of String)
             Try
-                Dim WebResult As String = AdvancedWebClient.downloadstring(API_CATEGORY) 'get from API
+                Dim WebResult As String = downloadstring(API_CATEGORY) 'get from API
                 If WebResult Is Nothing OrElse WebResult = "" OrElse WebResult = "null" Then
                     Return Nothing
                     Exit Function
@@ -116,7 +127,7 @@ Namespace MCInterop
                 Next
 
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "BukGetAPI", "Couldn't load plugin categories", ex.Message)
+                Log(loggingLevel.Warning, "BukGetAPI", "Couldn't load plugin categories", ex.Message)
             End Try
             Return l
         End Function
@@ -131,12 +142,12 @@ Namespace MCInterop
 
         Public Function GetMostPopular(ByVal amount As UInt16) As List(Of SimpleBukgetPlugin) 'get a list of all plugins
             Try
-                Dim WebResult As String = AdvancedWebClient.downloadstring(API_POPULAR_SETSIZE & amount)
+                Dim WebResult As String = downloadstring(API_POPULAR_SETSIZE & amount)
                 pluginlist = ParsePluginList(WebResult)
 
                 If pluginlist Is Nothing OrElse pluginlist.Count = 0 Then
-                    livebug.write(loggingLevel.Fine, "BukGetAPI", "Retrying to get available plugins")
-                    WebResult = AdvancedWebClient.downloadstring(API_POPULAR_SETSIZE & amount)
+                    Log(loggingLevel.Fine, "BukGetAPI", "Retrying to get available plugins")
+                    WebResult = downloadstring(API_POPULAR_SETSIZE & amount)
                     pluginlist = ParsePluginList(WebResult)
                 End If
 
@@ -147,7 +158,7 @@ Namespace MCInterop
 
             IsPluginListLoaded = True
             RaiseEvent PluginListLoaded(pluginlist)
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "All plugins loaded")
+            Log(loggingLevel.Fine, "BukGetAPI", "All plugins loaded")
             Return pluginlist
         End Function
 
@@ -161,12 +172,12 @@ Namespace MCInterop
 
         Public Function GetAllPlugins() As List(Of SimpleBukgetPlugin) 'get a list of all plugins
             Try
-                Dim WebResult As String = AdvancedWebClient.downloadstring(API_PLUGINLIST)
+                Dim WebResult As String = downloadstring(API_PLUGINLIST)
                 pluginlist = ParsePluginList(WebResult)
 
                 If pluginlist Is Nothing OrElse pluginlist.Count = 0 Then
-                    livebug.write(loggingLevel.Fine, "BukGetAPI", "Retrying to get available plugins")
-                    WebResult = AdvancedWebClient.downloadstring(API_PLUGINLIST)
+                    Log(loggingLevel.Fine, "BukGetAPI", "Retrying to get available plugins")
+                    WebResult = downloadstring(API_PLUGINLIST)
                     pluginlist = ParsePluginList(WebResult)
                 End If
 
@@ -177,7 +188,7 @@ Namespace MCInterop
 
             IsPluginListLoaded = True
             RaiseEvent PluginListLoaded(pluginlist)
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "All plugins loaded")
+            Log(loggingLevel.Fine, "BukGetAPI", "All plugins loaded")
             Return pluginlist
         End Function
 
@@ -191,7 +202,7 @@ Namespace MCInterop
 
         Public Function GetPluginsByCategory(category As String) As List(Of SimpleBukgetPlugin)
             Try
-                Dim WebResult As String = AdvancedWebClient.downloadstring(API_CATEGORY & category)
+                Dim WebResult As String = downloadstring(API_CATEGORY & category)
                 pluginlist = ParsePluginList(WebResult)
             Catch ex As Exception
                 pluginlist.Add(New SimpleBukgetPlugin("", lr("Error while loading plugins. Internet available?")))
@@ -213,12 +224,12 @@ Namespace MCInterop
             Try
                 Dim url = API_SEARCHBYNAMELIKE & name & "?fields=" & FIELDS
 
-                Dim WebResult As String = AdvancedWebClient.downloadstring(url)
+                Dim WebResult As String = downloadstring(url)
                 pluginlist = ParsePluginList(WebResult)
 
                 If pluginlist Is Nothing OrElse pluginlist.Count = 0 Then
-                    livebug.write(loggingLevel.Fine, "BukGetAPI", "Retrying to get available plugins")
-                    WebResult = AdvancedWebClient.downloadstring(url)
+                    Log(loggingLevel.Fine, "BukGetAPI", "Retrying to get available plugins")
+                    WebResult = downloadstring(url)
                     pluginlist = ParsePluginList(WebResult)
                 End If
 
@@ -232,7 +243,7 @@ Namespace MCInterop
             End If
             IsPluginListLoaded = True
             RaiseEvent PluginListLoaded(pluginlist)
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "All plugins loaded")
+            Log(loggingLevel.Fine, "BukGetAPI", "All plugins loaded")
             Return pluginlist
         End Function
 
@@ -248,12 +259,12 @@ Namespace MCInterop
             End If
             pl = ParsePlugin(webresult) 'Parse result
             If pl.name Is Nothing Then Return Nothing : Exit Function
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Got plugin info from plugin: " & pl.name) 'echo results
+            Log(loggingLevel.Fine, "BukGetAPI", "Got plugin info from plugin: " & pl.name) 'echo results
             If pl.versions.Count <> 0 Then _
-                livebug.write(loggingLevel.Fine, "BukGetAPI",
-                              "Latest version:" & pl.versions(0).version & " at " & pl.versions(0).ReleaseDate.ToString)
+                Log(loggingLevel.Fine, "BukGetAPI",
+                    "Latest version:" & pl.versions(0).version & " at " & pl.versions(0).ReleaseDate.ToString)
             If pl.versions.Count = 0 Then _
-                livebug.write(loggingLevel.Fine, "BukGetAPI", "There are no versions available for this plugin")
+                Log(loggingLevel.Fine, "BukGetAPI", "There are no versions available for this plugin")
             Return pl
         End Function
 
@@ -261,9 +272,9 @@ Namespace MCInterop
         Private Function ParsePluginList(list As String) As List(Of SimpleBukgetPlugin)
             'This function parses a simple plugin list, like http://org/api/plugins
 
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Starting parse of plugin list...")
+            Log(loggingLevel.Fine, "BukGetAPI", "Starting parse of plugin list...")
             If list Is Nothing OrElse list.Length = 0 Then
-                livebug.write(loggingLevel.Warning, "BukGetAPI", "No elements in list, cannot parse plugin list")
+                Log(loggingLevel.Warning, "BukGetAPI", "No elements in list, cannot parse plugin list")
                 Return New List(Of SimpleBukgetPlugin)
                 Exit Function
             End If
@@ -276,16 +287,16 @@ Namespace MCInterop
                             Dim pl As SimpleBukgetPlugin = ParsePluginListItem(jarr.GetString(i))
                             If pl IsNot Nothing Then reslist.Add(pl)
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Severe, "BukGetAPI", "Something went wrong Parsing the plugin...",
-                                          ex.Message)
+                            Log(loggingLevel.Severe, "BukGetAPI", "Something went wrong Parsing the plugin...",
+                                ex.Message)
                         End Try
                     Next
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "BukGetAPI", "Something went wrong while parsing the plugin list",
-                              ex.Message)
+                Log(loggingLevel.Severe, "BukGetAPI", "Something went wrong while parsing the plugin list",
+                    ex.Message)
             End Try
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Parsing done... Parsed " & reslist.Count & " items")
+            Log(loggingLevel.Fine, "BukGetAPI", "Parsing done... Parsed " & reslist.Count & " items")
             Return reslist
         End Function
 
@@ -323,7 +334,7 @@ Namespace MCInterop
 
             If obj("slug") IsNot Nothing Then pl.slug = obj("slug") Else pl.slug = "unkown name"
             If obj("plugin_name") IsNot Nothing Then pl.name = obj("plugin_name") Else pl.name = pl.slug
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "parsing plugin:" & pl.slug)
+            Log(loggingLevel.Fine, "BukGetAPI", "parsing plugin:" & pl.slug)
             If obj("description") IsNot Nothing Then pl.Description = obj("description") Else pl.Description = ""
             If obj("dbo_page") IsNot Nothing Then pl.BukkitDevLink = obj("dbo_page") Else _
                 pl.BukkitDevLink = "http://dev.bukkit.org"
@@ -382,11 +393,11 @@ Namespace MCInterop
                         pl.versions.Add(v)
                     Next
                 Else
-                    livebug.write(loggingLevel.Warning, "BukGetAPI", "No version found!")
+                    Log(loggingLevel.Warning, "BukGetAPI", "No version found!")
                 End If
             End If
 
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Plugin parsed: " & pl.slug)
+            Log(loggingLevel.Fine, "BukGetAPI", "Plugin parsed: " & pl.slug)
             Return pl
         End Function
 
@@ -409,7 +420,7 @@ Namespace MCInterop
 
 
                 If obj("versions") IsNot Nothing Then
-                    Dim jarr As Jayrock.Json.JsonArray = obj("versions")
+                    Dim jarr As JsonArray = obj("versions")
                     obj = jarr(0)
                     If obj("game_versions") IsNot Nothing Then
                         Dim vjarr As JsonArray = obj("game_versions")
@@ -423,7 +434,7 @@ Namespace MCInterop
                     '     If pl.name Is Nothing OrElse pl.name = "" Then pl.name = pl.slug
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "BukgetAPI", "Couldn't parse plugin from JSON:" & json, ex.Message)
+                Log(loggingLevel.Warning, "BukgetAPI", "Couldn't parse plugin from JSON:" & json, ex.Message)
                 Return Nothing
                 Exit Function
             End Try
@@ -506,8 +517,9 @@ Namespace MCInterop
 
 #End Region
 
+        
         ''' <summary>
-        ''' Get a bukgetplugin opbject based upon a plugin namespace
+        '''     Get a bukgetplugin opbject based upon a plugin namespace
         ''' </summary>
         ''' <param name="Main"></param>
         ''' <param name="ShowUI"></param>
@@ -515,25 +527,26 @@ Namespace MCInterop
         ''' <remarks></remarks>
         Public Function GetPluginInfoByNamespace(Main As String, Optional ByVal ShowUI As Boolean = True) _
             As BukgetPlugin
-            livebug.write(loggingLevel.Fine, "BukGetAPI", "Getting plugin info from plugin: " & Main)
+            Log(loggingLevel.Fine, "BukGetAPI", "Getting plugin info from plugin: " & Main)
             If Main Is Nothing OrElse Main = "" OrElse Main.Trim = "" Then Return Nothing : Exit Function
             Dim pl As New BukgetPlugin
             Try
                 Dim WebResult As String =
-                        AdvancedWebClient.downloadstring(API_SEARCHBYNAMESPACE & Main & "?fields=" & FIELDS_ALL) _
+                        downloadstring(API_SEARCHBYNAMESPACE & Main & "?fields=" & FIELDS_ALL) _
                 'get from API
                 pl = LoadPluginResult(WebResult)
             Catch ex As Exception
                 If ShowUI Then _
                     MessageBox.Show(lr("An error occured while loading this data"), lr("Could not get data"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BukGetAPI", "Couldn't load plugin data for " & Main, ex.Message)
+                Log(loggingLevel.Warning, "BukGetAPI", "Couldn't load plugin data for " & Main, ex.Message)
             End Try
             Return pl
         End Function
 
+        
         ''' <summary>
-        ''' Show a dialog containing version info and plugin details
+        '''     Show a dialog containing version info and plugin details
         ''' </summary>
         ''' <param name="main">The namespace of the plugin you want to display</param>
         ''' <remarks></remarks>
@@ -549,14 +562,15 @@ Namespace MCInterop
             pd.ShowDialog()
         End Sub
 
+        
         ''' <summary>
-        ''' Open the project page on dev.bukkit.org for a plugin with the provided namespace
+        '''     Open the project page on dev.bukkit.org for a plugin with the provided namespace
         ''' </summary>
         ''' <param name="main">The namespace of the plugin you want to display</param>
         ''' <remarks></remarks>
         Public Sub OpenProjectPageByNamespace(main As String)
             Dim p As New Process
-            Dim pi As BukgetPlugin = BukGetAPI.GetPluginInfoByNamespace(main)
+            Dim pi As BukgetPlugin = GetPluginInfoByNamespace(main)
             If pi Is Nothing OrElse pi.BukkitDevLink.Contains("http://") = False Then
                 MessageBox.Show(lr("Could not get data for this plugin"), lr("Could not get data"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Error)
@@ -566,8 +580,9 @@ Namespace MCInterop
             p.Start()
         End Sub
 
+        
         ''' <summary>
-        ''' Install a plugin by providing the namespace
+        '''     Install a plugin by providing the namespace
         ''' </summary>
         ''' <param name="main">The namespace of the plugin you want to install</param>
         ''' <param name="targetlocation">Target location, plugins/name by default</param>
@@ -581,8 +596,9 @@ Namespace MCInterop
             InstallPlugin(pi, targetlocation, updatelist, ShowUI)
         End Sub
 
+        
         ''' <summary>
-        ''' Install a plugin by providing the namespace
+        '''     Install a plugin by providing the namespace
         ''' </summary>
         ''' <param name="pi">The bukgetplugin object of the plugin you want to install</param>
         ''' <param name="targetlocation">Target location, plugins/name by default</param>
@@ -606,12 +622,13 @@ Namespace MCInterop
 
             If targetlocation = "" Then targetlocation = plugin_dir & "/" & pi.versions(0).filename
 
-            PluginInstaller.Install(pi.versions(0), targetlocation, updatelist, ShowUI)
+            Install(pi.versions(0), targetlocation, updatelist, ShowUI)
         End Sub
     End Module
 
+    
     ''' <summary>
-    ''' Less detailled plugin class for installing plugins and showing info
+    '''     Less detailled plugin class for installing plugins and showing info
     ''' </summary>
     ''' <remarks></remarks>
     Public Class SimpleBukgetPlugin
@@ -666,8 +683,9 @@ Namespace MCInterop
         End Sub
     End Class
 
+    
     ''' <summary>
-    ''' Most detailled plugin class for installing plugins and showing info
+    '''     Most detailled plugin class for installing plugins and showing info
     ''' </summary>
     ''' <remarks></remarks>
     Public Class BukgetPlugin
@@ -725,8 +743,9 @@ Namespace MCInterop
         End Sub
     End Class
 
+    
     ''' <summary>
-    ''' Contains details of a plugin version, including all data needed to update or install a plugin
+    '''     Contains details of a plugin version, including all data needed to update or install a plugin
     ''' </summary>
     ''' <remarks></remarks>
     Public Class PluginVersion

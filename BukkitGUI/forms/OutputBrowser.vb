@@ -1,7 +1,9 @@
-﻿Public Class OutputBrowser
-    Dim txtreference As Bertware.Controls.AdvancedRichTextBox
+﻿Imports Net.Bertware.Controls
 
-    Public Sub New(ByRef textbox As Bertware.Controls.AdvancedRichTextBox)
+Public Class OutputBrowser
+    Dim txtreference As AdvancedRichTextBox
+
+    Public Sub New(ByRef textbox As AdvancedRichTextBox)
         InitializeComponent()
         SetTextbox(textbox.Rtf)
         txtreference = textbox

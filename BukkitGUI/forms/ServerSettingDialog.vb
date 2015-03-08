@@ -10,25 +10,25 @@
         End Set
     End Property
 
-    Private Sub BtnOk_Click(sender As System.Object, e As System.EventArgs) Handles BtnOk.Click
+    Private Sub BtnOk_Click(sender As Object, e As EventArgs) Handles BtnOk.Click
         setting = TxtSetting.Text
         value = TxtValue.Text
-        Me.DialogResult = Windows.Forms.DialogResult.OK
+        Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
-    Private Sub Form1_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TxtSetting.Text = setting
         TxtValue.Text = value
         TxtValue.Focus()
     End Sub
 
-    Private Sub TxtValue_KeyUp(sender As System.Object, e As System.Windows.Forms.KeyEventArgs) Handles TxtValue.KeyUp
+    Private Sub TxtValue_KeyUp(sender As Object, e As KeyEventArgs) Handles TxtValue.KeyUp
         If e.KeyCode = Keys.Enter Then
             e.Handled = True
             setting = TxtSetting.Text
             value = TxtValue.Text
-            Me.DialogResult = Windows.Forms.DialogResult.OK
+            Me.DialogResult = DialogResult.OK
             Me.Close()
         End If
     End Sub

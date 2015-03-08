@@ -13,20 +13,23 @@ Namespace Utilities
             Me.PlayerJoin = PlayerJoin
         End Sub
 
+        
         ''' <summary>
-        ''' The reason for this join event
+        '''     The reason for this join event
         ''' </summary>
         ''' <remarks></remarks>
         Public reason As playerjoinreason
 
+        
         ''' <summary>
-        ''' The message that triggered this event
+        '''     The message that triggered this event
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
 
+        
         ''' <summary>
-        ''' The PlayerJoin object about this join
+        '''     The PlayerJoin object about this join
         ''' </summary>
         ''' <remarks></remarks>
         Public PlayerJoin As PlayerJoin
@@ -48,43 +51,48 @@ Namespace Utilities
             Me.details = details
         End Sub
 
+        
         ''' <summary>
-        ''' The simpleplayer object about the disconnected player
+        '''     The simpleplayer object about the disconnected player
         ''' </summary>
         ''' <remarks></remarks>
         Public player As SimplePlayer
 
+        
         ''' <summary>
-        ''' The disconnect reason, leave, kick, ban, or list update
+        '''     The disconnect reason, leave, kick, ban, or list update
         ''' </summary>
         ''' <remarks></remarks>
         Public reason As playerleavereason
 
+        
         ''' <summary>
-        ''' The message that raised this event
+        '''     The message that raised this event
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
 
+        
         ''' <summary>
-        ''' More details, can be playerleave, playerban, playerkick
+        '''     More details, can be playerleave, playerban, playerkick
         ''' </summary>
         ''' <remarks></remarks>
         Public details As Object
     End Class
 
     Public Class ListUpdateEventArgs
-        ''' <summary>
-        ''' List with added players
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Added_players As List(Of String)
+    ''' <summary>
+    '''     List with added players
+    ''' </summary>
+    ''' <remarks></remarks>
+                                    Public Added_players As List(Of String)
 
-        ''' <summary>
-        ''' List with removed players
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Removed_players As List(Of String)
+                                    
+                                    ''' <summary>
+                                    '''     List with removed players
+                                    ''' </summary>
+                                    ''' <remarks></remarks>
+                                    Public Removed_players As List(Of String)
 
         Public Sub New()
             Added_players = New List(Of String)
@@ -98,14 +106,16 @@ Namespace Utilities
     End Class
 
     Public Class ErrorReceivedEventArgs 'for both severe and warning
+        
         ''' <summary>
-        ''' The message that raised this event
+        '''     The message that raised this event
         ''' </summary>
         ''' <remarks></remarks>
         Public message As String
 
+        
         ''' <summary>
-        ''' the output type, warning or severe
+        '''     the output type, warning or severe
         ''' </summary>
         ''' <remarks></remarks>
         Public type As MessageType
@@ -117,11 +127,11 @@ Namespace Utilities
     End Class
 
     Public Class StackTraceReceivedEventArgs
-        ''' <summary>
-        ''' The message that raised this event
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public message As String
+    ''' <summary>
+    '''     The message that raised this event
+    ''' </summary>
+    ''' <remarks></remarks>
+                                            Public message As String
 
         Public Sub New(message As String)
             Me.message = message

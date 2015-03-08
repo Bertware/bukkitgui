@@ -22,7 +22,7 @@ Namespace Utilities
             End Get
             Set(value As Boolean)
                 _hidewarn = value
-                config.writeAsBool("hide_warning", value, "output")
+                writeAsBool("hide_warning", value, "output")
             End Set
         End Property
 
@@ -32,7 +32,7 @@ Namespace Utilities
             End Get
             Set(value As Boolean)
                 _hideerr = value
-                config.writeAsBool("hide_error", value, "output")
+                writeAsBool("hide_error", value, "output")
             End Set
         End Property
 
@@ -42,7 +42,7 @@ Namespace Utilities
             End Get
             Set(value As Boolean)
                 _hidetrc = value
-                config.writeAsBool("hide_stacktrace", value, "output")
+                writeAsBool("hide_stacktrace", value, "output")
             End Set
         End Property
 
@@ -52,9 +52,9 @@ Namespace Utilities
             AddHandler serverOutputHandler.WarningReceived, AddressOf WarningReceived
             AddHandler serverOutputHandler.SevereReceived, AddressOf SevereReceived
             AddHandler serverOutputHandler.StackTraceReceived, AddressOf StackTraceReceived
-            _hidewarn = config.readAsBool("hide_warning", False, "output")
-            _hideerr = config.readAsBool("hide_error", False, "output")
-            _hidetrc = config.readAsBool("hide_stacktrace", False, "output")
+            _hidewarn = readAsBool("hide_warning", False, "output")
+            _hideerr = readAsBool("hide_error", False, "output")
+            _hidetrc = readAsBool("hide_stacktrace", False, "output")
         End Sub
 
         Private Sub WarningReceived(e As ErrorReceivedEventArgs)
@@ -83,7 +83,7 @@ Namespace Utilities
                 lvi As _
                     New ListViewItem({e.id.ToString.PadLeft(3, "0"), e.type.ToString, Date.Now.ToLongTimeString, e.text})
             lvi.ImageIndex = imageid
-            lvi.ForeColor = serverOutputHandler.getMessageColor(e.type)
+            lvi.ForeColor = getMessageColor(e.type)
             Return lvi
         End Function
     End Module
@@ -149,11 +149,11 @@ Namespace Utilities
 
 
     Public Class ServerError
-        Public type As serverOutputHandler.MessageType
+        Public type As MessageType
         Public text As String
         Public id As UInt64
 
-        Public Sub New(id As UInt64, type As serverOutputHandler.MessageType, text As String)
+        Public Sub New(id As UInt64, type As MessageType, text As String)
             Me.text = text
             Me.type = type
             Me.id = id

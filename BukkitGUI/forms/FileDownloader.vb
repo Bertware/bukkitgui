@@ -1,6 +1,7 @@
 ﻿Imports System.Net
-Imports Net.Bertware.BukkitGUI.Core
 Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
+Imports Net.Bertware.BukkitGUI.Core
 
 Public Class FileDownloader
     Public URL As String, target As String, message As String
@@ -46,9 +47,9 @@ Public Class FileDownloader
         Me.message = message
     End Sub
 
-    Private Sub FileDownloader_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub FileDownloader_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            livebug.write(livebug.loggingLevel.Fine, "FileDownloader", "Starting download from " & URL)
+            Log(livebug.loggingLevel.Fine, "FileDownloader", "Starting download from " & URL)
             LblAction.Text = message
             LblStatus.Text = lr("Contacting server...")
             VPBProgress.Value = 0
@@ -57,10 +58,10 @@ Public Class FileDownloader
             old_size_2 = 0
             received = 0
 
-            tmptarget = common.TmpPath & "/download.tmp"
+            tmptarget = TmpPath & "/download.tmp"
 
             webc = New WebClient
-            webc.Headers = serverinteraction.header
+            webc.Headers = header
 
             AddHandler webc.DownloadProgressChanged, AddressOf DownloadProgressChange
             AddHandler webc.DownloadFileCompleted, AddressOf DownloadCompleted
@@ -74,7 +75,7 @@ Public Class FileDownloader
         Catch ex As Exception
             MessageBox.Show(lr("File download failed!") & vbCrLf & ex.Message, lr("Download failed!"),
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
-            livebug.write(loggingLevel.Warning, "FileDownloader", "File download failed!", ex.Message)
+            Log(loggingLevel.Warning, "FileDownloader", "File download failed!", ex.Message)
         End Try
     End Sub
 
@@ -91,11 +92,11 @@ Public Class FileDownloader
         Else
             Try
                 tmrspeed.Enabled = False
-                If FileIO.FileSystem.FileExists(tmptarget) Then FileIO.FileSystem.MoveFile(tmptarget, target, True)
+                If FileSystem.FileExists(tmptarget) Then FileSystem.MoveFile(tmptarget, target, True)
                 Me.Close()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "PluginUpdater", "The downloaded file could not be saved.",
-                              ex.Message)
+                Log(loggingLevel.Warning, "PluginUpdater", "The downloaded file could not be saved.",
+                    ex.Message)
                 MessageBox.Show(
                     lr(
                         "The downloaded file could not be saved. Are you allowed to write to this location? Try running as administrator"),
@@ -134,16 +135,16 @@ Public Class FileDownloader
         End If
     End Sub
 
-    Private Sub BtnCancel_Click(sender As System.Object, e As System.EventArgs) Handles BtnCancel.Click
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
         Try
             webc.CancelAsync()
             webc.Dispose()
-            If FileIO.FileSystem.FileExists(tmptarget) Then _
-                FileIO.FileSystem.DeleteFile(tmptarget, FileIO.UIOption.OnlyErrorDialogs,
-                                             FileIO.RecycleOption.DeletePermanently, FileIO.UICancelOption.DoNothing)
+            If FileSystem.FileExists(tmptarget) Then _
+                FileSystem.DeleteFile(tmptarget, UIOption.OnlyErrorDialogs,
+                                      RecycleOption.DeletePermanently, UICancelOption.DoNothing)
         Catch ex As Exception
-            livebug.write(loggingLevel.Severe, "FileDownloader", "Something went wrong while cancelling a download",
-                          ex.Message)
+            Log(loggingLevel.Severe, "FileDownloader", "Something went wrong while cancelling a download",
+                ex.Message)
         Finally
             Me.Close()
         End Try

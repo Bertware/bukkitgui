@@ -1,68 +1,78 @@
 ﻿
 
 'Module with text to handle the server output (Text won't be displayed using this module, but players will be added/removed, errors will be sorted,...)
+Imports System.Text
+Imports System.Text.RegularExpressions
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
-Imports System.Text.RegularExpressions
 
 
 Namespace MCInterop
-    ''' <summary>
-    ''' This module raises events when a certain type of server output passes, and provides functions to handle server output.
-    ''' The function Lookup will parse output, raise the needed events, these events will result in player joins etc.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Module serverOutputHandler
-        ''' <summary>
-        ''' This event is raised when a player joins. Also raised when a player is added on list synchronization
-        ''' </summary>
-        ''' <remarks>This event should be linked to a sub that adds the player to the UI</remarks>
-        Public Event PlayerJoin(ByVal e As PlayerJoinEventArgs)
+''' <summary>
+'''     This module raises events when a certain type of server output passes, and provides functions to handle server
+'''     output.
+'''     The function Lookup will parse output, raise the needed events, these events will result in player joins etc.
+''' </summary>
+''' <remarks></remarks>
+                   Public Module serverOutputHandler
+                   ''' <summary>
+                   '''     This event is raised when a player joins. Also raised when a player is added on list synchronization
+                   ''' </summary>
+                   ''' <remarks>This event should be linked to a sub that adds the player to the UI</remarks>
+                                                    Public Event PlayerJoin(ByVal e As PlayerJoinEventArgs)
 
-        ''' <summary>
-        ''' This event is raised when a player leaves, gets kicked or banned. Also raised when a player is removed on list synchronization
-        ''' </summary>
-        ''' <remarks>This event should be linked to a sub that removes the player from the UI</remarks>
-        Public Event PlayerDisconnect(ByVal e As PlayerDisconnectEventArgs)
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event is raised when a player leaves, gets kicked or banned. Also raised when a player is removed on list
+                                                    '''     synchronization
+                                                    ''' </summary>
+                                                    ''' <remarks>This event should be linked to a sub that removes the player from the UI</remarks>
+                                                    Public Event PlayerDisconnect(ByVal e As PlayerDisconnectEventArgs)
 
-        ''' <summary>
-        ''' This event is raised when a list synchronization has been ended
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Event ListUpdate()
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event is raised when a list synchronization has been ended
+                                                    ''' </summary>
+                                                    ''' <remarks></remarks>
+                                                    Public Event ListUpdate()
 
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event is raised when text was received by the server
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <remarks></remarks>
+                                                    Public Event TextReceived(text As String, type As MessageType)
 
-        ''' <summary>
-        ''' This event is raised when text was received by the server
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <remarks></remarks>
-        Public Event TextReceived(text As String, type As MessageType)
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event is raised when a message with a [severe] tag is detected.
+                                                    ''' </summary>
+                                                    ''' <remarks></remarks>
+                                                    Public Event SevereReceived(ByVal e As ErrorReceivedEventArgs)
 
-        ''' <summary>
-        ''' This event is raised when a message with a [severe] tag is detected.
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Event SevereReceived(ByVal e As ErrorReceivedEventArgs)
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event is raised when a message with a [warning] tag is detected.
+                                                    ''' </summary>
+                                                    ''' <remarks></remarks>
+                                                    Public Event WarningReceived(ByVal e As ErrorReceivedEventArgs)
 
-        ''' <summary>
-        ''' This event is raised when a message with a [warning] tag is detected.
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Event WarningReceived(ByVal e As ErrorReceivedEventArgs)
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event is raised when a stack trace is detected.
+                                                    ''' </summary>
+                                                    ''' <remarks></remarks>
+                                                    Public Event StackTraceReceived(ByVal e As StackTraceReceivedEventArgs)
 
-        ''' <summary>
-        ''' This event is raised when a stack trace is detected.
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Event StackTraceReceived(ByVal e As StackTraceReceivedEventArgs)
-
-        ''' <summary>
-        ''' This event will trigger the comparison of the listview containing player names and the list of actual online players
-        ''' </summary>
-        ''' <param name="onlineplayers"></param>
-        ''' <remarks></remarks>
-        Public Event CheckUILists(onlineplayers As List(Of String))
+                                                    
+                                                    ''' <summary>
+                                                    '''     This event will trigger the comparison of the listview containing player names and the list of actual online
+                                                    '''     players
+                                                    ''' </summary>
+                                                    ''' <param name="onlineplayers"></param>
+                                                    ''' <remarks></remarks>
+                                                    Public Event CheckUILists(onlineplayers As List(Of String))
 
         Dim _utf8comp As Boolean = False
 
@@ -75,11 +85,12 @@ Namespace MCInterop
             End Set
         End Property
 
-        ''' <summary>
-        ''' The output type of a console message
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Enum MessageType
+                                                    
+                                                    ''' <summary>
+                                                    '''     The output type of a console message
+                                                    ''' </summary>
+                                                    ''' <remarks></remarks>
+                                                    Public Enum MessageType
             info 'info message
             warning 'warning message
             severe 'severe message
@@ -94,55 +105,58 @@ Namespace MCInterop
             unknown 'unknown type, does not match any of the above
         End Enum
 
-        ''' <summary>
-        ''' Initialize the module, load values from config
-        ''' </summary>
-        ''' <returns>True if successful</returns>
-        ''' <remarks></remarks>
-        Public Function init() As Boolean
-            _clrInfo = Drawing.ColorTranslator.FromHtml(config.read("info", "blue", "output"))
-            _clrPlayerEvent = Drawing.ColorTranslator.FromHtml(config.read("player_event", "green", "output"))
-            _clrWarning = Drawing.ColorTranslator.FromHtml(config.read("warning", "orange", "output"))
-            _clrSevere = Drawing.ColorTranslator.FromHtml(config.read("severe", "red", "output"))
-            _clrUnknown = Drawing.ColorTranslator.FromHtml(config.read("unknown", "black", "output"))
+                                                    
+                                                    ''' <summary>
+                                                    '''     Initialize the module, load values from config
+                                                    ''' </summary>
+                                                    ''' <returns>True if successful</returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function init() As Boolean
+            _clrInfo = ColorTranslator.FromHtml(read("info", "blue", "output"))
+            _clrPlayerEvent = ColorTranslator.FromHtml(read("player_event", "green", "output"))
+            _clrWarning = ColorTranslator.FromHtml(read("warning", "orange", "output"))
+            _clrSevere = ColorTranslator.FromHtml(read("severe", "red", "output"))
+            _clrUnknown = ColorTranslator.FromHtml(read("unknown", "black", "output"))
 
-            _show_date = config.readAsBool("date", False, "output")
-            _show_time = config.readAsBool("time", True, "output")
+            _show_date = readAsBool("date", False, "output")
+            _show_time = readAsBool("time", True, "output")
             Return True
         End Function
 
         Private _show_date As Boolean = False
         Private _show_time As Boolean = False
 
-        ''' <summary>
-        ''' Should the date be shown before each server message
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Property Show_date As Boolean
+                                                    
+                                                    ''' <summary>
+                                                    '''     Should the date be shown before each server message
+                                                    ''' </summary>
+                                                    ''' <value></value>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Property Show_date As Boolean
             Get
                 Return _show_date
             End Get
             Set(value As Boolean)
                 _show_date = value
-                config.writeAsBool("date", value, "output")
+                writeAsBool("date", value, "output")
             End Set
         End Property
 
-        ''' <summary>
-        ''' Should the time be shown before each server message
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Property Show_time As Boolean
+                                                    
+                                                    ''' <summary>
+                                                    '''     Should the time be shown before each server message
+                                                    ''' </summary>
+                                                    ''' <value></value>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Property Show_time As Boolean
             Get
                 Return _show_time
             End Get
             Set(value As Boolean)
                 _show_time = value
-                config.writeAsBool("time", value, "output")
+                writeAsBool("time", value, "output")
             End Set
         End Property
 
@@ -163,7 +177,7 @@ Namespace MCInterop
             End Get
             Set(value As Color)
                 _clrPlayerEvent = value
-                config.write("player_event", ColorTranslator.ToHtml(value).Trim, "output")
+                write("player_event", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
 
@@ -173,7 +187,7 @@ Namespace MCInterop
             End Get
             Set(value As Color)
                 _clrSevere = value
-                config.write("severe", ColorTranslator.ToHtml(value).Trim, "output")
+                write("severe", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
 
@@ -183,7 +197,7 @@ Namespace MCInterop
             End Get
             Set(value As Color)
                 _clrWarning = value
-                config.write("warning", ColorTranslator.ToHtml(value).Trim, "output")
+                write("warning", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
 
@@ -193,7 +207,7 @@ Namespace MCInterop
             End Get
             Set(value As Color)
                 _clrInfo = value
-                config.write("info", ColorTranslator.ToHtml(value).Trim, "output")
+                write("info", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
 
@@ -203,48 +217,51 @@ Namespace MCInterop
             End Get
             Set(value As Color)
                 _clrUnknown = value
-                config.write("unknown", ColorTranslator.ToHtml(value).Trim, "output")
+                write("unknown", ColorTranslator.ToHtml(value).Trim, "output")
             End Set
         End Property
 
 #End Region
 
-        ''' <summary>
-        ''' Check server output for events etc.
-        ''' </summary>
-        ''' <param name="text">the text that should be parsed</param>
-        ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
-        Public Sub Lookup(text As String) _
-            'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
+                                                    
+                                                    ''' <summary>
+                                                    '''     Check server output for events etc.
+                                                    ''' </summary>
+                                                    ''' <param name="text">the text that should be parsed</param>
+                                                    ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
+                                                    Public Sub Lookup(text As String) _
+'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
             Try
                 Dim t As MessageType = getMessageType(text)
                 Lookup(text, t)
             Catch global_ex As Exception
                 If text IsNot Nothing Then _
-                    livebug.write(loggingLevel.Severe, "ServerOutputHandler",
-                                  "Exception at LookUp (text)! Parameter:" & text, global_ex.Message) Else _
-                    livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Exception at LookUp! Text is null!",
-                                  global_ex.Message)
+                    Log(loggingLevel.Severe, "ServerOutputHandler",
+                        "Exception at LookUp (text)! Parameter:" & text, global_ex.Message) Else _
+                    Log(loggingLevel.Severe, "ServerOutputHandler", "Exception at LookUp! Text is null!",
+                        global_ex.Message)
             End Try
         End Sub
 
-        ''' <summary>
-        ''' Check server output for events etc.
-        ''' </summary>
-        ''' <param name="passargs">the text and type that should be parsed</param>
-        ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
-        Public Sub LookupAsync(PassArgs As thds_pass_lookup) _
-            'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
+                                                    
+                                                    ''' <summary>
+                                                    '''     Check server output for events etc.
+                                                    ''' </summary>
+                                                    ''' <param name="passargs">the text and type that should be parsed</param>
+                                                    ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
+                                                    Public Sub LookupAsync(PassArgs As thds_pass_lookup) _
+'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
             Lookup(PassArgs.text, PassArgs.type)
         End Sub
 
-        ''' <summary>
-        ''' Check server output for events etc.
-        ''' </summary>
-        ''' <param name="text">the text that should be parsed</param>
-        ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
-        Public Sub Lookup(text As String, type As MessageType) _
-            'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
+                                                    
+                                                    ''' <summary>
+                                                    '''     Check server output for events etc.
+                                                    ''' </summary>
+                                                    ''' <param name="text">the text that should be parsed</param>
+                                                    ''' <remarks>This routine isn't responsible for output etc., only for parsing an looking at the content</remarks>
+                                                    Public Sub Lookup(text As String, type As MessageType) _
+'Most importante routine. Will lookup a text to a set of rules, in order to raise events, add/remove players,...
             If text Is Nothing Then Exit Sub
             Try
                 RaiseEvent TextReceived(text, type)
@@ -279,11 +296,11 @@ Namespace MCInterop
                     Case MessageType.ipban 'ip being banned
 
                     Case MessageType.listcount 'List command output
-                        livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                                      "List count recognized, will update player list")
+                        Log(loggingLevel.Fine, "ServerOutputHandler",
+                            "List count recognized, will update player list")
                     Case MessageType.list 'List command output
-                        livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                                      "List command output recognized, will update player list")
+                        Log(loggingLevel.Fine, "ServerOutputHandler",
+                            "List command output recognized, will update player list")
                         RaiseEvent ListUpdate()
                         HandleList(text)
                     Case MessageType.javastacktrace 'java stack trace e.g. "at net.minecraft....(java:12)"
@@ -292,113 +309,121 @@ Namespace MCInterop
                 End Select
             Catch global_ex As Exception
                 If text IsNot Nothing Then _
-                    livebug.write(loggingLevel.Severe, "ServerOutputHandler",
-                                  "Severe exception at LookUp (text,type)! Parameter:" & text, global_ex.Message) Else _
-                    livebug.write(loggingLevel.Severe, "ServerOutputHandler",
-                                  "Severe exception at LookUp! Text is null!", global_ex.Message)
+                    Log(loggingLevel.Severe, "ServerOutputHandler",
+                        "Severe exception at LookUp (text,type)! Parameter:" & text, global_ex.Message) Else _
+                    Log(loggingLevel.Severe, "ServerOutputHandler",
+                        "Severe exception at LookUp! Text is null!", global_ex.Message)
             End Try
         End Sub
 
-        ''' <summary>
-        ''' This function reads the output and provides data for the event
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getWarningArgs(text As String) As ErrorReceivedEventArgs
+                                                    
+                                                    ''' <summary>
+                                                    '''     This function reads the output and provides data for the event
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getWarningArgs(text As String) As ErrorReceivedEventArgs
             Return New ErrorReceivedEventArgs(text, MessageType.warning)
         End Function
 
-        ''' <summary>
-        ''' This function reads the output and provides data for the event
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getSevereArgs(text As String) As ErrorReceivedEventArgs
+                                                    
+                                                    ''' <summary>
+                                                    '''     This function reads the output and provides data for the event
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getSevereArgs(text As String) As ErrorReceivedEventArgs
             Return New ErrorReceivedEventArgs(text, MessageType.severe)
         End Function
 
-        ''' <summary>
-        ''' This function reads the output and provides data for the event
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getPlayerJoinArgs(text As String) As PlayerJoinEventArgs 'player joining
+                                                    
+                                                    ''' <summary>
+                                                    '''     This function reads the output and provides data for the event
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getPlayerJoinArgs(text As String) As PlayerJoinEventArgs 'player joining
             Dim pj As PlayerJoin = AnalyzeAction(PlayerAction.player_join, text)
-            livebug.write(loggingLevel.Fine, "ServerOutputHandler", "PlayerJoinEvent Raised!")
+            Log(loggingLevel.Fine, "ServerOutputHandler", "PlayerJoinEvent Raised!")
             Return New PlayerJoinEventArgs(PlayerJoinEventArgs.playerjoinreason.join, text, pj)
         End Function
 
-        ''' <summary>
-        ''' This function reads the output and provides data for the event
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getPlayerLeaveArgs(text As String) As PlayerDisconnectEventArgs 'player leaving
+                                                    
+                                                    ''' <summary>
+                                                    '''     This function reads the output and provides data for the event
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getPlayerLeaveArgs(text As String) As PlayerDisconnectEventArgs 'player leaving
             Dim pl As PlayerLeave = AnalyzeAction(PlayerAction.player_leave, text)
             Return New PlayerDisconnectEventArgs(pl.player, PlayerDisconnectEventArgs.playerleavereason.leave, text, pl)
         End Function
 
-        ''' <summary>
-        ''' This function reads the output and provides data for the event
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getPlayerKickArgs(text As String) As PlayerDisconnectEventArgs 'player being kicked
+                                                    
+                                                    ''' <summary>
+                                                    '''     This function reads the output and provides data for the event
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getPlayerKickArgs(text As String) As PlayerDisconnectEventArgs 'player being kicked
             Dim pk As PlayerKick = AnalyzeAction(PlayerAction.player_kick, text)
             Return New PlayerDisconnectEventArgs(pk.player, PlayerDisconnectEventArgs.playerleavereason.kick, text, pk)
         End Function
 
-        ''' <summary>
-        ''' This function reads the output and provides data for the event
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getPlayerBanArgs(text As String) As PlayerDisconnectEventArgs 'player being banned
+                                                    
+                                                    ''' <summary>
+                                                    '''     This function reads the output and provides data for the event
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getPlayerBanArgs(text As String) As PlayerDisconnectEventArgs 'player being banned
             Dim pb As playerBan = AnalyzeAction(PlayerAction.player_ban, text)
             Return New PlayerDisconnectEventArgs(pb.player, PlayerDisconnectEventArgs.playerleavereason.ban, text, pb)
         End Function
 
-        ''' <summary>
-        ''' Remove unknown characters from the server output
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks>These characters are (in most cases) coused by the use of --nojline</remarks>
-        Public Function FixJLine(text As String) As String
+                                                    
+                                                    ''' <summary>
+                                                    '''     Remove unknown characters from the server output
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks>These characters are (in most cases) coused by the use of --nojline</remarks>
+                                                    Public Function FixJLine(text As String) As String
             Debug.WriteLine("FixJLine input: " & text)
             ' Dim pattern As String = "\x1B\[(\d\d|\d)m"
             If _utf8comp = False Then
-                text = System.Text.ASCIIEncoding.ASCII.GetString(System.Text.Encoding.ASCII.GetBytes(text))
+                text = ASCIIEncoding.ASCII.GetString(Encoding.ASCII.GetBytes(text))
             End If
 
             Dim pattern As String = "(\x1B|)\[m(\x1B|)$" 'fix <[m at end
-            text = System.Text.RegularExpressions.Regex.Replace(text, pattern, "")
+            text = Regex.Replace(text, pattern, "")
 
             pattern = "\x3F\x65" 'fix ?e
-            text = System.Text.RegularExpressions.Regex.Replace(text, pattern, "")
+            text = Regex.Replace(text, pattern, "")
 
             pattern = "\xA7(\d|\w)" 'spigot has another format for color codes
-            text = System.Text.RegularExpressions.Regex.Replace(text, pattern, "")
+            text = Regex.Replace(text, pattern, "")
 
             pattern = "\x1B\[\d{1,2}(\;\d{1,2}|){1,2}m"
-            Return System.Text.RegularExpressions.Regex.Replace(text, pattern, "") ' [0;33;22m etc
+            Return Regex.Replace(text, pattern, "") ' [0;33;22m etc
         End Function
 
         Dim AcceptList As Boolean = True
 
-        ''' <summary>
-        ''' Get the message type for a given text
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getMessageType(text As String) As MessageType
+                                                    
+                                                    ''' <summary>
+                                                    '''     Get the message type for a given text
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getMessageType(text As String) As MessageType
             Try
                 Dim infotag As String = "\[info\]"
                 Dim warntag As String = "\[warning\]"
@@ -435,7 +460,7 @@ Namespace MCInterop
                 ElseIf _
                     Regex.IsMatch(text, "^" & infotag & " \w{1,16} lost connection", RegexOptions.IgnoreCase) Or
                     Regex.IsMatch(text, "^\[info\] \w{1,16} left the game.", RegexOptions.IgnoreCase) Then _
-                    'Detect playerleave
+'Detect playerleave
                     '[INFO] Bertware lost connection: disconnect.endOfStream
                     Return MessageType.playerleave
 
@@ -475,7 +500,7 @@ Namespace MCInterop
                     Return MessageType.playerban
 
                 ElseIf Regex.IsMatch(text, "^" & infotag & " connected players:", RegexOptions.IgnoreCase) Then _
-                    'Detect list
+'Detect list
                     '[info] connected players: bertware, ...
                     Return MessageType.list
                 ElseIf _
@@ -497,7 +522,7 @@ Namespace MCInterop
                 ElseIf _
                     Regex.IsMatch(text, "^" & infotag) Or
                     (text.Contains("aliasing material") And text.Contains("name:")) Then _
-                    'Detect info, with support for mods
+'Detect info, with support for mods
                     Return MessageType.info
 
                 ElseIf _
@@ -514,19 +539,20 @@ Namespace MCInterop
                     'End If
                 End If
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at GetMessageType!",
-                              ex.Message)
+                Log(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at GetMessageType!",
+                    ex.Message)
                 Return MessageType.unknown
             End Try
         End Function
 
-        ''' <summary>
-        ''' Fix issues due to new text formatting in 1.7.2
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function FixTextCompat(text As String) As String
+                                                    
+                                                    ''' <summary>
+                                                    '''     Fix issues due to new text formatting in 1.7.2
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function FixTextCompat(text As String) As String
             text = RemoveTimeStamp(text)
             ' text = Regex.Replace(text, "\[(\d(-|:|\s|/|))*(am|pm|)(\s|)\]", "")
             text = Regex.Replace(text, "\[\d\d\]", "")
@@ -540,37 +566,40 @@ Namespace MCInterop
             Return text
         End Function
 
-        ''' <summary>
-        ''' Remove the timestamp in front of the text, compatible with 1.7.2 output
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks>Works for all formats</remarks>
-        Public Function RemoveTimeStamp(text As String) As String
+                                                    
+                                                    ''' <summary>
+                                                    '''     Remove the timestamp in front of the text, compatible with 1.7.2 output
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks>Works for all formats</remarks>
+                                                    Public Function RemoveTimeStamp(text As String) As String
             text = Regex.Replace(text, "^(\d{1,3}(-|:|\s|/|,|)){2,4}(am|pm|)\s{0,1}", "", RegexOptions.IgnoreCase)
             text = Regex.Replace(text, "^\[(\d(-|:|\s|/|))*(am|pm|)\]\s{0,1}", "", RegexOptions.IgnoreCase)
             text = Regex.Replace(text, "\[(\d{1,3}(-|:|\s|/|,|)){2,4}(am|pm|)\s", "[", RegexOptions.IgnoreCase)
             Return text
         End Function
 
-        ''' <summary>
-        ''' Convert a string into an enum value
-        ''' </summary>
-        ''' <param name="text">String to be converted in enum</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function ParseMessageType(text As String) As MessageType
+                                                    
+                                                    ''' <summary>
+                                                    '''     Convert a string into an enum value
+                                                    ''' </summary>
+                                                    ''' <param name="text">String to be converted in enum</param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function ParseMessageType(text As String) As MessageType
             text = text.ToLower.Trim.Replace(" ", "_")
             Return DirectCast([Enum].Parse(GetType(MessageType), text), MessageType)
         End Function
 
-        ''' <summary>
-        ''' Get the color corresponding to the text type, the text type will be detected first
-        ''' </summary>
-        ''' <param name="text"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getMessageColor(text As String) As Color
+                                                    
+                                                    ''' <summary>
+                                                    '''     Get the color corresponding to the text type, the text type will be detected first
+                                                    ''' </summary>
+                                                    ''' <param name="text"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getMessageColor(text As String) As Color
             Try
                 Select Case getMessageType(text)
                     Case MessageType.info
@@ -597,19 +626,20 @@ Namespace MCInterop
                         Return clrUnknown
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler",
-                              "Severe exception at getMessageColor! (text as String)", ex.Message)
+                Log(loggingLevel.Severe, "ServerOutputHandler",
+                    "Severe exception at getMessageColor! (text as String)", ex.Message)
                 Return Color.Black
             End Try
         End Function
 
-        ''' <summary>
-        ''' Get the color corresponding to the given type
-        ''' </summary>
-        ''' <param name="type"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function getMessageColor(type As MessageType) As Color
+                                                    
+                                                    ''' <summary>
+                                                    '''     Get the color corresponding to the given type
+                                                    ''' </summary>
+                                                    ''' <param name="type"></param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks></remarks>
+                                                    Public Function getMessageColor(type As MessageType) As Color
             Try
                 Select Case type
                     Case MessageType.info
@@ -636,45 +666,46 @@ Namespace MCInterop
                         Return clrUnknown
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler",
-                              "Severe exception at getMessageColor! (type as MessageType)", ex.Message)
+                Log(loggingLevel.Severe, "ServerOutputHandler",
+                    "Severe exception at getMessageColor! (type as MessageType)", ex.Message)
                 Return Color.Black
             End Try
         End Function
 
-        ''' <summary>
-        ''' Handles the list output, and add/remove players to fix bugs
-        ''' </summary>
-        ''' <param name="text">the /list output</param>
-        ''' <returns></returns>
-        ''' <remarks>This function will also raise the needed events to update the UI</remarks>
-        Public Function HandleList(text As String) As Boolean
+                                                    
+                                                    ''' <summary>
+                                                    '''     Handles the list output, and add/remove players to fix bugs
+                                                    ''' </summary>
+                                                    ''' <param name="text">the /list output</param>
+                                                    ''' <returns></returns>
+                                                    ''' <remarks>This function will also raise the needed events to update the UI</remarks>
+                                                    Public Function HandleList(text As String) As Boolean
             Try
-                If server.running = False Then Return True : Exit Function 'if server isn't running, get out of here
-                If server.playerList Is Nothing OrElse server.playerNameList Is Nothing Then _
+                If running = False Then Return True : Exit Function 'if server isn't running, get out of here
+                If playerList Is Nothing OrElse playerNameList Is Nothing Then _
                     Return False : Exit Function 'if playerlist isn't set to an object, exit
-                Dim Plist As List(Of String) = server.playerNameList ' get the current player list from the GUI
+                Dim Plist As List(Of String) = playerNameList ' get the current player list from the GUI
                 Dim olist As List(Of String) = ResolvePlayerList(text) 'real player list in server
 
                 If olist Is Nothing OrElse Plist Is Nothing Then Return False : Exit Function _
                 'if something went wrong, exit
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checking player lists...")
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                              "Players online now:" & common.Serialize(olist, ";"))
+                Log(loggingLevel.Fine, "ServerOutputHandler", "Checking player lists...")
+                Log(loggingLevel.Fine, "ServerOutputHandler",
+                    "Players online now:" & Serialize(olist, ";"))
                 'Check 1: Duplicate Items
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                              "Checking lists (1/4) - players that are show multiple times")
+                Log(loggingLevel.Fine, "ServerOutputHandler",
+                    "Checking lists (1/4) - players that are show multiple times")
 
                 If Plist.Count > 1 Then _
-                    'when more than one player is shown, we need to check if the same player is shown twice
+'when more than one player is shown, we need to check if the same player is shown twice
                     For i As Byte = 0 To Plist.Count - 1
                         If i = Plist.Count Then Exit For
                         Dim Player As String = Plist(i)
                         If Player IsNot Nothing Then
                             While Plist.IndexOf(Player) <> Plist.LastIndexOf(Player) _
                                 'if first and last occurence are different: 2 or more items. While loop, to make sure all incorrect occurences are removed
-                                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                                              "Removing player " & Player & " - shown more than 1 time")
+                                Log(loggingLevel.Fine, "ServerOutputHandler",
+                                    "Removing player " & Player & " - shown more than 1 time")
                                 Plist.RemoveAt(Plist.LastIndexOf(Player))
                                 'IMPORTANT:
                                 '
@@ -688,13 +719,13 @@ Namespace MCInterop
                         End If
                     Next
                 Else
-                    livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                                  "Skipped duplicate player check, there are less than 2 players shown.",
-                                  "ServerOutputHandler")
+                    Log(loggingLevel.Fine, "ServerOutputHandler",
+                        "Skipped duplicate player check, there are less than 2 players shown.",
+                        "ServerOutputHandler")
                 End If
 
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                              "Checking lists (2/4) - Disconnected players are still shown", "ServerOutputHandler")
+                Log(loggingLevel.Fine, "ServerOutputHandler",
+                    "Checking lists (2/4) - Disconnected players are still shown", "ServerOutputHandler")
                 'Check 2: Disconnected players are still shown.
                 If Plist.Count > 0 Then
                     For i As Byte = 0 To Plist.Count - 1
@@ -704,9 +735,9 @@ Namespace MCInterop
                             'IMPORTANT:
                             '
                             'player new simpleplayer(player) should be removed
-                            livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                                          "Removing player " & Player & " - still shown while disconnected",
-                                          "ServerOutputHandler")
+                            Log(loggingLevel.Fine, "ServerOutputHandler",
+                                "Removing player " & Player & " - still shown while disconnected",
+                                "ServerOutputHandler")
                             RaiseEvent _
                                 PlayerDisconnect(New PlayerDisconnectEventArgs(New SimplePlayer(Player),
                                                                                PlayerDisconnectEventArgs.
@@ -715,8 +746,8 @@ Namespace MCInterop
                         End If
                     Next
                 End If
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                              "Checking lists (3/4) - Online players aren't shown")
+                Log(loggingLevel.Fine, "ServerOutputHandler",
+                    "Checking lists (3/4) - Online players aren't shown")
                 'Check 3: Players that aren't shown
                 If olist.Count > 0 Then
                     For i As Byte = 0 To olist.Count - 1
@@ -725,13 +756,13 @@ Namespace MCInterop
 
                         If Plist.Contains(onlinePlayer.Trim) = False Or Plist.IndexOf(onlinePlayer.Trim) = - 1 Then
 
-                            livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                                          "Player not shown: " & onlinePlayer & " - Adding now...")
+                            Log(loggingLevel.Fine, "ServerOutputHandler",
+                                "Player not shown: " & onlinePlayer & " - Adding now...")
                             'Routine to set all details. Ip will be set to unknown. Same routine as used in the player join detection
                             Dim pl As Player = Player.FromSimplePlayer(New SimplePlayer(onlinePlayer, "Unknown"))
                             If pl IsNot Nothing Then
-                                pl.OP = ServerSettings.IsOP(pl.name)
-                                pl.WhiteList = ServerSettings.IsWhitelisted(pl.name)
+                                pl.OP = IsOP(pl.name)
+                                pl.WhiteList = IsWhitelisted(pl.name)
                             End If
                             'IMPORTANT:
                             '
@@ -744,31 +775,31 @@ Namespace MCInterop
                     Next
                 End If
 
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler",
-                              "Checking lists (4/4) - detected players aren't shown in playerlist")
+                Log(loggingLevel.Fine, "ServerOutputHandler",
+                    "Checking lists (4/4) - detected players aren't shown in playerlist")
                 'Check 4: Players that aren't shown
                 If olist IsNot Nothing Then RaiseEvent CheckUILists(olist) _
                 'this event will trigger the mainform to compare online players to shown players
 
                 'End of checks
-                livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Checked Lists succesfully")
+                Log(loggingLevel.Fine, "ServerOutputHandler", "Checked Lists succesfully")
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerOutputHandler", "ERROR: could not complete list update",
-                              ex.Message)
+                Log(loggingLevel.Warning, "ServerOutputHandler", "ERROR: could not complete list update",
+                    ex.Message)
             End Try
-            livebug.write(loggingLevel.Fine, "ServerOutputHandler", "Finalized list check")
+            Log(loggingLevel.Fine, "ServerOutputHandler", "Finalized list check")
             Return True
         End Function
 
-        ''' <summary>
-        ''' Resolve the /list output into a list of the current online players
-        ''' </summary>
-        ''' <param name="text">The text to resolve, output of /list</param>
-        ''' <returns>The list of all online players ATM</returns>
-        ''' <remarks></remarks>
-        '''
-        Private Function ResolvePlayerList(text As String) As List(Of String) _
-            'resolve server player list output to list of playernames
+                                                    
+                                                    ''' <summary>
+                                                    '''     Resolve the /list output into a list of the current online players
+                                                    ''' </summary>
+                                                    ''' <param name="text">The text to resolve, output of /list</param>
+                                                    ''' <returns>The list of all online players ATM</returns>
+                                                    ''' <remarks></remarks>
+                                                    Private Function ResolvePlayerList(text As String) As List(Of String) _
+'resolve server player list output to list of playernames
             If text Is Nothing Then Return Nothing : Exit Function
             If Regex.IsMatch(text, "^\d{1,4}(-|:|\s|/)") Then text = RemoveTimeStamp(text)
             text = Regex.Replace(text, "\s{0,1}\[Minecraft[^\]]*\]", "") _
@@ -792,8 +823,8 @@ Namespace MCInterop
                 Return text
             Catch ex As Exception
                 Return text
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler",
-                              "Something went wrong while handling rewriting the date - text:" & text, ex.Message)
+                Log(loggingLevel.Severe, "ServerOutputHandler",
+                    "Something went wrong while handling rewriting the date - text:" & text, ex.Message)
             End Try
         End Function
     End Module
@@ -803,11 +834,11 @@ Namespace MCInterop
     'Code to get player names and info from server messages
 
     Public Module ServerActionsFilter
-        ''' <summary>
-        ''' Things a player could do
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Enum PlayerAction
+    ''' <summary>
+    '''     Things a player could do
+    ''' </summary>
+    ''' <remarks></remarks>
+                                     Public Enum PlayerAction
             player_join
             player_leave
             player_kick
@@ -815,22 +846,23 @@ Namespace MCInterop
             ip_ban
         End Enum
 
-        ''' <summary>
-        ''' Parse the text for a specified action, retrieve the details
-        ''' </summary>
-        ''' <param name="action">The action we're parsing</param>
-        ''' <param name="text">The text (console output) of the action</param>
-        ''' <returns></returns>
-        ''' <remarks>We need to parse both different server versions and different servers (vanilla, bukkit, ...)!</remarks>
-        Public Function AnalyzeAction(action As PlayerAction, text As String) As Object _
-            'analyze a player action. Note: the kind of action (join,leave,...) should be determined first
+                                     
+                                     ''' <summary>
+                                     '''     Parse the text for a specified action, retrieve the details
+                                     ''' </summary>
+                                     ''' <param name="action">The action we're parsing</param>
+                                     ''' <param name="text">The text (console output) of the action</param>
+                                     ''' <returns></returns>
+                                     ''' <remarks>We need to parse both different server versions and different servers (vanilla, bukkit, ...)!</remarks>
+                                     Public Function AnalyzeAction(action As PlayerAction, text As String) As Object _
+'analyze a player action. Note: the kind of action (join,leave,...) should be determined first
             Try
                 text = RemoveTimeStamp(text) 'Remove any date or timestamps in front, to lowercase
                 text = text.Replace("[INFO]", "")
                 text = Regex.Replace(text, "\[[\w\d]*\]", "") 'Remove prefixes like [Admin]
                 text = Regex.Replace(text, "\s{0,1}\[Minecraft[^\]]*\]", "") _
                 '[minecraft], [minecraft-server] will also be filtered out,
-                Dim match As System.Text.RegularExpressions.Match
+                Dim match As Match
                 Dim trimarray As Char() = {"[", "]", "(", ")", " ", "."}
 
                 Select Case action
@@ -844,23 +876,23 @@ Namespace MCInterop
                         '[INFO] bertware [/127.0.0.1:51417] logged in with entity id 401 at ([world] 309.713105541731, 63.0, 309.018407580967)
 
                         Try
-                            match = System.Text.RegularExpressions.Regex.Match(text,
-                                                                               "\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3}")
+                            match = Regex.Match(text,
+                                                "\d{0,3}\.\d{0,3}\.\d{0,3}\.\d{0,3}")
                             If match IsNot Nothing AndAlso match.Value IsNot Nothing Then pj.player.IP = match.Value _
                                 Else pj.player.IP = "unknown"
-                            match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}\s{0,1}")
+                            match = Regex.Match(text, "^\s{0,1}\w{1,16}\s{0,1}")
                             If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
                                 pj.player.name = match.Value.Trim(trimarray) Else pj.player.name = "unknown"
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                          "Could not get login player name/ip for text " & text, ex.Message)
+                            Log(loggingLevel.Warning, "ServerOutputHandler",
+                                "Could not get login player name/ip for text " & text, ex.Message)
                         End Try
 
                         pj.message = text
 
                         If pj.player.name IsNot Nothing Then
-                            pj.player.OP = ServerSettings.IsOP(pj.player.name)
-                            pj.player.WhiteList = ServerSettings.IsWhitelisted(pj.player.name)
+                            pj.player.OP = IsOP(pj.player.name)
+                            pj.player.WhiteList = IsWhitelisted(pj.player.name)
                         End If
 
                         Return pj
@@ -870,20 +902,20 @@ Namespace MCInterop
 
                         Try
                             pl.player = New SimplePlayer()
-                            match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}\s{0,1}")
+                            match = Regex.Match(text, "^\s{0,1}\w{1,16}\s{0,1}")
                             If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
                                 pl.player.name = match.Value.Trim(trimarray) Else pl.player.name = "unknown"
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                          "Could not get disconnected player for text " & text, ex.Message)
+                            Log(loggingLevel.Warning, "ServerOutputHandler",
+                                "Could not get disconnected player for text " & text, ex.Message)
                         End Try
 
                         Try
                             If text.Contains(":") Then pl.reason = text.Split(":")(1).Trim Else pl.reason = "unknown" _
                             'get additional details
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                          "Could not get disconnected reason for text " & text, ex.Message)
+                            Log(loggingLevel.Warning, "ServerOutputHandler",
+                                "Could not get disconnected reason for text " & text, ex.Message)
                         End Try
 
                         Return pl
@@ -900,11 +932,11 @@ Namespace MCInterop
                         Try
 
                             If Regex.IsMatch(text, "Kicked \w{1,16} from the game") Then _
-                                '[INFO] Kicked Bertware from the game: 'zomaar'
+'[INFO] Kicked Bertware from the game: 'zomaar'
 
                                 pk.CommandSender = "unknown"
 
-                                match = System.Text.RegularExpressions.Regex.Match(text, "Kicked \w{1,16} ")
+                                match = Regex.Match(text, "Kicked \w{1,16} ")
                                 If match IsNot Nothing AndAlso match.Value IsNot Nothing Then
                                     pk.player.name = match.Value.Split(" ")(1).Trim(trimarray)
                                 Else
@@ -912,29 +944,29 @@ Namespace MCInterop
                                 End If
 
                             ElseIf Regex.IsMatch(text, "\w{1,16}: Kicking \w{1,16}") Then _
-                                '14:42:36 [INFO] CONSOLE: Kicking bertware
-                                match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}")
+'14:42:36 [INFO] CONSOLE: Kicking bertware
+                                match = Regex.Match(text, "^\s{0,1}\w{1,16}")
                                 If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
                                     pk.CommandSender = match.Value.Trim(trimarray) Else pk.CommandSender = "unknown"
 
-                                match = System.Text.RegularExpressions.Regex.Match(text, "\w{1,16}\s{0,1}$")
+                                match = Regex.Match(text, "\w{1,16}\s{0,1}$")
                                 If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
                                     pk.player.name = match.Value.Trim(trimarray) Else pk.player.name = "unknown"
 
                             ElseIf Regex.IsMatch(text, "\w{1,16}: Kicked player \w{1,16}") Then _
-                                '2013-06-20 19:11:35 [INFO] CONSOLE: Kicked player Bertware. With reason:
-                                match = System.Text.RegularExpressions.Regex.Match(text, "^\s{0,1}\w{1,16}")
+'2013-06-20 19:11:35 [INFO] CONSOLE: Kicked player Bertware. With reason:
+                                match = Regex.Match(text, "^\s{0,1}\w{1,16}")
                                 If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
                                     pk.CommandSender = match.Value.Trim(trimarray) Else pk.CommandSender = "unknown"
 
-                                match = System.Text.RegularExpressions.Regex.Match(text, "\w{1,16}\.")
+                                match = Regex.Match(text, "\w{1,16}\.")
                                 If match IsNot Nothing AndAlso match.Value IsNot Nothing Then _
                                     pk.player.name = match.Value.Trim(trimarray) Else pk.player.name = "unknown"
                             End If
 
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                          "Could not get kick information for text " & text, ex.Message)
+                            Log(loggingLevel.Warning, "ServerOutputHandler",
+                                "Could not get kick information for text " & text, ex.Message)
                         End Try
 
                         Return pk
@@ -947,16 +979,16 @@ Namespace MCInterop
                                 pb.player = New SimplePlayer(text.Split("]")(1).Trim.Split(" ")(2)) 'get player
                                 pb.CommandSender = text.Split("]")(1).Split(":")(0).Trim 'get additional details
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                              "Could not get player ban information for text " & text, ex.Message)
+                                Log(loggingLevel.Warning, "ServerOutputHandler",
+                                    "Could not get player ban information for text " & text, ex.Message)
                             End Try
                         ElseIf text.Contains("Banned player") Then
                             Try
                                 pb.player = New SimplePlayer(text.Split("]")(1).Trim.Split(" ")(3)) 'get player
                                 pb.CommandSender = text.Split("]")(1).Split(":")(0).Trim 'get additional details
                             Catch ex As Exception
-                                livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                              "Could not get player ban information for text " & text, ex.Message)
+                                Log(loggingLevel.Warning, "ServerOutputHandler",
+                                    "Could not get player ban information for text " & text, ex.Message)
                             End Try
                         End If
 
@@ -968,23 +1000,24 @@ Namespace MCInterop
                             ib.IP = text.Split("]")(1).Split(":")(1).Trim.Split(" ")(2).Trim 'get details
                             ib.CommandSender = text.Split("]")(1).Split(":")(0).Trim 'get details
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "ServerOutputHandler",
-                                          "Could not get player ban information for text " & text, ex.Message)
+                            Log(loggingLevel.Warning, "ServerOutputHandler",
+                                "Could not get player ban information for text " & text, ex.Message)
                         End Try
                         Return ib
                     Case Else
                         Return Nothing
                 End Select
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at AnalyzeAction!",
-                              ex.Message)
+                Log(loggingLevel.Severe, "ServerOutputHandler", "Severe exception at AnalyzeAction!",
+                    ex.Message)
                 Return Nothing
             End Try
         End Function
     End Module
 
+    
     ''' <summary>
-    ''' These classes will be returned along with the event
+    '''     These classes will be returned along with the event
     ''' </summary>
     ''' <remarks></remarks>
 #Region "EventClasses"

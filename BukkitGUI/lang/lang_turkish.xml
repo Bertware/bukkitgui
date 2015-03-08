@@ -1,0 +1,1444 @@
+﻿<language version="1.1" target="1.0.0.126">
+  <text string="Error while importing the Backup! Is this a valid file?">Yedek dosyasını içe aktarırken hata çıktı ! Geçerli bir yedek alındığından emin misin?</text>
+  <text string="Import failed!">İçe aktarma başarısız oldu :'(</text>
+  <text string="Error while exporting the Backup!">
+    Yedek alırken bir hata çıktı !
+  </text>
+  <text string="Export failed!">
+    Yedek alınamadı.
+  </text>
+  <text string="Error while exporting the backups!">
+    Yedekleri dışarı aktarırken hata çıktı!
+  </text>
+  <text string="Backup cancelled">
+    Yedekten veri alınma iptal edildi
+  </text>
+  <text string="Reason: Nothing selected to backup. Select folders first.">Yedek almak için hiç birşey seçilmedi! Lütfen yedeği alınacak klasörleri seçiniz.</text>
+  <text string="Couldn't backup this folder:">
+    Bu klasör yedeklenemez:
+  </text>
+  <text string="Reason:">
+    Nedeni:
+  </text>
+  <text string="Data:">
+    Veri:
+  </text>
+  <text string="Backup completed!">
+    Yedekleme Başarıyla tamamlandı!
+  </text>
+  <text string="Backup completed">
+    Yedekleme tamamlandı
+  </text>
+  <text string="Could not get data for this plugin">
+    Seçilen plugin ile ilgili bukkit'den veri alınamadı
+  </text>
+  <text string="Could not get data">
+    Server'dan veri alınamadı
+  </text>
+  <text string="Error: No downloads are available for this project. It is probably still under construction.">
+    Bu plugin için şuanlık bir indirme yok . Tahminen bakım bitmemiş olabilir
+  </text>
+  <text string="no downloads available">
+    Plugin için geçerli indirme yok
+  </text>
+  <text string="Error while loading plugins. Internet available?">
+    Server'den pluginler alınamadı . İnternet bağlantısı var mı?
+  </text>
+  <text string="An error occured while loading this data">
+    Bu veriyi yüklerken bir hata ile karşılaşıldı . Lütfen FeedBack atın . (İngilizce)
+
+  </text>
+  <text string="The file you chose to download is not supported yet.">
+    Seçtiğiniz dosyanın daha indirilmesi koyulmamış.
+  </text>
+  <text string="At this moment only .jar and .zip files are supported.">Burada sadece .jar ve .zip dosyaları geçerlidir</text>
+  <text string="Not supported">
+    Desteklenmiyor
+  </text>
+  <text string="You are about to install">Yüklemek üzeresiniz</text>
+  <text string="Do you wish to continue?">
+    Devam etmek istiyormusunuz?
+  </text>
+  <text string="Continue?">
+    Devam et
+  </text>
+  <text string="installing plugin:">
+    Kurulan plugin:
+  </text>
+  <text string="was installed succesfully">
+    başarıyla kuruldu
+  </text>
+  <text string="Plugin Installed">Plugin yüklendi!</text>
+  <text string="couldn't be installed. You have to visit the project page in order to install it manually.">yüklenemedi . Projenin bukkit sayfasına göz atıp elle indirmeniz önerilir .</text>
+  <text string="Plugin Installation failed">
+    Plugin Kurulumunda hata oldu
+  </text>
+  <text string="A restart is required in order for the changes to take effect. The GUI will now close itself">
+    Bu ayarların değiştirilmesi ve çalışması için Bukkit-GUI'nin kapatılıp açılması gerekiyor . Program kendini kapatacak ..
+  </text>
+  <text string="Restart required">
+    Yeniden başlatma gereklidir.
+  </text>
+  <text string="Downloading latest Bukkit version">
+    En son Bukkit sürümü indiriliyor
+  </text>
+  <text string="Downloading Bukkit build">
+    Bukkit indiriliyor
+  </text>
+  <text string="Ok">
+    Tamam
+  </text>
+  <text string="Cancel">
+    İptal
+  </text>
+  <text string="Browse...">
+    Dosyanın yolunu göster
+  </text>
+  <text string="Compress backup to reduce disk usage.">
+    Harddisk kullanımını azaltmak için yedeği sıkıştır
+  </text>
+  <text string="Folders to backup, separated by ;">
+    Yedeklenecek klasörler ; ile ayrılmıştır.
+  </text>
+  <text string="Backup name:">Yedek dosyasının adı:</text>
+  <text string="Folder to store backup:">Yedeğin bulundurulacağı klasör:</text>
+  <text string="Backup settings">
+    Yedekleme ayarları
+  </text>
+  <text string="Select folders to backup">
+    Yedeklenecek klasörleri seçin
+  </text>
+  <text string="Select folder to store backup">
+    Yedeğin bulunacağı klasörü seçiniz
+  </text>
+  <text string="The name must be at least 1 character long">
+    İsim en az 1 karakterden uzun
+    olmalıdır :)
+  </text>
+  <text string="You can only use the following characters: a-z ; 1-9 ; _ ; -">
+    Sadece a'dan z'ye olan harfleri , 1'den 9'a kadar olan sayıları Alttantire _ ve tire - kullanabilirsiniz
+  </text>
+  <text string="You need to specify at least 1 directory">
+    En az 1 ana klasör seçmelisiniz
+  </text>
+  <text string="You need to specify the destination directory">
+    En az bir tane hedef dizin belirtmeniz gerekmektedir.
+  </text>
+  <text string="Warning type:">
+    Uyarı:
+  </text>
+  <text string="Time:">
+    Zaman:
+  </text>
+  <text string="Cause:">
+    Nedeni:
+  </text>
+  <text string="Text:">
+    Metin:
+
+  </text>
+  <text string="Solutions:">
+    Çözümler:
+  </text>
+  <text string="Solution">
+    Çözüm
+  </text>
+  <text string="Apply">
+    Uygula!
+  </text>
+  <text string="ErrorDiagnose">
+    Sorun
+    teşhisi
+  </text>
+  <text string="This isn't a valid solution.">
+    Bu çözüm geçerli değil.
+  </text>
+  <text string="Invalid solution">
+    Geçersiz çözüm
+  </text>
+  <text string="E-mail (optional):">
+    E-mail adresiniz (Vermeniz zorunlu değil)
+  </text>
+  <text string="Message:">
+    Projeyi geliştirmek için bize bırakacağınız mesaj:
+  </text>
+  <text string="Send!">
+    Yolla!
+  </text>
+  <text string="Send Feedback">
+    Feedback'i yolla
+  </text>
+  <text string="You cannot send empty messages!">
+    Boş mesajları yollanamaz
+  </text>
+  <text string="Can't send">
+    Yollanamadı
+  </text>
+  <text string="Status:">
+    Durum:
+  </text>
+  <text string="">
+  </text>
+  <text string="Downloading...">
+    İndiriliyor ...
+  </text>
+  <text string="File Download">
+    Dosyayı indir
+  </text>
+  <text string="Contacting server...">
+    Server ile bağlantı kuruluyor
+  </text>
+  <text string="Downloading:">
+    İndiriliyor:
+  </text>
+  <text string="Path:">
+    Yol:
+  </text>
+  <text string="Version:">
+    Sürüm:
+  </text>
+  <text string="Author(s):">
+    Projenin Sahip(-leri):
+  </text>
+  <text string="Name:">
+    İsim:
+  </text>
+  <text string="Main namespace:">
+    Ana ad
+  </text>
+  <text string="Softdepend:">Softdepend:</text>
+  <text string="Command">
+    Komut
+  </text>
+  <text string="Description">
+    Tanım
+  </text>
+  <text string="Usage">
+    Kullanım
+  </text>
+  <text string="Aliases">
+    Diğer adıyla
+  </text>
+  <text string="Permission">
+    İzinler
+  </text>
+  <text string="View latest version">
+    Son sürümü görüntüle
+  </text>
+  <text string="Plugin details:">
+    Plugin ayrıntıları:
+  </text>
+  <text string="Date">
+    Tarih
+  </text>
+  <text string="Name">
+    İsim
+  </text>
+  <text string="File">
+    Dosya
+  </text>
+  <text string="Craftbukkit">
+    Bukkit
+  </text>
+  <text string="Authors:">
+    Sahipleri:
+  </text>
+  <text string="Site:">
+    Site:
+  </text>
+  <text string="Categories:">
+    Kategoriler:
+
+  </text>
+  <text string="Close">
+    Kapat
+  </text>
+  <text string="Install Selected Version">
+    Bu Bukkit sürümünü yükle
+  </text>
+  <text string="Plugin information">
+    Plugin bilgisi
+  </text>
+  <text string="No data for this plugin available">No data for this plugin available</text>
+  <text string="no data available">
+    hiç bir veri ulaşılabilir değil
+  </text>
+  <text string="Could not load plugin data for this plugin">
+    Bu plugin için bilgi yüklenemedi
+  </text>
+  <text string="Could not load plugin">
+    Plugin yüklenemedi
+  </text>
+  <text string="Website:">
+    Web sitesi:
+  </text>
+  <text string="Install">Yükle</text>
+  <text string="Language">
+    Dil
+  </text>
+  <text string="GUI Version">
+    GUI Sürümü
+  </text>
+  <text string="Translator">
+    Çevirmen
+  </text>
+  <text string="Comment">
+    Yorum
+  </text>
+  <text string="Install languages....">
+    Dilleri yükle ...
+
+  </text>
+  <text string="Installing language:">
+    Dil yükleniyor:
+  </text>
+  <text string="I have read and accept the">
+    Ben okudum ve kabul ettim
+  </text>
+  <text string="OK">
+    TAMAM
+  </text>
+  <text string="Accept license...">
+    Lisans ve kullanım koşullarını kabul ediyorum
+  </text>
+  <text string="Accept">
+    Kabul
+  </text>
+  <text string="value:">
+    değer:
+  </text>
+  <text string="Setting:">
+    Ayarlar:
+  </text>
+  <text string="Server settings...">
+    Server ayarları...
+
+
+  </text>
+  <text string="The name of the task. Doesn't affect the working of the task.">
+    İşlemin adı , işlemin çalışma mantığını etkilemez.
+  </text>
+  <text string="server start">
+    Serveri aç
+  </text>
+  <text string="server starting">
+    Server açılıyor...
+  </text>
+  <text string="server stop">
+    Serveri kapat
+  </text>
+  <text string="server stopping">
+    Server kapatılıyor
+  </text>
+  <text string="elapsed time">
+    Geçen zaman
+  </text>
+  <text string="current time">
+    Şimdiki zaman
+  </text>
+  <text string="player join">
+    Giren oyuncular
+  </text>
+  <text string="player leave">
+    Ayrılan oyuncular
+  </text>
+  <text string="server empty">
+    Server boş
+  </text>
+  <text string="heartbeat fail">
+    Kalp atışı hatası
+  </text>
+  <text string="Type:">
+    Tür
+  </text>
+  <text string="Trigger">
+    Tetik
+  </text>
+  <text string="Explanation: Please select a type first">
+    Açıklama: Lüfen bir tür seçin
+  </text>
+  <text string="parameters:">
+    parametreler:
+  </text>
+  <text string="Action">
+    Eylem
+  </text>
+  <text string="execute">
+    İşleme getir
+  </text>
+  <text string="shellexecute">
+    İşle
+  </text>
+  <text string="command">
+    Komut
+  </text>
+  <text string="stop server">
+    Serveri kapat
+  </text>
+  <text string="start server">
+    Serveri aç
+  </text>
+  <text string="restart server">
+    Serveri yeniden başlat
+  </text>
+  <text string="restart server brute">
+    Serveri zorla yeniden başlat (!)
+  </text>
+  <text string="backup">
+    Yedekle
+  </text>
+  <text string="synchronize list">
+    Listeyi senkronize et
+  </text>
+  <text string="Save">
+    Kaydet
+  </text>
+  <text string="Edit task...">
+    İşlemi değiştir...
+  </text>
+  <text string="Run this task when the server starts.">
+    Server açıldığı zaman bu işlemi başlat
+  </text>
+  <text string="No parameters required.">
+    Her hangi bir parametre gerekli değil
+  </text>
+  <text string="Run this task before the server starts.">
+    Bu işlemi server başlamadan önce başlat
+  </text>
+  <text string="Run this task when the server stops.">
+    Bu işlemi server bittikten sonra başlat
+  </text>
+  <text string="Run this task before the server stops.">
+    Bu işlemi server kapatılmadan önce başlat
+  </text>
+  <text string="Run this task every hh:mm:ss while the server is running.">
+    Bu işlemi  ss:dd:ss (saat:dakika:saniye) 'de server başlarken çalıştır
+  </text>
+  <text string="The time in hh:mm:ss">ss:dd:ss 'deki Zaman</text>
+  <text string="Run this task when the computer time is equal to hh:mm:ss.">
+    Bu işlemi ana bilgisayarın saati ss:dd:ss olduğu zaman başlat
+  </text>
+  <text string="The time in hh:mm:ss. You can add multiple times, each in hh:mm:ss format, split by ;">
+    Bu zamanda hh:mm:ss, Sen çoklu zaman ekleyebilirsin, bu zamanda hh:mm:ss formatında bununla ayır
+    ;
+  </text>
+  <text string="Run this task every time a player joins the server.">
+    Bu işlemi her hangi bir kullanıcı servere girdiği an çalıştır
+  </text>
+  <text string="Optional: the player name(s) to trigger at, split by;">İsteğe bağlı:oyuncu(-lar)ın isimlerini ayarla , ayıraç değişkeni ;</text>
+  <text string="Run this task every time a player disconnects.">
+    Her hangi biri serverden çıktığı an bu işlemi çalıştır
+  </text>
+  <text string="Optional: the player name(s) to trigger at, split by ;">
+    Kişisel:Oyuncu isimleri atayablirsin,bununla böl;
+  </text>
+  <text string="Run this task when a player disconnects and there are no longer players online.">
+    Bu işlemi son oyuncu çıktığı zaman ve serverde kimse kalmadığı zaman çalıştır
+  </text>
+  <text
+    string="Run this task when the server doesn't respond any longer. This task will send a heartbeat to the server, and check if the server responds">
+    Bu işlemi server uzun süre hiç yanıt vermesse çalıştırın . Bu işlem servere kalp atışı gönderecektir ve eğer serverden yanıt gelmesini kontrol edecektir.
+  </text>
+  <text string="The amount of time between 2 heartbeats, in hh:mm:ss">
+    İki kalp atışı arasındaki zaman farkı ,  ss:dd:s
+    s
+  </text>
+  <text string="Run a program, or a file that is associated with a default program.">
+    Default bir programla ilişkilendirilmiş bir program başlat veya normal bir program başlat.
+  </text>
+  <text string="the path to the program or file">
+    Program veya dosyanın kaynak yolu
+  </text>
+  <text string="Execute a CMD command.">
+    CMD kodu çalıştır
+  </text>
+  <text string="the CMD command">
+    CMD Kodu
+  </text>
+  <text string="Send a command to the server, if the server is running.">
+    Eğer server çalışıyorsa ve açıkca , sunucuya bir konut gönder.
+  </text>
+  <text string="the command to send. You can specify multiple commands, separated by ;">
+    Servere gidecek komutlar iki komut girmek için ; kullanın (Örnek : /say Birinci Komut;/say İkinci Komut)
+
+  </text>
+  <text string="Stop the server, if it's running.">
+    Eğer server açık ise sunucuya kapat.
+  </text>
+  <text string="No parameters required">
+    Herhangi bir parametre gerekli değil
+  </text>
+  <text string="Start the server, if it isn't already running. No parameters required.">
+    Eğer server kapalı ise , Serveri başlat . Herhangi bir ek parametre gerektirmez
+  </text>
+  <text string="The server will start with the settings set in the superstart tab.">Serveri SüperBaşlat sekmesindeki ayarlarla başlat.</text>
+  <text string="Restart the server, if it's running. No parameters required.">
+    Eğer server çalışıyorsa , sunucuyu yeniden başlat
+  </text>
+  <text
+    string="Restart a server that doesn't respond, by killing it and starting it again. Might cause data loss. USE WITH CAUTION.">
+    Eğer server yanıt vermiyor ve takıldı ise serverin işlemini öldürüp tekrar başlatır (ZORLU) . Chunk ve Veri kaybına sebep olabilir . RİSKİNİ BİLEREK KULLANIN!
+  </text>
+  <text string="Create a backup. Enter the name of the backup to execute.">
+    Bir yedek oluşturun . Ve çalıştırmak için o yedeğin ismini girin
+
+  </text>
+  <text string="The name of the backup">
+    Yedeğin ismi
+  </text>
+  <text string="Sycnhronize the GUI player list with the server player list">
+    Serverdeki kullanıcıları GUI'deki kullanıcılara senkronize et
+  </text>
+  <text string="Time should be in format hh:mm:ss">
+    Zaman formatı bu şekilde olmalıdır ss:dd
+    :ss
+  </text>
+  <text string="You need to enter a command">
+    Bir komut girmek zorundasınız
+  </text>
+  <text string="You need to enter a file or program">
+    Bir dosya veya program girmen lazım
+  </text>
+  <text string="You need to enter a backup name">
+    Bir yedek ismi girmen gerek
+  </text>
+  <text string="You need to enter a valid backup name">
+    Geçerli bir yedek ismi girmen gerek
+  </text>
+  <text string="Explanation">
+    Açıklama
+  </text>
+  <text string="Parameters">
+    Parametreler
+  </text>
+  <text string="You didn't enter valid values. Make sure all values are valid, and try again">
+    Geçerli bir değer girilmedi . Lütfen tüm değerleri doğru girin ve tekrar deneyin
+  </text>
+  <text string="Save cancelled">
+    Kayıt etme iptal oldu
+  </text>
+  <text string="Send">
+    Yolla
+  </text>
+  <text string="Don't Send">
+    Yollama
+  </text>
+  <text string="Your comment (optional)">
+    Sizin yorumunuz (İsteğe bağlı)
+  </text>
+  <text string="upload progress">
+    Upload işlemi
+  </text>
+  <text string="Email">
+    Email
+  </text>
+  <text string="Your email (optional)">
+    Sizi email'iniz (İsteğe bağlı)
+  </text>
+  <text string="Problem report">
+    Problemi rapor et
+  </text>
+  <text
+    string="Could not get ticket ID, upload cancelled. If you want to report this error manually, you can contact us at">
+    Kayıt ID'si alınamadı , upload iptal edildi . Eğer bu hatayı elle rapor etmek istiyorsanız bertware'e ulaşın
+  </text>
+  <text string="could not get ID">
+    ID alınamadı
+  </text>
+  <text string="This bug report can't be submitted automaticly: program outdated.">
+    Bu bug raporu otomatikman yollanmaz : programın sürümü eski.
+  </text>
+  <text string="Please make sure you have the latest version">
+    Lütfen Son sürüme sahip olduğunuzdan emin olun
+  </text>
+  <text string="If you want to report this error manually, you can contact us at">
+    Eğer bu hatayı elle rapor etmek istiyorsanız bertware ile iletişime geçebilirsiniz
+  </text>
+  <text string="The log has been uploaded. Thank you for sending it towards us!">
+    Log dosyası upload edildi . Bize yolladığınız için teşekkür ederiz!
+  </text>
+  <text string="Your log ID is #">
+    Sizin özel log numaranız #
+  </text>
+  <text string="You can keep this for future reference.">
+    Bunu gelecekteki referanslar için saklayabilirsiniz
+  </text>
+  <text string="Log file sent!">
+    Log dosyası yollandı!
+  </text>
+  <text string="Error while importing the task! Is this a valid file?">
+    İşlemi içe aktarrken hata oluştu ! İşlem dosyası geçerli mi?
+  </text>
+  <text string="Error while exporting the task!">
+    İşlem dosyasını dışarı aktarırken hata çıktı!
+  </text>
+  <text string="Error while exporting the tasks!">
+    İşlemleri dışarı aktarırken hata ortaya çıktı
+  </text>
+  <text string="Install update">
+    Güncelle
+  </text>
+  <text string="Current version:">
+    Şimdiki sürüm:
+  </text>
+  <text string="Latest version:">
+    Son Sürüm
+  </text>
+  <text string="An update is available. If you continue, this update will be installed automaticl">
+    Bir güncelleme mevcut! Eğer devam ederseniz otomatik olarak son güncellemeye sahip olacaksınız!
+  </text>
+  <text string="y.">
+    e.
+  </text>
+  <text string="Note: if the server is running, it will be stopped while updating">
+    Not: Server çalışıyor . Eğer güncelleme yaparsanız server kapatılır
+  </text>
+  <text string="Release date:">
+    Çıkış tarihi:
+  </text>
+  <text string="Updater">
+    Güncelleyici
+  </text>
+  <text string="You have to accept in order to use the application. Do you want to exit?">
+    Uygulamayı kullanmak için kabul etmek zorundasınız. Çıkış yapmak istiyor musunuz?
+  </text>
+  <text string="Exit?">
+    Çık
+  </text>
+  <text string="Waiting for server to stop">
+    Serverin durdurulması bekleniyor
+  </text>
+  <text string="Access to to the following folder was denied.">
+    Bu klasöre erişim engellendi!
+  </text>
+  <text string="Please run this app as administrator to ensure proper working">
+    Eğer uygulama düzgün çalışmaz ise Yönetici olarak başlatın.
+  </text>
+  <text string="Access to folder denied">
+    Klasöre erişim engellendi.
+  </text>
+  <text string="Delete this plugin?">
+    Bu plugin'i sil?
+  </text>
+  <text string="Delete plugin?">
+    Plugini sil?
+  </text>
+  <text string="You need to stop the server in order to remove this plugin. Stop server?">
+    Bu plugini kaldırmak için sunucuyu kapatmanız gerekiyor.Sunucuyu kapat
+  </text>
+  <text string="Server stop required">
+    Sunucunun durdurulması gerekiyor
+  </text>
+  <text string="It seems that this folder was created by the plugin:">
+    Bu dosya plugin tarafından oluşturulmuşa benziyor:
+  </text>
+  <text string="Remove this folder?">
+    Bu klasörü sil?
+  </text>
+  <text string="Remove folder?">
+    Klasörü sil?
+  </text>
+  <text string="Plugin succesfully removed!">
+    Plugin başarıyla silindi!
+  </text>
+  <text string="Succes!">
+    Başarılı!
+  </text>
+  <text string="Plugin removal failed. There might be some files left undeleted">
+    Plugin silme işlemi başarısız oldu. Belki plugin'e ait silinmeyen dosyalar olabilir
+  </text>
+  <text string="Failed">
+    Başarısız
+  </text>
+  <text string="Failed to connect to remote server. Are the credentials correct?">
+    Sunucu'ya bağlanırken hata oluştu . Tüm bilgiler doğru mu?
+  </text>
+  <text string="Failed to connect">
+    Bağlanırken hata oluştur.
+  </text>
+  <text string="The java path could not be found, server start aborted">
+    Bu java yolu bulunamadı . Server başlatılması iptal edildi
+  </text>
+  <text string="Please select the correct java version in the superstart tab">
+    SüperBaşlatma menüsünde lütfen doğru java sürümünü seçin
+  </text>
+  <text string="Could not start server">
+    Server başlatılamadı
+  </text>
+  <text string="Could not start the process - no executable given">
+    İşlem başlatılamadı - çalıştırılabilir komut verilmemiş.
+  </text>
+  <text string="The program couldn't find this executable: ">
+    Program çalıştırılabilir kod bulamadı:
+
+  </text>
+  <text string="File not found">
+    Dosya bulunamadı
+  </text>
+  <text string="The server should be running before you can send commands.">
+    Çeşitli komutlar göndermek için , sunucunun açık olması gerekmektedir
+  </text>
+  <text string="Could not send command">
+    Komut gönderilemedi
+  </text>
+  <text string="The command could not be sent due to an error. See the log file for more information">
+    Bu komut bir hata nedeni ile sunucuya yollanamadı . Daha fazla bilgi için log dosyasına bakın ve logu Bertware'e bildirin
+  </text>
+  <text string="The GUI couldn't download data from">
+    Program veriyi konumdan indiremedi
+  </text>
+  <text string="The server didn't respond in time">
+    Sunucu bir süre yanıt vermedi
+  </text>
+  <text string="Couldn't download data">
+    Veri download edilemedi
+  </text>
+  <text string="The server is unavailable (Response code 503)">
+    Server'e ulaşılamıyor (Yanıt kodu 503)
+  </text>
+  <text string="The server is unavailable (Response code 502)">
+    Sunucuya ulaşılamıyor (Yanıt kodu
+    502)
+  </text>
+  <text string="The server didn't response in time">
+    Sunucu bir süre yanıt vermedi
+
+  </text>
+  <text string="It seems that the server stopped responding. Do you want to kill the server?">
+    Sunucu yanıt vermeyi kesti . Server işlemini durdurmak istiyor musunuz?
+  </text>
+  <text string="Server not responding">
+    Sunucu yanıt vermiyor
+  </text>
+  <text string="The server is still running. Do you want to stop the server and exit the GUI?">
+    Sunucu hâlen çalışıyor.Sunucuyu kapatıp programdan çıkış yapmak istermisin?
+
+  </text>
+  <text string="Stop server?">
+    Serveri durdur?
+  </text>
+  <text
+    string="The server could not be started: the .jar file specified could not be found. Please make sure all superstart settings are valid.">
+    Sunucu başlatılamadı çünkü .jar dosyası bulunamadı . Lütfen tüm Süperbaşlangıç seçeneklerinin geçerli olduğuna emin olun
+  </text>
+  <text string="Could't start server">
+    Sunucu başlatılamadı
+  </text>
+  <text string="Starting bukkit server">
+    Bukkit sunucu başlatılıyor
+
+  </text>
+  <text string="min. RAM:">
+    En az RAM:
+  </text>
+  <text string="max. RAM:">
+    En fazla RAM:
+  </text>
+  <text string="Starting vanilla server">
+    Vanilla sunucusu başlatılıyor
+  </text>
+  <text string="Starting new remote jsonapi server...">
+    Uzak Jsona
+    pi sunucusu başlatılıyor
+  </text>
+  <text string="Starting java server">
+    Java sunucusu başlatılıyor
+  </text>
+  <text string="Do you really want to kill the server? This can corrupt your data!">
+    Gerçekten serverin işlemini öldürmek istiyor musunuz? Bu işlem veri kaybına sebebiyet verebilir!
+  </text>
+  <text string="Kill server?">
+    Server işlemini öldür?
+  </text>
+  <text string="Server running">
+    Sunucu çalışıyor
+  </text>
+  <text string="Connected to remote server">
+    Uzak sunucuya bağlanıldı
+  </text>
+  <text string="Server stopped">
+    Server durduruldu
+  </text>
+  <text string="Killed remote server connection, severe error in remote reader thread. Please report this bug.">
+    Uzak sunucu bağlantısı kapatıldı , şiddetli hatalar meydana geldi . Lütfen bu hatayı bildirin.
+  </text>
+  <text string="The server could not be started, reason:">
+    Sunucu başlatılamadı çünkü:
+  </text>
+  <text string="This is probably caused by another server that is running already.">
+    Bu genelde başka bir sunucu açık olduğunda meydana gelir.
+  </text>
+  <text string="Kill all java instances, and retry to start this server?">
+    Tüm java örneklerini öldür , ve sunucuyu başlatmaya çalış?
+  </text>
+  <text string="Server couldn't be started">
+    Sunucu başlatılamadı
+  </text>
+  <text string="Player joined">
+    Bir oyuncu sunucuya katıldı
+  </text>
+  <text string="logged in to the server">
+    sunucuya giriş yapıldı
+  </text>
+  <text string="at world">
+    dünyada
+  </text>
+  <text string="Player disconnected (Leave)">
+    Oyuncu bağlantıyı kesti (Ayrıldı)
+  </text>
+  <text string="disconnected">
+    Bağlantı Kesildi
+  </text>
+  <text string="reason:">
+    Neden:
+  </text>
+  <text string="Player disconnected (Kick)">
+    Oyuncu ile sunucu arasındaki bağlantı kesildi (Kicklendi)
+
+  </text>
+  <text string="Player disconnected (Ban)">
+    Oyuncu sunucudan banlandı
+
+  </text>
+  <text string="Warning">
+    Uyarı
+  </text>
+  <text string="Severe">
+    Şiddetli
+  </text>
+  <text string="status">
+    Durum
+  </text>
+  <text string="Time since start:">
+    Sunucu açıldıktan sonra geçen zaman:
+  </text>
+  <text string="Latest stable:">
+    Son stabil sürüm:
+  </text>
+  <text string="Latest beta:">
+    Son beta sürüm:
+  </text>
+  <text string="Latest dev:">
+    Son geliştirici sürüm:
+  </text>
+  <text string="Your current bukkit version is">Şuanki bukkit sürümü</text>
+  <text string="Bukkit version">
+    Bukkit sürümü
+  </text>
+  <text string="Your current bukkit version could not be determined">Sizin şuanki bukkit sürümünüz tespit  edilemedi</text>
+  <text string="The server settings you entered are invalid">Girdiğiniz sunucu ayarları geçerli değil</text>
+  <text string="Invalid server settings">
+    Geçersiz sunucu ayarları
+  </text>
+  <text string="You must enter a path to the .jar file">
+    .Jar dosyasına giden yolu girmeniz gerekmektedir.
+  </text>
+  <text string="Invalid file path, must be a .jar file">Yanlış dosya yolu , kesinlike .jar dosyası olması lazım</text>
+  <text string="File doesn't exist!">Dosya bulunamıyor!</text>
+  <text string="You can't use more then 1024MB RAM with Java x32">32 bit java ile 1024mb'den fazla ram çalıştıramazsınız.</text>
+  <text string="locating...">Aranıyor</text>
+  <text string="from">
+    Buradan
+  </text>
+  <text string="at">Buraya</text>
+  <text string="Error while loading plugins. Probably the server could not be reached.">
+    Pluginleri yüklerken hata çıktı . Muhtemelen sunucuya ulaşılamıyor.
+  </text>
+  <text string="Loaded">
+    Yüklendi
+  </text>
+  <text string="plugins">
+    Pluginler
+  </text>
+  <text string="Right click for options, double click for details.">Ayarlar için sağ tık, detaylar için çift sol tıklama</text>
+  <text string="No information available">Herhangi bilgi bulunmuyor.</text>
+  <text string="Double click for more information. Right Click for options.">Daha fazla bilgi için çift tık.Ayarlar için sağ tık</text>
+  <text string="Copyright:">
+    Üretici:
+  </text>
+  <text string="Web:">Ağ:</text>
+  <text string="Computer name:">
+    Bilgisayar Adı:
+  </text>
+  <text string="CPU:">
+    İşlemci:
+  </text>
+  <text string="RAM:">RAM:</text>
+  <text string="OS:">
+    İşletim Sistemi:
+  </text>
+  <text string="Local IP:">
+    Modem İp:
+  </text>
+  <text string="Ext. IP:">
+    Sabit IP:
+  </text>
+  <text string="You changed the language to ">Dili şu dile çevirdiniz:</text>
+  <text string="Restart the GUI for the changes to take effect">
+    Değişikliklerin etkili olabilmesi için programı yeniden başlatın
+  </text>
+  <text string="Do you really want to reset all GUI settings?">Gerçekten program ayarlarını sıfırlamak istiyormusunuz?</text>
+  <text string="Reset settings">Ayarları Sıfırla</text>
+  <text string="All settings will be resetted. You need to restart the GUI in order for the changes to take effect">
+    Bütün ayarlar sıfırlandı.Değişikliklerin etkili olabilmesi için programı yeniden başlatın
+  </text>
+  <text string="Autostart is currently disabled. Do you want to enable autostart?">
+    Otomaik başlatma şimdilik kapalı.Otomatik başlatmayı etkinleştirmek istiyor musunuz?
+  </text>
+  <text string="Autostart disabled">
+    Otomatik başlatma devre dışı bı
+    rakıldı
+  </text>
+  <text string="Autostart is currently enabled. Do you want to disable autostart?">
+    Otomatik başlatma şimdilik etkin.Otomatik başlatmayı kapatmak istiyormusunuz?
+  </text>
+  <text string="Can't access autostart functions! Are you running this as administrator?">
+    Otomatik başlatma fonksiyonlarına erişilemiyor! Programı yönetici olarakmı açtınız?
+  </text>
+  <text string="Can't access autostart">
+    Otomatik başlatmaya erişilemiyor
+  </text>
+  <text string="General">
+    Genel
+  </text>
+  <text string="Auto Scroll">
+    Otomatik kaydırma
+
+  </text>
+  <text string="Say (Ctrl+S)">Söyle(Ctrl+S)</text>
+  <text string="Op">Operatör</text>
+  <text string="De-op">
+    Operatör olan oyuncunun , operatörlük yetkilerini alır.
+  </text>
+  <text string="Kick">Oyundan At</text>
+  <text string="Ban">
+    Oyundan kalıcı olarak atmak (BAN)
+  </text>
+  <text string="Gamemode">Oyun Modu</text>
+  <text string="Survival">Hayatta Kalma</text>
+  <text string="Creative">
+    Yaratıcı
+  </text>
+  <text string="Give...">
+    Al...
+  </text>
+  <text string="Refresh list">
+    Listeyi yenile
+  </text>
+  <text string="player_face.png">
+    player_face.png
+  </text>
+  <text string="Info">Bilgi</text>
+  <text string="000% [0000MB]">000% [0000MB]</text>
+  <text string="000%">000%</text>
+  <text string="Total RAM Usage:">
+    Toplam Ram Kullanımı
+    :
+  </text>
+  <text string="Server RAM Usage:">
+    Sunucu Ram Kullanımı
+    :
+  </text>
+  <text string="GUI RAM Usage:">Program Ram Kullanımı:</text>
+  <text string="Total CPU Usage:">
+    Toplam İşlemci Kullanımı
+    :
+  </text>
+  <text string="Server CPU Usage:">
+    Sunucu İşlemci Kullanımı
+    :
+  </text>
+  <text string="GUI CPU Usage:">
+    Program İşlemci Kullanımı
+    :
+  </text>
+  <text string="Kill">
+    Öldür
+  </text>
+  <text string="Reload">
+    Yeniden yükle
+  </text>
+  <text string="Restart">
+    Yeniden başlat
+  </text>
+  <text string="Start">
+    Başlat
+  </text>
+  <text string="Players">
+    Oyuncular
+  </text>
+  <text string="View:">
+    Göster:
+  </text>
+  <text string="IP">IP</text>
+  <text string="Location">
+    Konum
+  </text>
+  <text string="Time Joined">
+    Katılma zamanı
+  </text>
+  <text string="Whitelisted">
+    Beyaz Li
+    steye Eklendi
+  </text>
+  <text string="OP">
+    Operatör
+  </text>
+  <text string="SuperStart">
+    SüperBaşlat
+  </text>
+  <text string="Launch Server">
+    Serveri Başlat
+  </text>
+  <text string="Maintainance">
+    Bakım
+  </text>
+  <text string="Retrieve the current version on server start">
+    Server başladığı zaman güncel bukkit sürümünü algıla
+  </text>
+  <text string="Notify me when a server update is available">
+    Kullanılabilir güncelleme olduğunda beni uyar
+  </text>
+  <text string="Download build #">
+    İndirilecek Bukkit Sürümü  #
+  </text>
+  <text string="Download">
+    İndir
+  </text>
+  <text string="Download Latest Development Build">
+    En son çıkan geliştirilme aşamasındaki bukkiti indir
+  </text>
+  <text string="Download Latest Bèta Build">
+    En son çıkan beta bukkit sürümünü indir
+  </text>
+  <text string="Download Latest Recommended Build">
+    En son çıkan sorunsuz sürümü yükle
+  </text>
+  <text string="Remote Server">
+    Uzak Sunucu
+  </text>
+  <text string="salt:">salt:</text>
+  <text string="port:">port:</text>
+  <text string="password:">
+    Parola:
+  </text>
+  <text string="username:">
+    Kullanıcı Adı:
+  </text>
+  <text string="host:">
+    Sunucu:
+  </text>
+  <text string="Java Server">
+    Java Sunucusu:
+  </text>
+  <text string="Custom switches:">
+    Seçmeli switchler:
+
+  </text>
+  <text string="...">...</text>
+  <text string="Custom arguments:">Custom arguments:</text>
+  <text string="JAR file:">
+    JAR  dosyası:
+  </text>
+  <text string="Max. RAM:">
+    En yüksek
+    RAM:
+  </text>
+  <text string="Min. RAM:">
+    En düşük
+    RAM:
+  </text>
+  <text string="Java Version:">
+    Java Sürümü
+    :
+  </text>
+  <text string="Jre6x32">Jre6x32</text>
+  <text string="Jre6x64">Jre6x64</text>
+  <text string="Jre7x32">Jre7x32</text>
+  <text string="Jre7x64">Jre7x64</text>
+  <text string="alternative java path">
+    Alternatif java sürümü yolu (Daha eskileri için)
+  </text>
+  <text string="Bukkit">Bukkit</text>
+  <text string="Vanilla">Vanilla</text>
+  <text string="Remote JSONAPI">Remote JSONAPI</text>
+  <text string="Generic Java">Generic Java</text>
+  <text string="Server Type:">
+    Sunucu Tipi:
+  </text>
+  <text string="Error Logging">
+    Hata kaydı
+  </text>
+  <text string="Hide stacktraces from server output">Hide stacktraces from server output</text>
+  <text string="Hide errors from server output">Hide errors from server output</text>
+  <text string="Hide warnings from server output">Hide warnings from server output</text>
+  <text string="Details...">
+    Detaylar...
+  </text>
+  <text string="ID">ID</text>
+  <text string="Type">
+    Tip
+  </text>
+  <text string="Time">
+    Zaman
+  </text>
+  <text string="Text">
+    Metin
+  </text>
+  <text string="error.png">error.png</text>
+  <text string="exclamation.png">exclamation.png</text>
+  <text string="Task manager">
+    Görev Yöneticisi
+  </text>
+  <text string="Import...">
+    İçe Aktar...
+
+  </text>
+  <text string="Export...">
+    Dışa Aktar...
+  </text>
+  <text string="Add...">
+    Ekle...
+  </text>
+  <text string="Edit...">
+    Düzenle
+  </text>
+  <text string="Trigger Type">
+    İtekleyici tipi
+  </text>
+  <text string="Trigger Parameters">
+    İtekleyici parametreleri
+  </text>
+  <text string="Action type">
+    Hareket tipi
+  </text>
+  <text string="Action parameters">
+    Hareket parametreleri
+  </text>
+  <text string="Remove">
+    Kaldır
+  </text>
+  <text string="Plugins">
+    Pluginler
+  </text>
+  <text string="Install Plugins">
+    Pluginleri yükle
+  </text>
+  <text string="If you see this text, please contact the devs">
+    Eğer bu yazıyı görüyorsan,Lütfen geliştiricilere bildir
+  </text>
+  <text string="Category:">
+    Kategori:
+  </text>
+  <text string="Filter:">
+    Filtre:
+  </text>
+  <text string="More info">
+    Daha Fazla Bilgi
+  </text>
+  <text string="Install plugin">
+    Plugin yükle
+  </text>
+  <text string="Go to project page">
+    Pluginin proje sayfasına git
+  </text>
+  <text string="Installed Plugins">
+    Yüklenmiş pluginler
+  </text>
+  <text string="Version">
+    Sürüm
+  </text>
+  <text string="Author(s)">
+    Yapımcılar
+  </text>
+  <text string="View versions">
+    Sürümleri görüntüle
+  </text>
+  <text string="Update">
+    Güncelle
+  </text>
+  <text string="Project page...">
+    Plugin Proje Sayfası...
+  </text>
+  <text string="information.png">information.png</text>
+  <text string="group.png">group.png</text>
+  <text string="control_play.png">control_play.png</text>
+  <text string="plugin.png">plugin.png</text>
+  <text string="settings.png">settings.png</text>
+  <text string="save.png">save.png</text>
+  <text string="drive-download.png">drive-download.png</text>
+  <text string="clock.png">clock.png</text>
+  <text string="wrench.png">wrench.png</text>
+  <text string="Drive-Backup-icon.png">Drive-Backup-icon.png</text>
+  <text string="arrow_down.png">arrow_down.png</text>
+  <text string="plugin_add.png">plugin_add.png</text>
+  <text string="plugin_edit.png">plugin_edit.png</text>
+  <text string="Server options">
+    Sunucu ayarları
+  </text>
+  <text string="Right-click to see all available actions">
+    Bütün kullanılabilir komutları görmek için sağ tık
+  </text>
+  <text string="Add">
+    Ekle
+  </text>
+  <text string="Right-click to see al available actions.">
+    Bütün kullanılabilir hareketleri görmek için sağ tık
+  </text>
+  <text string="Banned IPs">
+    Banlanmış IPler
+  </text>
+  <text string="Refresh">
+    Yenile
+  </text>
+  <text string="Banned Players">
+    Banlanmış Oyuncular
+  </text>
+  <text string="OPs">
+    Operatörler
+  </text>
+  <text string="Whitelist">Beyaz Liste</text>
+  <text string="Value">
+    Değer
+  </text>
+  <text string="Backup">
+    Yedekle
+  </text>
+  <text string="Execute">
+    Komutu çalıştır
+  </text>
+  <text string="Folders">
+    Klasörler
+  </text>
+  <text string="Destination">
+    Kök Klasör
+  </text>
+  <text string="Compression">
+    Sıkıştırm
+    a
+  </text>
+  <text string="Options &amp; Info">
+    Ayarlar &amp; bilgi
+  </text>
+  <text string="This project takes a lot of time. ">
+    Evet
+  </text>
+  <text string="Support it by donating.">
+    Geliştiriciyi destekle
+  </text>
+  <text string="Click the images to ">
+    Resimler için tıkla
+  </text>
+  <text string="donate.">
+    Bağıs.
+  </text>
+  <text string="Tell us what you think!">
+    Ne düşündüğünü bize söyle
+  </text>
+  <text string="Give feedback by clicking here">
+    Geri dönüş için buraya bas
+  </text>
+  <text string="Application Settings">
+    Uygulama ayarları
+  </text>
+  <text string="Reset all settings">
+    Bütün ayarları sıfırla
+  </text>
+  <text string="Check for updates on startup">
+    Güncellemeri açılışta kontrol et
+  </text>
+  <text string="You might need to restart the GUI, in order for ">
+    Programı yeniden başlatmanız gerekebilir
+  </text>
+  <text string="these settings to take full eff">
+    Tam etkiyi almak için
+  </text>
+  <text string="ect.">
+  </text>
+  <text string="Tabpages:">
+    Yan sekmeler
+  </text>
+  <text string="Show server options tab">
+    Sunucu ayarları sekmesini göster
+  </text>
+  <text string="Show plugins tab">
+    Plugin sekmesini göster
+  </text>
+  <text string="Show task manager tab">
+    Görev yöneticisi sekmesini göster
+  </text>
+  <text string="Show error logging tab">
+    Hata kaydı sekmesini göster
+  </text>
+  <text string="Show players tab">
+    Oyuncu sekmesini görüntüle
+  </text>
+  <text string="Config location:">
+    Ayar konumu:
+  </text>
+  <text string="Run server when GUI starts">
+    Program başladığında sunucuyu çalıştır
+  </text>
+  <text string="Start the server when the GUI starts, using the settings from the SuperStart tab.">Program başladığında server başlarsa, ayarlar için süperbaşlatma sekmesini kullan.</text>
+  <text string="Toggle ">
+    Değiştir
+  </text>
+  <text string="Toggle the GUI start when the user logs on. Administrator privileges required.">Program başladığında kullanıcı log oluşturmasını değiştir. Yönetici ayrıcalıkları gerktirir.</text>
+  <text string="Language:">
+    Dil:
+  </text>
+  <text string="Set the language for the GUI.">
+    Program için dili seç.
+  </text>
+  <text string="Sound settings">
+    Ses Ayarları
+  </text>
+  <text string="Play sound on severe message">
+    Önemli mesajda ses çal
+  </text>
+  <text string="Play a sound when the server sends a severe message">
+    Sunucu önemli mesaj yolladığında ses çal
+  </text>
+  <text string="Play sound on warning message">
+    Hata mesajında ses çal
+  </text>
+  <text string="Play a sound when the server sends a warning">
+    Sunucu uyarı yolladığında ses çal
+  </text>
+  <text string="Play sound on player leave">
+    Oyuncu ayrıldığında ses çal
+  </text>
+  <text string="Play a sound when a player leaves the server">
+    Oyuncu sunucuyu terk ettiğinde ses çal
+  </text>
+  <text string="Play sound on player join">
+    Oyunc katıldığında ses çal
+  </text>
+  <text string="Play a sound when a player connects to the server">
+    Oyuncu sunucuya bağlandığında ses çal
+  </text>
+  <text string="Tray and sound">
+    Bildirim ve ses
+  </text>
+  <text string="On warning">Uyarıyı aç</text>
+  <text string="Show a tray balloon when the server throws a warning message">Sunucu uyarı gönderdiğinde uyarı balonu göster</text>
+  <text string="On player leave">Oyuncu ayrıldığında</text>
+  <text string="Show a tray balloon when a player leaves.">Oyuncu ayrıldığında kutucuk balonu göster</text>
+  <text string="On player join">
+    Oyuncu katıldığında
+  </text>
+  <text string="Show a tray balloon when a player joins.">
+    Oyuncu katıldığında kutucuk balonu göster
+  </text>
+  <text string="On severe">
+    Şiddet üstünde
+  </text>
+  <text string="Show a tray balloon when the server throws a severe message">
+    Sunucu şiddetlli mesaj gönderdiğinde uyarı balonu göster
+  </text>
+  <text string="Always show balloons">
+    Daima balon göster
+  </text>
+  <text string="Minimize to tray">Sistem çubuğuna küçült</text>
+  <text string="Minimize the GUI to tray when the minimize button is clicked.">Küçültme tuşuna bastığında programı küçült</text>
+  <text string="Text output">
+    Yazı çıkışı
+  </text>
+  <text string="font preview">
+    Yazı tipi
+  </text>
+  <text string="Font size:">Yazı Tipi Boyutu:</text>
+  <text string="Font :">
+    Yazı tipi
+    :
+  </text>
+  <text string="The font size that will be used for most lists and textboxes.">
+    Önemli listede ve yazı kutusunda kullanılacak yazı tipi büyüklüğü
+  </text>
+  <text string="The font type that will be used for most lists an textboxes.">
+    Önemli listede ve yazı kutusunda kullanılacak yazı tipi şekli
+  </text>
+  <text string="Font preview:">Yazı Tipi görünümü:</text>
+  <text string="Unknown :">
+    Bilinmeyen
+    :
+  </text>
+  <text string="[SEVERE] :">
+    [ÖNEMLİ
+    ] :
+  </text>
+  <text string="[WARNING] :">
+    [UYARI
+    ] :
+  </text>
+  <text string="Player event :">
+    Oyuncu olayı
+    :
+  </text>
+  <text string="[INFO] :">
+    [BİLGİ
+    ] :
+  </text>
+  <text string="Show date">
+    Görüntülenme tarihi
+  </text>
+  <text string="Show time">
+    Görüntülenme zamanı
+  </text>
+  <text string="Computer Info">
+    Bilgisayar bilgisi
+  </text>
+  <text string="Computer Name:">
+    Bilgisayar Adı
+  </text>
+  <text string="About">
+    Hakkında
+  </text>
+  <text string="Open Updater">
+    Güncelleyiciyi
+    aç
+  </text>
+  <text string="BukkitGUI">BukkitGUI</text>
+  <text string="Exit">
+    Çıkış
+  </text>
+  <text string="Get current version #">
+    Şimdiki sürüme git
+    #
+  </text>
+  <text string="The following xml file could not be loaded. Please check for errors">
+    Konumdaki xml dosyası bulunamadı.Lütfen hataları kontrol edin
+  </text>
+  <text string="Invalid XML file">
+    Yanlış XML dosyası
+  </text>
+  <text
+    string="Oh no! something went wrong in the application. The application is unable to continue it's work, and will exit. Please report this error to the developers">
+    Hayır! Birşeyler uygulamın yanlış olmasına götürüyor.Bu uygulama böyle çalışamaz ve birazdan çıkacak lütfen bu durumu geliştiricilere bildirin
+  </text>
+  <text string="Critical error">
+    Kritik hata
+  </text>
+  <text
+    string="This file is too big to send using the error report. If you want to report it, please upload %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.xlog and send it to contact@bertware.net">
+    Bu dosya hata raporu göndermek için çok büyük. Eğer gerçekten bunu rapor etmek istiyorsanız lütfen buraya %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.xlog yükleyin ve buraya gönderin contact@bertware.net
+  </text>
+  <text string="file too big">
+    Dosya çok büyük
+  </text>
+  <text string="Can't send bug report: no internet available">
+    Hata raporu görüntülenemiyor:internet bağlantısı yok
+  </text>
+  <text string="Can't send log">
+    Hata kaydı gönderilemiyor
+  </text>
+  <text string="Update information invalid: server returned error">
+    Güncelleme bilgisi yanlış. sunucu hataya geri dönüyor
+  </text>
+  <text string="Please contact the developers">
+    Lütfen geliştiricilere bildirin
+  </text>
+  <text string="Server returned error">
+    Server hata döndürdü
+  </text>
+</language>

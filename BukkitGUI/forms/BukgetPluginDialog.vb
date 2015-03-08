@@ -28,7 +28,7 @@ Public Class BukgetPluginDialog
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        Me.Plugin = BukGetAPI.GetPluginInfoByNamespace(plugin.main)
+        Me.Plugin = GetPluginInfoByNamespace(plugin.main)
     End Sub
 
     Public Sub New(main As String)
@@ -37,13 +37,13 @@ Public Class BukgetPluginDialog
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        Me.Plugin = BukGetAPI.GetPluginInfoByNamespace(main)
+        Me.Plugin = GetPluginInfoByNamespace(main)
     End Sub
 
-    Private Sub PluginDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub PluginDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Plugin Is Nothing Then
-            livebug.write(livebug.loggingLevel.Warning, "BukGetPluginDialog",
-                          "Load of plugin data failed! No plugin defined.")
+            Log(livebug.loggingLevel.Warning, "BukGetPluginDialog",
+                "Load of plugin data failed! No plugin defined.")
             MessageBox.Show(lr("No data for this plugin available"), lr("no data available"), MessageBoxButtons.OK,
                             MessageBoxIcon.Error)
             Me.Close()
@@ -51,8 +51,8 @@ Public Class BukgetPluginDialog
             Try
                 loadplugin()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "BukGetPluginDialog", "Visualisation of plugin data failed!",
-                              ex.Message)
+                Log(loggingLevel.Warning, "BukGetPluginDialog", "Visualisation of plugin data failed!",
+                    ex.Message)
                 MessageBox.Show(lr("Could not load plugin data for this plugin"), lr("Could not load plugin"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Me.Close()
@@ -74,7 +74,7 @@ Public Class BukgetPluginDialog
         lblStatus.Text = lr("Status:") & " " & Plugin.status.ToString
         If Plugin.BukkitDevLink IsNot Nothing Then ALlblWebsite.Text = lr("Website:") & " " & Plugin.BukkitDevLink
 
-        If Plugin.Author IsNot Nothing Then lblAuthors.Text = lr("Authors:") & " " & common.Serialize(Plugin.Author)
+        If Plugin.Author IsNot Nothing Then lblAuthors.Text = lr("Authors:") & " " & Serialize(Plugin.Author)
 
         If Plugin.Category IsNot Nothing Then _
             lblcategories.Text = lr("Categories:") & " " & Serialize(Plugin.Category).ToString.Replace("_", " ")
@@ -98,17 +98,17 @@ Public Class BukgetPluginDialog
         Next
     End Sub
 
-    Private Sub BtnClose_Click(sender As System.Object, e As System.EventArgs) Handles BtnClose.Click
+    Private Sub BtnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
         Me.Close()
     End Sub
 
     Private Sub BtnInstall_Click() Handles BtnInstall.Click, LVVersions.DoubleClick
         If LVVersions.SelectedItems.Count > 0 Then
-            If file = "" Then PluginInstaller.Install(Plugin.versions(LVVersions.SelectedIndices(0)))
-            If file <> "" Then PluginInstaller.Install(Plugin.versions(LVVersions.SelectedIndices(0)), file)
+            If file = "" Then Install(Plugin.versions(LVVersions.SelectedIndices(0)))
+            If file <> "" Then Install(Plugin.versions(LVVersions.SelectedIndices(0)), file)
         Else
-            If file = "" Then PluginInstaller.Install(Plugin.versions(0))
-            If file <> "" Then PluginInstaller.Install(Plugin.versions(0), file)
+            If file = "" Then Install(Plugin.versions(0))
+            If file <> "" Then Install(Plugin.versions(0), file)
         End If
         Me.Close()
     End Sub

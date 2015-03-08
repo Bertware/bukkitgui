@@ -14,13 +14,13 @@ Public Class thds_pass_servermessage
     Public Sub New()
         shorttext = ""
         fulltext = ""
-        color = Drawing.Color.Black
+        color = Color.Black
     End Sub
 
     Public Sub New(text As String)
         shorttext = text.Split(Environment.NewLine)(0)
         fulltext = text
-        color = Drawing.Color.Black
+        color = Color.Black
     End Sub
 
     Public Sub New(text As String, color As Color)

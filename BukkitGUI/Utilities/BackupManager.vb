@@ -1,12 +1,16 @@
-﻿Imports Net.Bertware.BukkitGUI.MCInterop
-Imports Net.Bertware.BukkitGUI.Core
+﻿Imports System.IO
+Imports System.Security
+Imports System.Text.RegularExpressions
 Imports System.Xml
+Imports Microsoft.VisualBasic.FileIO
+Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.MCInterop
 
 Namespace Utilities
     Public Module BackupManager
         Public backups As List(Of BackupSetting)
 
-        Public backup_xml_path As String = common.ConfigPath & "/backups.xml"
+        Public backup_xml_path As String = ConfigPath & "/backups.xml"
         Public backup_xml As fxml
 
         Public Event BackupsLoaded()
@@ -19,20 +23,20 @@ Namespace Utilities
         End Property
 
         Public Sub init()
-            If Not FileIO.FileSystem.FileExists(backup_xml_path) Then _
-                common.Create_file(backup_xml_path, "<backups version=""" & version & """></backups>")
+            If Not FileSystem.FileExists(backup_xml_path) Then _
+                Create_file(backup_xml_path, "<backups version=""" & version & """></backups>")
             backup_xml = New fxml(backup_xml_path, "BackupManager", True)
             LoadAllBackups()
         End Sub
 
         Public Sub LoadAllBackups()
             backups = New List(Of BackupSetting)
-            livebug.write(loggingLevel.Fine, "Backupmanager", "Loading backups...")
+            Log(loggingLevel.Fine, "Backupmanager", "Loading backups...")
             Dim elements As XmlNodeList = backup_xml.GetElementsByName("backup")
             If elements IsNot Nothing AndAlso elements.Count > 0 Then
                 For i = 0 To elements.Count - 1
-                    livebug.write(loggingLevel.Fine, "Backupmanager",
-                                  "Parsing backup " & i + 1 & " out of " & elements.Count)
+                    Log(loggingLevel.Fine, "Backupmanager",
+                        "Parsing backup " & i + 1 & " out of " & elements.Count)
                     Dim xmle As XmlElement = elements(i)
                     If xmle IsNot Nothing AndAlso xmle.GetAttribute("name") IsNot Nothing Then
                         Try
@@ -51,14 +55,14 @@ Namespace Utilities
 
                             backups.Add(bs)
 
-                            livebug.write(loggingLevel.Fine, "Backupmanager",
-                                          "Loaded backup:" & bs.name & " :Backup enabled")
+                            Log(loggingLevel.Fine, "Backupmanager",
+                                "Loaded backup:" & bs.name & " :Backup enabled")
                         Catch ex As Exception
-                            livebug.write(loggingLevel.Warning, "Backupmanager", "Could not load backup:" & ex.Message)
+                            Log(loggingLevel.Warning, "Backupmanager", "Could not load backup:" & ex.Message)
                         End Try
                     Else
-                        livebug.write(loggingLevel.Warning, "Backupmanager", "Skipped backup! Wrong XML")
-                        backup_xml.RemoveElement(CType(backup_xml.GetElementByName("backup")(i), Xml.XmlElement))
+                        Log(loggingLevel.Warning, "Backupmanager", "Skipped backup! Wrong XML")
+                        backup_xml.RemoveElement(CType(backup_xml.GetElementByName("backup")(i), XmlElement))
                         MessageBox.Show(
                             lr(
                                 "One of your backup profiles wasn't loaded: the file is probably corrupt! The backup profile was removed."),
@@ -66,12 +70,12 @@ Namespace Utilities
                     End If
                 Next
             End If
-            livebug.write(loggingLevel.Fine, "Backupmanager", "Loaded backups: " & backups.Count & " backups loaded")
+            Log(loggingLevel.Fine, "Backupmanager", "Loaded backups: " & backups.Count & " backups loaded")
             RaiseEvent BackupsLoaded()
         End Sub
 
         Public Sub ReloadAllBackups()
-            livebug.write(loggingLevel.Fine, "Backupmanager", "Reloading backups...", "BackupManager")
+            Log(loggingLevel.Fine, "Backupmanager", "Reloading backups...", "BackupManager")
             LoadAllBackups()
         End Sub
 
@@ -81,7 +85,7 @@ Namespace Utilities
                 toplevelelement.SetAttribute("name", bs.name)
 
                 Dim folders_element As XmlElement = backup_xml.Document.CreateElement("folders")
-                folders_element.InnerText = common.Serialize(bs.folders, ";")
+                folders_element.InnerText = Serialize(bs.folders, ";")
                 toplevelelement.AppendChild(folders_element)
 
                 Dim destination_element As XmlElement = backup_xml.Document.CreateElement("destination")
@@ -97,13 +101,13 @@ Namespace Utilities
                 backups.Add(bs)
                 RaiseEvent BackupsLoaded()
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Backupmanager", "Severe error in addBackup! " & ex.Message)
+                Log(loggingLevel.Severe, "Backupmanager", "Severe error in addBackup! " & ex.Message)
             End Try
         End Sub
 
         Public Sub saveBackup(ByRef OldBackup As BackupSetting, ByRef NewBackup As BackupSetting)
-            livebug.write(loggingLevel.Fine, "Backupmanager",
-                          "Updating backup: " & OldBackup.name & " - Will be replaced by its updated version")
+            Log(loggingLevel.Fine, "Backupmanager",
+                "Updating backup: " & OldBackup.name & " - Will be replaced by its updated version")
             deleteBackup(OldBackup)
             addBackup(NewBackup)
             RaiseEvent BackupsLoaded()
@@ -114,7 +118,7 @@ Namespace Utilities
                 backups.Remove(bs)
                 backup_xml.RemoveElement(backup_xml.getElementByAttribute("backup", "name", bs.name))
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Backupmanager", "Severe error in deleteBackup(bs)!", ex.Message)
+                Log(loggingLevel.Severe, "Backupmanager", "Severe error in deleteBackup(bs)!", ex.Message)
             End Try
             RaiseEvent BackupsLoaded()
         End Sub
@@ -124,7 +128,7 @@ Namespace Utilities
                 backups.Remove(GetBackupByName(name))
                 backup_xml.RemoveElement(backup_xml.getElementByAttribute("backup", "name", name))
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Backupmanager", "Severe error in deleteBackup(name)!", ex.Message)
+                Log(loggingLevel.Severe, "Backupmanager", "Severe error in deleteBackup(name)!", ex.Message)
             End Try
             RaiseEvent BackupsLoaded()
         End Sub
@@ -137,19 +141,19 @@ Namespace Utilities
                 Next
                 Return result
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Backupmanager", "Severe error in GetBackupByName! " & ex.Message)
+                Log(loggingLevel.Severe, "Backupmanager", "Severe error in GetBackupByName! " & ex.Message)
                 Return Nothing
             End Try
         End Function
 
         Public Sub import()
-            livebug.write(loggingLevel.Fine, "BackupManager", "Starting Import routine")
+            Log(loggingLevel.Fine, "BackupManager", "Starting Import routine")
             Dim ofd As New OpenFileDialog
             ofd.Filter = "Backup manager file (*.bs)|*.bs"
             ofd.Multiselect = False
             ofd.Title = "Import Backups"
-            If ofd.ShowDialog() = Windows.Forms.DialogResult.Cancel Then _
-                livebug.write(loggingLevel.Fine, "BackupManager", "Import cancelled") : Exit Sub
+            If ofd.ShowDialog() = DialogResult.Cancel Then _
+                Log(loggingLevel.Fine, "BackupManager", "Import cancelled") : Exit Sub
             Try
                 Dim impxml As New fxml(ofd.FileName, "Backupmanager", True)
                 For Each element As XmlElement In impxml.GetElementsByName("Backup")
@@ -157,17 +161,17 @@ Namespace Utilities
                     backup_xml.Document.DocumentElement.AppendChild(tmpnode)
                 Next
                 backup_xml.save()
-                livebug.write(loggingLevel.Fine, "BackupManager", "Import finished!", "Backupmanager")
+                Log(loggingLevel.Fine, "BackupManager", "Import finished!", "Backupmanager")
                 ReloadAllBackups()
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "BackupManager", "Error while importing Backups", ex.Message)
+                Log(loggingLevel.Severe, "BackupManager", "Error while importing Backups", ex.Message)
                 MessageBox.Show(lr("Error while importing the Backup! Is this a valid file?"), lr("Import failed!"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 
         Public Sub export(name As String)
-            livebug.write(loggingLevel.Fine, "BackupManager", "Starting Export routine (single), backup:" & name)
+            Log(loggingLevel.Fine, "BackupManager", "Starting Export routine (single), backup:" & name)
             Dim sfd As New SaveFileDialog
             sfd.Title = "Export backup settings"
             sfd.Filter = "Backup manager file (*.bs)|*.bs"
@@ -176,24 +180,24 @@ Namespace Utilities
             sfd.DefaultExt = ".Backup"
             sfd.AddExtension = True
             If sfd.ShowDialog = DialogResult.Cancel Then _
-                livebug.write(loggingLevel.Fine, "BackupManager", "Export cancelled") : Exit Sub
+                Log(loggingLevel.Fine, "BackupManager", "Export cancelled") : Exit Sub
             Try
-                common.Create_file(sfd.FileName, "<backups version=""" & version & """></backups>")
+                Create_file(sfd.FileName, "<backups version=""" & version & """></backups>")
                 Dim expxml As New fxml(sfd.FileName, "Backupmanager", True)
                 Dim tmpnode As XmlElement = expxml.Document.ImportNode(
                     backup_xml.getElementByAttribute("backup", "name", name), True)
                 expxml.Document.DocumentElement.AppendChild(tmpnode)
                 expxml.save()
-                livebug.write(loggingLevel.Fine, "BackupManager", "Export finished!")
+                Log(loggingLevel.Fine, "BackupManager", "Export finished!")
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "BackupManager", "Error while exporting Backup", ex.Message)
+                Log(loggingLevel.Severe, "BackupManager", "Error while exporting Backup", ex.Message)
                 MessageBox.Show(lr("Error while exporting the Backup!"), lr("Export failed!"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Warning)
             End Try
         End Sub
 
         Public Sub export(names As List(Of String))
-            livebug.write(loggingLevel.Fine, "BackupManager", "Starting Export routine (multiple)")
+            Log(loggingLevel.Fine, "BackupManager", "Starting Export routine (multiple)")
             Dim sfd As New SaveFileDialog
             sfd.Title = "Export backup settings"
             sfd.Filter = "Backup manager file (*.bs)|*.bs"
@@ -202,9 +206,9 @@ Namespace Utilities
             sfd.AddExtension = True
             sfd.SupportMultiDottedExtensions = True
             If sfd.ShowDialog = DialogResult.Cancel Then _
-                livebug.write(loggingLevel.Fine, "BackupManager", "Export cancelled") : Exit Sub
+                Log(loggingLevel.Fine, "BackupManager", "Export cancelled") : Exit Sub
             Try
-                common.Create_file(sfd.FileName, "<backups version=""" & version & """></backups>")
+                Create_file(sfd.FileName, "<backups version=""" & version & """></backups>")
                 Dim expxml As New fxml(sfd.FileName, "Backupmanager", True)
                 For Each name As String In names
                     Dim tmpnode As XmlElement = expxml.Document.ImportNode(
@@ -212,9 +216,9 @@ Namespace Utilities
                     expxml.Document.DocumentElement.AppendChild(tmpnode)
                 Next
                 expxml.save()
-                livebug.write(loggingLevel.Fine, "BackupManager", "Export finished!")
+                Log(loggingLevel.Fine, "BackupManager", "Export finished!")
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "BackupManager", "Error while exporting backups", ex.Message)
+                Log(loggingLevel.Severe, "BackupManager", "Error while exporting backups", ex.Message)
                 MessageBox.Show(lr("Error while exporting the backups!"), lr("Export failed!"), MessageBoxButtons.OK,
                                 MessageBoxIcon.Warning)
             End Try
@@ -246,44 +250,44 @@ Namespace Utilities
             Try
 
                 Dim foldername As String = CreateName()
-                Dim tmp_bu As String = My.Computer.FileSystem.CombinePath(common.TmpPath, foldername)
+                Dim tmp_bu As String = My.Computer.FileSystem.CombinePath(TmpPath, foldername)
 
                 Dim dest_hnd As String = ParseParameters(destination)
 
 
-                livebug.write(loggingLevel.Fine, "BackupManager", "Calculating disk space needed...")
+                Log(loggingLevel.Fine, "BackupManager", "Calculating disk space needed...")
                 Dim tsize As UInt64 = 0
                 For Each folder As String In folders
                     Try
-                        tsize += common.GetFolderSize(folder, True)
+                        tsize += GetFolderSize(folder, True)
                     Catch ex As Exception
                     End Try
                 Next
 
-                Dim drivematch As System.Text.RegularExpressions.MatchCollection =
-                        System.Text.RegularExpressions.Regex.Matches(dest_hnd, "^\w:\\")
+                Dim drivematch As MatchCollection =
+                        Regex.Matches(dest_hnd, "^\w:\\")
                 If drivematch.Count > 0 Then
-                    If Not IO.Directory.Exists(drivematch(0).Value) Then
+                    If Not Directory.Exists(drivematch(0).Value) Then
                         MessageBox.Show(
                             lr(
                                 "The backup can't be performed: the following drive could not be found. Is this a removeable device (e.g. USB stick)") &
                             vbCrLf & drivematch(0).Value, lr("Drive not found"),
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        livebug.write(loggingLevel.Warning, "BackupManager", "BAckup failed: drive not present")
+                        Log(loggingLevel.Warning, "BackupManager", "BAckup failed: drive not present")
                         Exit Sub
                     End If
                 End If
 
-                If Not FileIO.FileSystem.DirectoryExists(dest_hnd) Then FileIO.FileSystem.CreateDirectory(dest_hnd)
+                If Not FileSystem.DirectoryExists(dest_hnd) Then FileSystem.CreateDirectory(dest_hnd)
 
                 If compression = False Then
                     tmp_bu = My.Computer.FileSystem.CombinePath(dest_hnd, foldername)
 
-                    livebug.write(loggingLevel.Fine, "BackupManager",
-                                  "Needed:" & common.ByteToMb(tsize) & "Mb - Available:" &
-                                  common.ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) & "Mb")
+                    Log(loggingLevel.Fine, "BackupManager",
+                        "Needed:" & ByteToMb(tsize) & "Mb - Available:" &
+                        ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) & "Mb")
                     If _
-                        common.ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) - 512 - common.ByteToMb(tsize) <
+                        ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) - 512 - ByteToMb(tsize) <
                         0 Then
                         MessageBox.Show(
                             "You don't have enough free space at one fo your disks to execute this backup! cancelling...",
@@ -291,20 +295,20 @@ Namespace Utilities
                         Exit Sub
                     End If
                 Else
-                    livebug.write(loggingLevel.Fine, "BackupManager",
-                                  "Needed:" & common.ByteToMb(tsize) & "Mb - Available:" &
-                                  common.ByteToMb(GetSpaceInDrive("c")) & "Mb")
-                    If common.ByteToMb(GetSpaceInDrive("c")) - 512 - common.ByteToMb(tsize) < 0 Then
+                    Log(loggingLevel.Fine, "BackupManager",
+                        "Needed:" & ByteToMb(tsize) & "Mb - Available:" &
+                        ByteToMb(GetSpaceInDrive("c")) & "Mb")
+                    If ByteToMb(GetSpaceInDrive("c")) - 512 - ByteToMb(tsize) < 0 Then
                         MessageBox.Show(
                             "You don't have enough free space at one fo your disks to execute this backup! cancelling...",
                             "Backup failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         Exit Sub
                     End If
-                    livebug.write(loggingLevel.Fine, "BackupManager",
-                                  "Needed:" & common.ByteToMb(tsize) & "Mb - Available:" &
-                                  common.ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) & "Mb")
+                    Log(loggingLevel.Fine, "BackupManager",
+                        "Needed:" & ByteToMb(tsize) & "Mb - Available:" &
+                        ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) & "Mb")
                     If _
-                        common.ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) - 512 - common.ByteToMb(tsize) <
+                        ByteToMb(GetSpaceInDrive(Me.destination.Substring(0, 1))) - 512 - ByteToMb(tsize) <
                         0 Then
                         MessageBox.Show(
                             "You don't have enough free space at one fo your disks to execute this backup! cancelling...",
@@ -313,7 +317,7 @@ Namespace Utilities
                     End If
                 End If
 
-                If FileIO.FileSystem.DirectoryExists(tmp_bu) Then Exit Sub 'this means another backup is running
+                If FileSystem.DirectoryExists(tmp_bu) Then Exit Sub 'this means another backup is running
 
                 If folders Is Nothing OrElse folders.Count = 0 Then
                     If showUI Then _
@@ -321,8 +325,8 @@ Namespace Utilities
                             lr("Backup cancelled") & " : " & name & vbCrLf &
                             lr("Reason: Nothing selected to backup. Select folders first."),
                             lr("Backup cancelled"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    livebug.write(loggingLevel.Fine, "BackupManager",
-                                  "Backup cancelled:" & name & " - Nothing selected to backup.")
+                    Log(loggingLevel.Fine, "BackupManager",
+                        "Backup cancelled:" & name & " - Nothing selected to backup.")
                     Exit Sub
                 End If
 
@@ -330,15 +334,15 @@ Namespace Utilities
                     Try
                         Dim tg As String
 
-                        drivematch = System.Text.RegularExpressions.Regex.Matches(folder, "^\w:\\")
+                        drivematch = Regex.Matches(folder, "^\w:\\")
                         If drivematch.Count > 0 Then
-                            If Not IO.Directory.Exists(drivematch(0).Value) Then
+                            If Not Directory.Exists(drivematch(0).Value) Then
                                 MessageBox.Show(
                                     lr(
                                         "The backup can't be performed: the following drive could not be found. Is this a removeable device (e.g. USB stick)") &
                                     vbCrLf & drivematch(0).Value, lr("Drive not found"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Error)
-                                livebug.write(loggingLevel.Warning, "BackupManager", "BAckup failed: drive not present")
+                                Log(loggingLevel.Warning, "BackupManager", "BAckup failed: drive not present")
                                 Exit Sub
                             End If
                         End If
@@ -348,12 +352,12 @@ Namespace Utilities
                         Else
                             tg = folder
                         End If
-                        If Not FileIO.FileSystem.DirectoryExists(tg) Then FileIO.FileSystem.CreateDirectory(tg)
-                        If FileIO.FileSystem.DirectoryExists(folder) Then _
-                            FileIO.FileSystem.CopyDirectory(folder, tg, True)
+                        If Not FileSystem.DirectoryExists(tg) Then FileSystem.CreateDirectory(tg)
+                        If FileSystem.DirectoryExists(folder) Then _
+                            FileSystem.CopyDirectory(folder, tg, True)
                     Catch ex As Exception
-                        livebug.write(loggingLevel.Warning, "BackupManager", "Couldn't backup this folder: " & folder,
-                                      ex.Message)
+                        Log(loggingLevel.Warning, "BackupManager", "Couldn't backup this folder: " & folder,
+                            ex.Message)
                         MessageBox.Show(
                             lr("Couldn't backup this folder:") & " " & folder & vbCrLf & lr("Reason:") & " " &
                             ex.Message & lr("Data:") & " " & ex.Data.ToString, "Couldn't backup folder",
@@ -362,12 +366,12 @@ Namespace Utilities
                 Next
 
                 If compression Then
-                    If FileIO.FileSystem.DirectoryExists(dest_hnd) = False Then _
-                        FileIO.FileSystem.CreateDirectory(dest_hnd)
-                    If FileIO.FileSystem.DirectoryExists(tmp_bu) Then _
-                        Utilities.compression.compress(tmp_bu, dest_hnd.TrimEnd("/") & "/" & foldername & ".zip")
-                    If FileIO.FileSystem.DirectoryExists(tmp_bu) Then _
-                        FileIO.FileSystem.DeleteDirectory(tmp_bu, FileIO.DeleteDirectoryOption.DeleteAllContents)
+                    If FileSystem.DirectoryExists(dest_hnd) = False Then _
+                        FileSystem.CreateDirectory(dest_hnd)
+                    If FileSystem.DirectoryExists(tmp_bu) Then _
+                        compress(tmp_bu, dest_hnd.TrimEnd("/") & "/" & foldername & ".zip")
+                    If FileSystem.DirectoryExists(tmp_bu) Then _
+                        FileSystem.DeleteDirectory(tmp_bu, DeleteDirectoryOption.DeleteAllContents)
                 Else
                     'If FileIO.FileSystem.DirectoryExists(tmp_bu) Then FileIO.FileSystem.CopyDirectory(tmp_bu, dest_hnd.TrimEnd("/").TrimEnd & "/" & foldername)
                     'ALREADY MOVED TO CORRECT LOCATION
@@ -376,52 +380,52 @@ Namespace Utilities
                 If showUI Then _
                     MessageBox.Show(lr("Backup completed!") & " : " & name, lr("Backup completed"), MessageBoxButtons.OK,
                                     MessageBoxIcon.Information)
-            Catch ioex As IO.IOException
+            Catch ioex As IOException
                 MessageBox.Show(
                     lr("An error occured while creating a backup for the following backup scheme:") & Me.name & vbCrLf &
                     lr(
                         "The backup might be incomplete or corrupt. Make sure all task settings are valid. The error has been logged"),
                     lr("Backup failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BackupManager",
-                              "An exception occured while executing this backup:" & name, ioex.Message)
+                Log(loggingLevel.Warning, "BackupManager",
+                    "An exception occured while executing this backup:" & name, ioex.Message)
             Catch uaex As UnauthorizedAccessException
                 MessageBox.Show(
                     lr("An error occured while creating a backup for the following backup scheme:") & Me.name & vbCrLf &
                     lr(
                         "The backup might be incomplete or corrupt. Make sure all task settings are valid. The error has been logged"),
                     lr("Backup failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BackupManager",
-                              "An exception occured while executing this backup:" & name, uaex.Message)
-            Catch sex As Security.SecurityException
+                Log(loggingLevel.Warning, "BackupManager",
+                    "An exception occured while executing this backup:" & name, uaex.Message)
+            Catch sex As SecurityException
                 MessageBox.Show(
                     lr("An error occured while creating a backup for the following backup scheme:") & Me.name & vbCrLf &
                     lr(
                         "The backup might be incomplete or corrupt. Make sure all task settings are valid. The error has been logged"),
                     lr("Backup failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BackupManager",
-                              "An exception occured while executing this backup:" & name, sex.Message)
+                Log(loggingLevel.Warning, "BackupManager",
+                    "An exception occured while executing this backup:" & name, sex.Message)
             Catch ex As Exception
                 MessageBox.Show(
                     lr("An error occured while creating a backup for the following backup scheme:") & Me.name & vbCrLf &
                     lr(
                         "The backup might be incomplete or corrupt. Make sure all task settings are valid. The error has been logged"),
                     lr("Backup failed"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BackupManager",
-                              "An exception occured while executing this backup:" & name, ex.Message)
+                Log(loggingLevel.Warning, "BackupManager",
+                    "An exception occured while executing this backup:" & name, ex.Message)
             End Try
         End Sub
 
         Private Function ParseParameters(text As String) As String
             Try
-                livebug.write(loggingLevel.Fine, "BackupManager", "Parsing action parameters for " & text)
+                Log(loggingLevel.Fine, "BackupManager", "Parsing action parameters for " & text)
 
-                text = text.Replace("%server-cpu%", performance.ServerCpu)
-                text = text.Replace("%gui-cpu%", performance.GuiCpu)
-                text = text.Replace("%total-cpu%", Performance.TotalCpu)
+                text = text.Replace("%server-cpu%", ServerCpu)
+                text = text.Replace("%gui-cpu%", GuiCpu)
+                text = text.Replace("%total-cpu%", TotalCpu)
 
-                text = text.Replace("%server-ram%", performance.ServerMem)
-                text = text.Replace("%gui-ram%", performance.GuiMem)
-                text = text.Replace("%total-ram%", performance.TotalMem)
+                text = text.Replace("%server-ram%", ServerMem)
+                text = text.Replace("%gui-ram%", GuiMem)
+                text = text.Replace("%total-ram%", TotalMem)
 
                 text = text.Replace("%gui-dir%", My.Application.Info.DirectoryPath)
                 text = text.Replace("%gui-ver%", My.Application.Info.Version.ToString)
@@ -431,20 +435,20 @@ Namespace Utilities
                 text = text.Replace("%date-long%", Date.Now.ToLongDateString)
                 text = text.Replace("%date-short%", Date.Now.ToShortDateString)
 
-                text = text.Replace("%server-running%", server.running.ToString.ToLower)
+                text = text.Replace("%server-running%", running.ToString.ToLower)
 
                 If playerList IsNot Nothing Then _
-                    text = text.Replace("%players%", common.Serialize(server.playerNameList, ",")) Else _
+                    text = text.Replace("%players%", Serialize(playerNameList, ",")) Else _
                     text = text.Replace("%players%", "INVALID")
                 If playerList IsNot Nothing Then _
-                    text = text.Replace("%playercount%", common.Serialize(server.playerNameList, ",")) Else _
+                    text = text.Replace("%playercount%", Serialize(playerNameList, ",")) Else _
                     text = text.Replace("%players%", "INVALID")
                 If playerList IsNot Nothing AndAlso playerList.Count > 0 Then _
-                    text = text.Replace("%lastplayer%", server.playerList.Last.name) Else _
+                    text = text.Replace("%lastplayer%", playerList.Last.name) Else _
                     text = text.Replace("%lastplayer%", "INVALID")
-                livebug.write(loggingLevel.Fine, "BackupManager", "Parsed parameters: " & text)
+                Log(loggingLevel.Fine, "BackupManager", "Parsed parameters: " & text)
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "BackupManager", "Severe error in ParseParameters!", ex.Message)
+                Log(loggingLevel.Severe, "BackupManager", "Severe error in ParseParameters!", ex.Message)
             End Try
             Return text
         End Function

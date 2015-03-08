@@ -1,7 +1,5 @@
+﻿Imports System.Reflection
 Imports System.Resources
-
-Imports System
-Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 ' General Information about an assembly is controlled through the following 
@@ -10,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("BukkitGUI")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("Bertware")> 
-<Assembly: AssemblyProduct("BukkitGUI")> 
-<Assembly: AssemblyCopyright("Copyright ©Bertware 2011-2015")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("BukkitGUI")>
+<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyCompany("Bertware")>
+<Assembly: AssemblyProduct("BukkitGUI")>
+<Assembly: AssemblyCopyright("Copyright ©Bertware 2011-2015")>
+<Assembly: AssemblyTrademark("")>
 
-<Assembly: ComVisible(False)> 
+<Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("c7f1723b-5fa3-4fdc-94b4-f12ccd17aac6")> 
+<Assembly: Guid("c7f1723b-5fa3-4fdc-94b4-f12ccd17aac6")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -34,7 +32,7 @@ Imports System.Runtime.InteropServices
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
 
-<Assembly: AssemblyVersion("1.7.3.536")> 
-<Assembly: AssemblyFileVersion("1.7.3.536")> 
+<Assembly: AssemblyVersion("1.7.4.538")> 
+<Assembly: AssemblyFileVersion("1.7.4.538")> 
 
-<Assembly: NeutralResourcesLanguageAttribute("en")> 
+<Assembly: NeutralResourcesLanguage("en")>

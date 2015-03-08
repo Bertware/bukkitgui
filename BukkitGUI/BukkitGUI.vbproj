@@ -478,6 +478,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="img\spigot_logo.png" />
+    <EmbeddedResource Include="lang\lang_bulgarian.xml" />
+    <EmbeddedResource Include="lang\lang_danish.xml" />
+    <EmbeddedResource Include="lang\lang_dutch.xml" />
+    <EmbeddedResource Include="lang\lang_french.xml" />
+    <EmbeddedResource Include="lang\lang_german.xml" />
+    <EmbeddedResource Include="lang\lang_italian.xml" />
+    <EmbeddedResource Include="lang\lang_japanese.xml" />
+    <EmbeddedResource Include="lang\lang_polish.xml" />
+    <EmbeddedResource Include="lang\lang_romanian.xml" />
+    <EmbeddedResource Include="lang\lang_russian.xml" />
+    <EmbeddedResource Include="lang\lang_simplifiedChinese.xml" />
+    <EmbeddedResource Include="lang\lang_spanish.xml" />
+    <EmbeddedResource Include="lang\lang_traditionalChinese.xml" />
+    <EmbeddedResource Include="lang\lang_turkish.xml" />
     <EmbeddedResource Include="img\menu_icons\plugin_add.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_delete.png" />
     <EmbeddedResource Include="img\menu_icons\plugin_disabled.png" />

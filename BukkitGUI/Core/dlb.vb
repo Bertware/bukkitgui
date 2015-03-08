@@ -37,6 +37,7 @@
 '</channel>
 '</root>
 Imports System.Net
+Imports System.Text.RegularExpressions
 Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
@@ -49,19 +50,20 @@ Namespace MCInterop
             beta 'beta build
         End Enum
 
-
+        
         ''' <summary>
-        ''' Check if the needed servers are available
+        '''     Check if the needed servers are available
         ''' </summary>
         ''' <param name="warn">Should a dialog box be showed when the server is unavailable?</param>
         ''' <returns>True if ok, false if a necessary server is unavailable</returns>
         ''' <remarks>Warning not implemented yet</remarks>
         Public Function CheckServers(Optional ByVal warn As Boolean = False) As Boolean
-            Return common.CheckServer(dlb_api)
+            Return CheckServer(dlb_api)
         End Function
 
+        
         ''' <summary>
-        ''' Get the file info about the latest version.
+        '''     Get the file info about the latest version.
         ''' </summary>
         ''' <param name="version">The version to get info about (recommended/beta/dev)</param>
         ''' <returns>Returns a dlb_download item, based upon the received XML</returns>
@@ -71,8 +73,9 @@ Namespace MCInterop
             Return dlbd 'return result
         End Function
 
+        
         ''' <summary>
-        ''' Get the file info about a specified bukkit build
+        '''     Get the file info about a specified bukkit build
         ''' </summary>
         ''' <param name="build">The build number. Between 1325 and the current build</param>
         ''' <returns>a dlb_download item, containing all the info</returns>
@@ -82,7 +85,7 @@ Namespace MCInterop
             Return New dlb_download(getcontents(build_url(build)))
         End Function
 
-        Private Function build_url(version As dlb.BukkitVersionType) As String
+        Private Function build_url(version As BukkitVersionType) As String
             Return "http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/view/latest-" & version.ToString & "/" _
             'build URL for dlb api - http://dl.bukkit.org/about/
         End Function
@@ -95,12 +98,12 @@ Namespace MCInterop
         Private Function getcontents(url As String) As String
             Try
                 Dim webc As New WebClient 'new webclient
-                webc.Headers = serverinteraction.header 'get header collection from serverinteraction module
+                webc.Headers = header 'get header collection from serverinteraction module
                 webc.Headers.Add(HttpRequestHeader.Accept, "application/xml") 'make sure received data is in XML format
                 Return webc.DownloadString(url) 'return result
             Catch ex As Exception
                 Return Nothing
-                livebug.write(loggingLevel.Severe, "dlb", "Could not download data from " & url, ex.Message)
+                Log(loggingLevel.Severe, "dlb", "Could not download data from " & url, ex.Message)
             End Try
         End Function
     End Module
@@ -119,8 +122,8 @@ Namespace MCInterop
         Public Sub New(Xml As String)
             Try
                 If Xml Is Nothing OrElse Xml = "" OrElse Xml.Contains("<") = False OrElse Xml.Contains(">") = False Then
-                    livebug.write(loggingLevel.Warning, "dlb",
-                                  "Could not create dlb_download object, xml invalid. Xml:" & Xml)
+                    Log(loggingLevel.Warning, "dlb",
+                        "Could not create dlb_download object, xml invalid. Xml:" & Xml)
                     Exit Sub
                 End If
                 Dim bxml As New fxml 'use fxml to parse the xml quickly
@@ -138,14 +141,14 @@ Namespace MCInterop
 
                 Dim created_string As String = bxml.read("created", "", "") 'e.g. 2012-04-05 11:14:24
                 Dim dtstring As String =
-                        System.Text.RegularExpressions.Regex.Match(created_string,
-                                                                   "\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}").ToString
+                        Regex.Match(created_string,
+                                    "\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}").ToString
                 dtstring = dtstring.Replace(":", "-").Replace(" ", "-")
                 Dim dtarr() As String = dtstring.Split("-")
                 created = New DateTime(CInt(dtarr(0)), CInt(dtarr(1)), CInt(dtarr(2)), CInt(dtarr(3)), CInt(dtarr(4)),
                                        CInt(dtarr(5)))
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "dlb", "Severe error while trying to create dlb object!", ex.Message)
+                Log(loggingLevel.Severe, "dlb", "Severe error while trying to create dlb object!", ex.Message)
             End Try
         End Sub
 

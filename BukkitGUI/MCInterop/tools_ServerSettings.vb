@@ -1,12 +1,15 @@
 ﻿Imports System.IO
+Imports System.Security
+Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
 Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
-    ''' <summary>
-    ''' Module to read minecraft server settings + whitelist, ops, banned players and Ips
-    ''' </summary>
-    ''' <remarks></remarks>
-    Module ServerSettings
+''' <summary>
+'''     Module to read minecraft server settings + whitelist, ops, banned players and Ips
+''' </summary>
+''' <remarks></remarks>
+                   Module ServerSettings
         Private _ops As List(Of String),
                 _whitelist As List(Of String),
                 _player_bans As List(Of String),
@@ -63,7 +66,7 @@ Namespace MCInterop
 
         Public ReadOnly Property MOTD As String
             Get
-                If common.isRunningLight Then Return ""
+                If IsRunningLight Then Return ""
                 If _settings Is Nothing Then LoadSettings()
                 If _settings Is Nothing Then Return "" : Exit Property
                 Return GetSetting("motd")
@@ -87,9 +90,9 @@ Namespace MCInterop
         End Sub
 
         Private Sub WriteList(list As List(Of String), path As String)
-            livebug.write(loggingLevel.Info, "ServerSettings", "Writing list to " & path)
+            Log(loggingLevel.Info, "ServerSettings", "Writing list to " & path)
             Try
-                Dim fs As New FileStream(path, IO.FileMode.Create)
+                Dim fs As New FileStream(path, FileMode.Create)
                 Dim sw As New StreamWriter(fs)
                 Dim text As String = ""
                 For Each entry As String In list
@@ -99,14 +102,13 @@ Namespace MCInterop
                 sw.WriteLine(text)
                 sw.Close()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Error while writing list to " & path, ex.Message)
+                Log(loggingLevel.Warning, "ServerSettings", "Error while writing list to " & path, ex.Message)
             End Try
-
         End Sub
 
         Private Function ReadList(path As String) As List(Of String)
             Try
-                If Not FileIO.FileSystem.FileExists(path) Then Return New List(Of String) : Exit Function
+                If Not FileSystem.FileExists(path) Then Return New List(Of String) : Exit Function
 
                 Dim fs As New FileStream(path, FileMode.Open, FileAccess.Read)
                 Dim sr As New StreamReader(fs)
@@ -123,13 +125,13 @@ Namespace MCInterop
 
                 Return list
 
-            Catch ioex As System.IO.IOException
-                livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
-                              ioex.Message)
+            Catch ioex As IOException
+                Log(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
+                    ioex.Message)
                 Return New List(Of String)
             Catch ex As Exception 'The file could've been in use
                 Try
-                    Threading.Thread.Sleep(50) 'The file could've been in use, wait a few ms then try again
+                    Thread.Sleep(50) 'The file could've been in use, wait a few ms then try again
                     Dim fs2 As New FileStream(path, FileMode.Open, FileAccess.Read)
                     Dim sr2 As New StreamReader(fs2)
                     Dim list As New List(Of String)
@@ -139,21 +141,21 @@ Namespace MCInterop
                     sr2.Close()
 
                     Return list
-                Catch ioex As System.IO.IOException
-                    livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
-                                  ioex.Message)
+                Catch ioex As IOException
+                    Log(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
+                        ioex.Message)
                     Return New List(Of String)
                 Catch ex2 As Exception
-                    livebug.write(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
-                                  ex.Message)
+                    Log(loggingLevel.Warning, "ServerSettings", "Could not read list from file: " & path,
+                        ex.Message)
                     Return New List(Of String)
                 End Try
             End Try
         End Function
 
         Private Sub WriteServerSettings(settings As Dictionary(Of String, String), path As String)
-            livebug.write(loggingLevel.Fine, "ServerSettings", "Writing server settings to " & path)
-            Dim fs As New FileStream(path, IO.FileMode.Create)
+            Log(loggingLevel.Fine, "ServerSettings", "Writing server settings to " & path)
+            Dim fs As New FileStream(path, FileMode.Create)
             Dim sw As New StreamWriter(fs)
 
             For Each entry In settings 'add all lines to list
@@ -165,8 +167,8 @@ Namespace MCInterop
 
         Private Function ReadServerSettings(path As String) As Dictionary(Of String, String)
             Try
-                If Not FileIO.FileSystem.FileExists(path) Then Return New Dictionary(Of String, String) : Exit Function
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Reading server settings from " & path)
+                If Not FileSystem.FileExists(path) Then Return New Dictionary(Of String, String) : Exit Function
+                Log(loggingLevel.Fine, "ServerSettings", "Reading server settings from " & path)
                 Dim fs As New FileStream(path, FileMode.Open, FileAccess.Read)
 
                 Dim sr As New StreamReader(fs)
@@ -190,72 +192,72 @@ Namespace MCInterop
                 sr.Close()
 
                 Return _settings
-            Catch ioex As IO.IOException
-                livebug.write(loggingLevel.Warning, "ServerSettings",
-                              "Could not read server settings from file: " & path, ioex.Message)
+            Catch ioex As IOException
+                Log(loggingLevel.Warning, "ServerSettings",
+                    "Could not read server settings from file: " & path, ioex.Message)
                 Return New Dictionary(Of String, String)
             Catch aex As ArgumentException
-                livebug.write(loggingLevel.Warning, "ServerSettings",
-                              "Could not read server settings from file: " & path, aex.Message)
+                Log(loggingLevel.Warning, "ServerSettings",
+                    "Could not read server settings from file: " & path, aex.Message)
                 Return New Dictionary(Of String, String)
-            Catch pex As Security.SecurityException
-                livebug.write(loggingLevel.Warning, "ServerSettings",
-                              "Could not read server settings from file: " & path, pex.Message)
+            Catch pex As SecurityException
+                Log(loggingLevel.Warning, "ServerSettings",
+                    "Could not read server settings from file: " & path, pex.Message)
                 Return New Dictionary(Of String, String)
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "ServerSettings",
-                              "Could not read server settings from file: " & path, ex.Message)
+                Log(loggingLevel.Warning, "ServerSettings",
+                    "Could not read server settings from file: " & path, ex.Message)
                 Return New Dictionary(Of String, String)
             End Try
         End Function
 
         Public Sub AddOp(player As String)
-            If server.running Then
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Opping player through console:" & player)
-                server.SendCommand("op " & player)
+            If running Then
+                Log(loggingLevel.Fine, "ServerSettings", "Opping player through console:" & player)
+                SendCommand("op " & player)
             Else
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Opping player through file:" & player)
+                Log(loggingLevel.Fine, "ServerSettings", "Opping player through file:" & player)
                 _ops.Add(player)
                 WriteList(_ops, ops_file)
             End If
         End Sub
 
         Public Sub AddWhitelist(player As String)
-            If server.running Then
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Whitelisting player through console:" & player)
-                server.SendCommand("whitelist add " & player)
+            If running Then
+                Log(loggingLevel.Fine, "ServerSettings", "Whitelisting player through console:" & player)
+                SendCommand("whitelist add " & player)
             Else
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Whitelisting player through file:" & player)
+                Log(loggingLevel.Fine, "ServerSettings", "Whitelisting player through file:" & player)
                 _whitelist.Add(player)
                 WriteList(_whitelist, whitelist_file)
             End If
         End Sub
 
         Public Sub AddPlayerBan(player As String)
-            If server.running Then
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning player through console:" & player)
-                server.SendCommand("ban " & player)
+            If running Then
+                Log(loggingLevel.Fine, "ServerSettings", "Banning player through console:" & player)
+                SendCommand("ban " & player)
             Else
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning player through file:" & player)
+                Log(loggingLevel.Fine, "ServerSettings", "Banning player through file:" & player)
                 _player_bans.Add(player)
                 WriteList(_player_bans, playerban_file)
             End If
         End Sub
 
         Public Sub AddIpBan(ip As String)
-            If server.running Then
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning ip through console:" & ip)
-                server.SendCommand("ban-ip " & ip)
+            If running Then
+                Log(loggingLevel.Fine, "ServerSettings", "Banning ip through console:" & ip)
+                SendCommand("ban-ip " & ip)
             Else
-                livebug.write(loggingLevel.Fine, "ServerSettings", "Banning ip through file:" & ip)
+                Log(loggingLevel.Fine, "ServerSettings", "Banning ip through file:" & ip)
                 _ip_bans.Add(ip)
                 WriteList(_ip_bans, ipban_file)
             End If
         End Sub
 
         Public Sub RemoveOp(player As String)
-            If server.running Then
-                server.SendCommand("deop " & player)
+            If running Then
+                SendCommand("deop " & player)
             Else
                 _ops.Remove(player)
                 WriteList(_ops, ops_file)
@@ -263,8 +265,8 @@ Namespace MCInterop
         End Sub
 
         Public Sub RemoveWhitelist(player As String)
-            If server.running Then
-                server.SendCommand("whitelist remove " & player)
+            If running Then
+                SendCommand("whitelist remove " & player)
             Else
                 _whitelist.Remove(player)
                 WriteList(_whitelist, whitelist_file)
@@ -272,8 +274,8 @@ Namespace MCInterop
         End Sub
 
         Public Sub RemovePlayerBan(player As String)
-            If server.running Then
-                server.SendCommand("pardon " & player)
+            If running Then
+                SendCommand("pardon " & player)
             Else
                 _player_bans.Remove(player)
                 WriteList(_player_bans, playerban_file)
@@ -281,36 +283,38 @@ Namespace MCInterop
         End Sub
 
         Public Sub RemoveIpBan(ip As String)
-            If server.running Then
-                server.SendCommand("pardon-ip " & ip)
+            If running Then
+                SendCommand("pardon-ip " & ip)
             Else
                 _ip_bans.Remove(ip)
                 WriteList(_ip_bans, ipban_file)
             End If
         End Sub
 
+        
         ''' <summary>
-        ''' Check if a player is an OP
+        '''     Check if a player is an OP
         ''' </summary>
         ''' <param name="name"></param>
         ''' <returns></returns>
         ''' <remarks>Always returns false in case of light mode</remarks>
         Public Function IsOP(name As String) As Boolean
-            If common.isRunningLight Then Return False 'ops not loaded
+            If IsRunningLight Then Return False 'ops not loaded
             For Each entry As String In _ops
                 If entry.ToLower = name.ToLower Then Return True : Exit Function
             Next
             Return False
         End Function
 
+        
         ''' <summary>
-        ''' Check if a player is whitelisted
+        '''     Check if a player is whitelisted
         ''' </summary>
         ''' <param name="name"></param>
         ''' <returns></returns>
         ''' <remarks>Always returns false in case of light mode</remarks>
         Public Function IsWhitelisted(name As String) As Boolean
-            If common.isRunningLight Then Return False
+            If IsRunningLight Then Return False
             For Each entry As String In _whitelist
                 If entry.ToLower = name.ToLower Then Return True : Exit Function
             Next

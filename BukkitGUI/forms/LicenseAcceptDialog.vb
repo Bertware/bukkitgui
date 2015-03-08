@@ -10,24 +10,24 @@ Public Class LicenseAcceptDialog
         Me.License_url = url
     End Sub
 
-    Private Sub LicenseAcceptDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub LicenseAcceptDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = lr("Accept") & " " & License_name
         ChkAccept.Text = lr("I have read and accept the") & " " & License_name
         WebLicense.Navigate(License_url)
     End Sub
 
-    Private Sub ChkAccept_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub ChkAccept_CheckedChanged(sender As Object, e As EventArgs) _
         Handles ChkAccept.CheckedChanged
         If ChkAccept.Checked Then btnOk.Enabled = True
     End Sub
 
-    Private Sub btnOk_Click(sender As System.Object, e As System.EventArgs) Handles btnOk.Click
-        Me.DialogResult = Windows.Forms.DialogResult.OK
+    Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
+        Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
-    Private Sub BtnCancel_Click(sender As System.Object, e As System.EventArgs) Handles BtnCancel.Click
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 End Class

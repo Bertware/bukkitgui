@@ -1,7 +1,10 @@
 ﻿Imports System.IO
+Imports System.Security
+Imports System.Text.RegularExpressions
+Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
-Imports System.Threading
 
 Namespace MCInterop
     Module BukkitTools
@@ -45,8 +48,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' Do we have the data already?
+        '''     Do we have the data already?
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -57,8 +61,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' Fetch versions on another thread
+        '''     Fetch versions on another thread
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub FetchLatestVersionsAsync()
@@ -68,63 +73,67 @@ Namespace MCInterop
             t.Start()
         End Sub
 
+        
         ''' <summary>
-        ''' Fetch and store the bukkit versions
+        '''     Fetch and store the bukkit versions
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub FetchLatestVersions()
-            _lrb = dlb.getlatest(BukkitVersionType.rb)
-            livebug.write(livebug.loggingLevel.Fine, "BukkitTools",
-                          "Fetched latest recommended bukkit version (" & _lrb.build & ")")
-            _lbeta = dlb.getlatest(BukkitVersionType.beta)
-            livebug.write(loggingLevel.Fine, "BukkitTools", "Fetched latest beta bukkit version (" & _lbeta.build & ")")
-            _ldev = dlb.getlatest(BukkitVersionType.dev)
-            livebug.write(loggingLevel.Fine, "BukkitTools", "Fetched latest dev bukkit version (" & _ldev.build & ")")
+            _lrb = getlatest(BukkitVersionType.rb)
+            Log(livebug.loggingLevel.Fine, "BukkitTools",
+                "Fetched latest recommended bukkit version (" & _lrb.build & ")")
+            _lbeta = getlatest(BukkitVersionType.beta)
+            Log(loggingLevel.Fine, "BukkitTools", "Fetched latest beta bukkit version (" & _lbeta.build & ")")
+            _ldev = getlatest(BukkitVersionType.dev)
+            Log(loggingLevel.Fine, "BukkitTools", "Fetched latest dev bukkit version (" & _ldev.build & ")")
             RaiseEvent BukkitVersionFetchComplete()
         End Sub
 
+        
         ''' <summary>
-        ''' download bukkit
+        '''     download bukkit
         ''' </summary>
         ''' <param name="v">file to download, as dlb item</param>
         ''' <param name="target">target location, where the file will be stored. This can overwrite an existing file</param>
         ''' <returns></returns>
         ''' <remarks>See also: dlb class</remarks>
-        Public Function Download(v As dlb.BukkitVersionType, target As String) As DialogResult
-            If server.running Then
+        Public Function Download(v As BukkitVersionType, target As String) As DialogResult
+            If running Then
                 Dim d As New ServerStopDialog
                 If d.ShowDialog <> DialogResult.OK Then
                     Return DialogResult.Cancel
                     Exit Function
                 End If
             End If
-            Dim info As dlb_download = dlb.getlatest(v) 'Always update to the latest
+            Dim info As dlb_download = getlatest(v) 'Always update to the latest
             Dim fd As New FileDownloader(info.file_url, target, lr("Downloading latest Bukkit version"))
             Return fd.ShowDialog()
         End Function
 
+        
         ''' <summary>
-        ''' Download a custom build number
+        '''     Download a custom build number
         ''' </summary>
         ''' <param name="build"></param>
         ''' <param name="target"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function DownloadCustom(build As UInt16, target As String) As DialogResult
-            If server.running Then
+            If running Then
                 Dim d As New ServerStopDialog
                 If d.ShowDialog <> DialogResult.OK Then
                     Return DialogResult.Cancel
                     Exit Function
                 End If
             End If
-            Dim info As dlb_download = dlb.GetCustomBuild(build) 'Always update to the latest
+            Dim info As dlb_download = GetCustomBuild(build) 'Always update to the latest
             Dim fd As New FileDownloader(info.file_url, target, lr("Downloading Bukkit build") & " " & build)
             Return fd.ShowDialog()
         End Function
 
+        
         ''' <summary>
-        ''' Run java to get the current bukkit versions
+        '''     Run java to get the current bukkit versions
         ''' </summary>
         ''' <param name="java">java path</param>
         ''' <param name="bukkitpath">bukkit path</param>
@@ -141,81 +150,84 @@ Namespace MCInterop
 
             Try
                 Dim p As New Process
-                livebug.write(loggingLevel.Fine, "BukkitTools", "Determining current bukkit version")
+                Log(loggingLevel.Fine, "BukkitTools", "Determining current bukkit version")
                 With p.StartInfo
-                    .FileName = javaAPI.GetExec(java)
+                    .FileName = GetExec(java)
                     .Arguments = "-Xincgc -Xmx32M -jar """ & bukkitpath & """ -v"
                     .RedirectStandardOutput = True
                     .RedirectStandardError = True
                     .UseShellExecute = False
                     .CreateNoWindow = True
                 End With
-                If FileIO.FileSystem.FileExists(p.StartInfo.FileName) = False Then _
-                    livebug.write(loggingLevel.Warning, "BukkitTools",
-                                  "Could not determine current bukkit version: Java not found") : _
+                If FileSystem.FileExists(p.StartInfo.FileName) = False Then _
+                    Log(loggingLevel.Warning, "BukkitTools",
+                        "Could not determine current bukkit version: Java not found") : _
                         Return New BukkitVersionDetails : Exit Function
-                If FileIO.FileSystem.FileExists(bukkitpath) = False Then _
-                    livebug.write(loggingLevel.Warning, "BukkitTools",
-                                  "Could not determine current bukkit version: Bukkit not found") : _
+                If FileSystem.FileExists(bukkitpath) = False Then _
+                    Log(loggingLevel.Warning, "BukkitTools",
+                        "Could not determine current bukkit version: Bukkit not found") : _
                         Return New BukkitVersionDetails : Exit Function
                 p.Start()
                 Dim sr As New StreamReader(p.StandardOutput.BaseStream)
                 Dim vstring As String = sr.ReadToEnd
-                livebug.write(loggingLevel.Fine, "BukkitTools", "Current version string : " & vstring)
+                Log(loggingLevel.Fine, "BukkitTools", "Current version string : " & vstring)
                 Dim v As BukkitVersionDetails = New BukkitVersionDetails(vstring)
-                livebug.write(loggingLevel.Fine, "BukkitTools", "Current version : " & v.Build)
+                Log(loggingLevel.Fine, "BukkitTools", "Current version : " & v.Build)
                 Return v
-            Catch pex As System.Security.SecurityException
+            Catch pex As SecurityException
                 MessageBox.Show(
                     lr(
                         "The current bukkit version could not be determined. It seems like you don't have permissions to do this. Try running the GUI as administator"),
                     lr("Insufficient rights"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "BukkitTools",
-                              "Security error in GetCurrentBukkitVersion! " & pex.Message)
+                Log(loggingLevel.Warning, "BukkitTools",
+                    "Security error in GetCurrentBukkitVersion! " & pex.Message)
                 Return New BukkitVersionDetails
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "BukkitTools",
-                              "Could not determine current bukkit version, exception: " & ex.Message)
+                Log(loggingLevel.Warning, "BukkitTools",
+                    "Could not determine current bukkit version, exception: " & ex.Message)
                 Return New BukkitVersionDetails
             End Try
         End Function
 
+        
         ''' <summary>
-        ''' parse a version string (jenkins etc)
+        '''     parse a version string (jenkins etc)
         ''' </summary>
         ''' <param name="text"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Function ParseVersionString(text As String) As Integer
             Dim pattern As String = "(#\d\d\d\d|#\d\d\d|b\d\d\d\djnks|b\d\d\djnks)"
-            Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
+            Dim match = Regex.Match(text, pattern)
             Dim chars() As Char = {"#", "b", "j", "n", "k", "s"}
             If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else _
                 Return CInt(match.Value.Trim(chars))
         End Function
 
+        
         ''' <summary>
-        ''' parse a bukkit version (console output)
+        '''     parse a bukkit version (console output)
         ''' </summary>
         ''' <param name="text"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Function ParseVersionStringBukkitVer(text As String) As String
             Dim pattern As String = "(\d.\d.\d|\d.\d)(\-R\d|)"
-            Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
+            Dim match = Regex.Match(text, pattern)
             If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else _
                 Return match.Value
         End Function
 
+        
         ''' <summary>
-        ''' parse an MC version. Can be in the same version string as the bukkit version
+        '''     parse an MC version. Can be in the same version string as the bukkit version
         ''' </summary>
         ''' <param name="text"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Function ParseVersionStringMCVer(text As String) As String
             Dim pattern As String = "MC: (\d.\d.\d|\d.\d)"
-            Dim match = System.Text.RegularExpressions.Regex.Match(text, pattern)
+            Dim match = Regex.Match(text, pattern)
             If match Is Nothing OrElse match.Value Is Nothing OrElse match.Value = "" Then Return 0 Else _
                 Return match.Value
         End Function
@@ -231,9 +243,9 @@ Namespace MCInterop
         End Sub
 
         Public Sub New(VersionString As String)
-            Build = BukkitTools.ParseVersionString(VersionString)
-            BukkitVer = BukkitTools.ParseVersionStringBukkitVer(VersionString)
-            MCVer = BukkitTools.ParseVersionStringMCVer(VersionString)
+            Build = ParseVersionString(VersionString)
+            BukkitVer = ParseVersionStringBukkitVer(VersionString)
+            MCVer = ParseVersionStringMCVer(VersionString)
         End Sub
 
         Public Shadows Function ToString() As String

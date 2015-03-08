@@ -1,5 +1,5 @@
-﻿Imports Net.Bertware.BukkitGUI.MCInterop
-Imports Net.Bertware.BukkitGUI.Core
+﻿Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.MCInterop
 Imports Net.Bertware.BukkitGUI.Utilities
 
 Module SoundNotificator
@@ -10,7 +10,7 @@ Module SoundNotificator
             Return _onPlayerJoin
         End Get
         Set(value As Boolean)
-            config.writeAsBool("join", value, "sound")
+            writeAsBool("join", value, "sound")
             _onPlayerJoin = value
         End Set
     End Property
@@ -20,7 +20,7 @@ Module SoundNotificator
             Return _onplayerDisconnect
         End Get
         Set(value As Boolean)
-            config.writeAsBool("disconnect", value, "sound")
+            writeAsBool("disconnect", value, "sound")
             _onplayerDisconnect = value
         End Set
     End Property
@@ -30,7 +30,7 @@ Module SoundNotificator
             Return _onWarning
         End Get
         Set(value As Boolean)
-            config.writeAsBool("warning", value, "sound")
+            writeAsBool("warning", value, "sound")
             _onWarning = value
         End Set
     End Property
@@ -40,16 +40,16 @@ Module SoundNotificator
             Return _onsevere
         End Get
         Set(value As Boolean)
-            config.writeAsBool("severe", value, "sound")
+            writeAsBool("severe", value, "sound")
             _onsevere = value
         End Set
     End Property
 
     Public Sub init()
-        _onPlayerJoin = config.readAsBool("join", False, "sound")
-        _onplayerDisconnect = config.readAsBool("disconnect", False, "sound")
-        _onWarning = config.readAsBool("warning", False, "sound")
-        _onsevere = config.readAsBool("severe", False, "sound")
+        _onPlayerJoin = readAsBool("join", False, "sound")
+        _onplayerDisconnect = readAsBool("disconnect", False, "sound")
+        _onWarning = readAsBool("warning", False, "sound")
+        _onsevere = readAsBool("severe", False, "sound")
 
         AddHandler serverOutputHandler.PlayerJoin, AddressOf hnd_PlayerJoin
         AddHandler serverOutputHandler.PlayerDisconnect, AddressOf hnd_PlayerDisconnect

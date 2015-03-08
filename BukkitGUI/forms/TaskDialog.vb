@@ -1,9 +1,10 @@
 ﻿
 Imports Net.Bertware.BukkitGUI.Core
+Imports Net.Bertware.BukkitGUI.TaskManager
 Imports Net.Bertware.BukkitGUI.Utilities
 
 Public Class TaskDialog
-    Public task As TaskManager.task = Nothing
+    Public task As task = Nothing
     Private _existing As Boolean = False
 
     'server start;server stop;elapsed time;current time;player join;player leave;server empty, server crash
@@ -79,7 +80,7 @@ Public Class TaskDialog
             }
 
 
-    Private Sub TaskDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub TaskDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If task IsNot Nothing Then
             _existing = True
             ChkEnable.Checked = task.IsEnabled
@@ -98,7 +99,7 @@ Public Class TaskDialog
         BtnSave.Enabled = False
         If CBTriggerType.SelectedItem Is Nothing Then Return False : Exit Function
         Select Case CBTriggerType.SelectedIndex
-            Case TaskManager.task.trigger.current_time
+            Case task.trigger.current_time
                 If TxtTriggerParam.Text.Contains(";") Then
                     For Each time As String In TxtTriggerParam.Text.Split(";")
                         If time <> "" AndAlso time.Trim(";") <> "" Then
@@ -132,7 +133,7 @@ Public Class TaskDialog
                         ErrProv.SetError(TxtTriggerParam, lr("Time should be in format hh:mm:ss")) : Return False : _
                             Exit Function
                 End If
-            Case TaskManager.task.trigger.elapsed_time
+            Case task.trigger.elapsed_time
                 If TxtTriggerParam.Text.Length <> 8 Then _
                     ErrProv.SetError(TxtTriggerParam, lr("Time should be in format hh:mm:ss")) : Return False : _
                         Exit Function
@@ -147,7 +148,7 @@ Public Class TaskDialog
                     ErrProv.SetError(TxtTriggerParam, lr("Time should be in format hh:mm:ss")) : Return False : _
                         Exit Function
 
-            Case TaskManager.task.trigger.heartbeat_fail
+            Case task.trigger.heartbeat_fail
                 If TxtTriggerParam.Text.Length <> 8 Then _
                     ErrProv.SetError(TxtTriggerParam, lr("Time should be in format hh:mm:ss")) : Return False : _
                         Exit Function
@@ -172,21 +173,21 @@ Public Class TaskDialog
         BtnSave.Enabled = False
         If CBActionType.SelectedItem Is Nothing Then Return False : Exit Function
         Select Case CBActionType.SelectedIndex
-            Case TaskManager.task.action.command
+            Case task.action.command
                 If TxtActionParam.Text = "" Then _
                     ErrProv.SetError(TxtActionParam, lr("You need to enter a command")) : Return False : Exit Function
-            Case TaskManager.task.action.execute
+            Case task.action.execute
                 If TxtActionParam.Text = "" Then _
                     ErrProv.SetError(TxtActionParam, lr("You need to enter a file or program")) : Return False : _
                         Exit Function
-            Case TaskManager.task.action.shellexecute
+            Case task.action.shellexecute
                 If TxtActionParam.Text = "" Then _
                     ErrProv.SetError(TxtActionParam, lr("You need to enter a command")) : Return False : Exit Function
-            Case TaskManager.task.action.backup
+            Case task.action.backup
                 If TxtActionParam.Text = "" Then _
                     ErrProv.SetError(TxtActionParam, lr("You need to enter a backup name")) : Return False : _
                         Exit Function
-                If BackupManager.GetBackupByName(TxtActionParam.Text) Is Nothing Then _
+                If GetBackupByName(TxtActionParam.Text) Is Nothing Then _
                     ErrProv.SetError(TxtActionParam, lr("You need to enter a valid backup name")) : Return False : _
                         Exit Function
         End Select
@@ -210,7 +211,7 @@ Public Class TaskDialog
         Return True
     End Function
 
-    Private Sub CBTriggerType_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub CBTriggerType_SelectedIndexChanged(sender As Object, e As EventArgs) _
         Handles CBTriggerType.SelectedIndexChanged
         lblTriggerHelp.Text = lr("Explanation") & ": " & trigger_help(CBTriggerType.SelectedIndex).explanation & vbCrLf &
                               lr("Parameters") & ": " & trigger_help(CBTriggerType.SelectedIndex).parameters
@@ -219,7 +220,7 @@ Public Class TaskDialog
         validate_triggerparameter()
     End Sub
 
-    Private Sub CBActionType_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub CBActionType_SelectedIndexChanged(sender As Object, e As EventArgs) _
         Handles CBActionType.SelectedIndexChanged
         lblActionHelp.Text = lr("Explanation") & ": " & action_help(CBActionType.SelectedIndex).explanation & vbCrLf &
                              lr("Parameters") & ": " & action_help(CBActionType.SelectedIndex).parameters
@@ -228,32 +229,32 @@ Public Class TaskDialog
         validate_actionparameter()
     End Sub
 
-    Private Sub TxtTriggerParam_TextChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub TxtTriggerParam_TextChanged(sender As Object, e As EventArgs) _
         Handles TxtTriggerParam.TextChanged, TxtTriggerParam.GotFocus, TxtTriggerParam.LostFocus
         validate_triggerparameter()
     End Sub
 
-    Private Sub TxtActionParam_TextChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub TxtActionParam_TextChanged(sender As Object, e As EventArgs) _
         Handles TxtActionParam.TextChanged, TxtActionParam.GotFocus, TxtActionParam.LostFocus
         validate_actionparameter()
     End Sub
 
-    Private Sub TxtTaskName_TextChanged(sender As System.Object, e As System.EventArgs) _
+    Private Sub TxtTaskName_TextChanged(sender As Object, e As EventArgs) _
         Handles TxtTaskName.TextChanged, TxtTaskName.GotFocus, TxtTaskName.LostFocus
         validate_name()
     End Sub
 
 
-    Private Sub BtnSave_Click(sender As System.Object, e As System.EventArgs) Handles BtnSave.Click
-        livebug.write(loggingLevel.Fine, "TaskDialog", "Saving task...")
+    Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles BtnSave.Click
+        Log(loggingLevel.Fine, "TaskDialog", "Saving task...")
 
         If Not (validate_name() And validate_triggerparameter() And validate_actionparameter()) Then _
-            livebug.write(loggingLevel.Fine, "TaskDialog", "Saving task... Cancelling... Invalid settings") _
+            Log(loggingLevel.Fine, "TaskDialog", "Saving task... Cancelling... Invalid settings") _
                 : _
                 MessageBox.Show(lr("You didn't enter valid values. Make sure all values are valid, and try again"),
                                 lr("Save cancelled"), MessageBoxButtons.OK, MessageBoxIcon.Error) : Exit Sub
 
-        Dim t As New TaskManager.task
+        Dim t As New task
         With t
             .name = TxtTaskName.Text
             .trigger_parameters = TxtTriggerParam.Text
@@ -263,27 +264,27 @@ Public Class TaskDialog
 
             .canEnable = ChkEnable.Checked
         End With
-        livebug.write(loggingLevel.Fine, "TaskDialog", "Saving task... Task created")
+        Log(loggingLevel.Fine, "TaskDialog", "Saving task... Task created")
 
         If _existing Then
-            livebug.write(loggingLevel.Fine, "TaskDialog", "Updating task...")
-            TaskManager.saveTask(task, t)
-            livebug.write(loggingLevel.Fine, "TaskDialog", "Updated task...")
+            Log(loggingLevel.Fine, "TaskDialog", "Updating task...")
+            saveTask(task, t)
+            Log(loggingLevel.Fine, "TaskDialog", "Updated task...")
         Else
-            livebug.write(loggingLevel.Fine, "TaskDialog", "Adding task...")
-            TaskManager.addTask(t, t.canEnable)
-            livebug.write(loggingLevel.Fine, "TaskDialog", "Added task...")
+            Log(loggingLevel.Fine, "TaskDialog", "Adding task...")
+            addTask(t, t.canEnable)
+            Log(loggingLevel.Fine, "TaskDialog", "Added task...")
         End If
 
         task = t
-        livebug.write(loggingLevel.Fine, "TaskDialog", "Saving task... Completed")
+        Log(loggingLevel.Fine, "TaskDialog", "Saving task... Completed")
 
-        Me.DialogResult = Windows.Forms.DialogResult.OK
+        Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
-    Private Sub BtnCancel_Click(sender As System.Object, e As System.EventArgs) Handles BtnCancel.Click
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 End Class

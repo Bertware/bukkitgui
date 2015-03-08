@@ -6,8 +6,14 @@
 'If the GUI hosts the server connection itself (for example built-in remote support, instead of classic java server) the host should point at the current process.
 
 'Other things: Time since start, events for easy handling, player list
+Imports System.ComponentModel
 Imports System.IO
+Imports System.Security
+Imports System.Text
+Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
 Imports Net.Bertware.BukkitGUI.Core
+Imports Timer = System.Timers.Timer
 
 Namespace MCInterop
     Public Module server
@@ -37,8 +43,9 @@ Namespace MCInterop
 
         Private _remote_obj As RemoteServerBase
 
+        
         ''' <summary>
-        ''' Indicates if the server is running or not
+        '''     Indicates if the server is running or not
         ''' </summary>
         ''' <value>Boolean to indicate if the server is running or not</value>
         ''' <returns>Boolean to indicate if the server is running or not</returns>
@@ -49,8 +56,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' The process that hosts the server
+        '''     The process that hosts the server
         ''' </summary>
         ''' <value>the process object</value>
         ''' <returns>the process object</returns>
@@ -61,8 +69,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' The standardOut stream of the process
+        '''     The standardOut stream of the process
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -73,8 +82,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' The standardError stream of the server
+        '''     The standardError stream of the server
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -85,8 +95,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' The standardIn stream of the server, used for sending of commands etc.
+        '''     The standardIn stream of the server, used for sending of commands etc.
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -97,8 +108,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' The time that has elapsed since the start of the server
+        '''     The time that has elapsed since the start of the server
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -109,8 +121,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' The list of currently online players
+        '''     The list of currently online players
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -149,32 +162,36 @@ Namespace MCInterop
 
         Public Function GetPlayerByName(name As String) As Player
             Dim p As Player = Nothing
-            For Each Pl As Player In server.playerList
+            For Each Pl As Player In playerList
                 If Pl.name = name Then p = Pl
             Next
             Return p
         End Function
 
+        
         ''' <summary>
-        ''' Raised at the beginning of the server start routine
+        '''     Raised at the beginning of the server start routine
         ''' </summary>
         ''' <remarks></remarks>
         Public Event ServerStarting() 'Raised when server is being initialized
+        
         ''' <summary>
-        ''' Raised when the server is fully started
+        '''     Raised when the server is fully started
         ''' </summary>
         ''' <remarks></remarks>
         Public Event ServerStarted() 'Raised when server start is finished
+        
         ''' <summary>
-        ''' Raised when the server stopped
+        '''     Raised when the server stopped
         ''' </summary>
         ''' <remarks></remarks>
         Public Event ServerStopped() 'Raised when server stopped
 
         Public Event ServerStopping()
 
+        
         ''' <summary>
-        ''' Start a new minecraft server, using Java
+        '''     Start a new minecraft server, using Java
         ''' </summary>
         ''' <param name="Jsa">The start information to start the server</param>
         ''' <returns>Returns the ID of the started process</returns>
@@ -183,30 +200,30 @@ Namespace MCInterop
             Dim p As New Process
             Try
                 _current_type = type
-                livebug.write(livebug.loggingLevel.Fine, "Server", "Starting server (java)", "server")
-                livebug.write(loggingLevel.Fine, "Server", "Executable:" & Jsa.executable, "Server-StartJavaServer")
-                livebug.write(loggingLevel.Fine, "Server", "Jar:" & Jsa.jar, "Server-StartJavaServer")
-                livebug.write(loggingLevel.Fine, "Server", "Options:" & Jsa.args, "Server-StartJavaServer")
-                livebug.write(loggingLevel.Fine, "Server", "Flags:" & Jsa.switches, "Server-StartJavaServer")
-                livebug.write(loggingLevel.Fine, "Server", "Total argument:" & Jsa.buildArgs, "Server-StartJavaServer")
+                Log(livebug.loggingLevel.Fine, "Server", "Starting server (java)", "server")
+                Log(loggingLevel.Fine, "Server", "Executable:" & Jsa.executable, "Server-StartJavaServer")
+                Log(loggingLevel.Fine, "Server", "Jar:" & Jsa.jar, "Server-StartJavaServer")
+                Log(loggingLevel.Fine, "Server", "Options:" & Jsa.args, "Server-StartJavaServer")
+                Log(loggingLevel.Fine, "Server", "Flags:" & Jsa.switches, "Server-StartJavaServer")
+                Log(loggingLevel.Fine, "Server", "Total argument:" & Jsa.buildArgs, "Server-StartJavaServer")
 
                 'check for valid path
                 If _
                     Jsa.executable Is Nothing OrElse Jsa.executable = "" OrElse Not Jsa.executable.EndsWith(".exe") OrElse
-                    FileIO.FileSystem.FileExists(Jsa.executable) = False Then
+                    FileSystem.FileExists(Jsa.executable) = False Then
                     MessageBox.Show(
                         lr("The java path could not be found, server start aborted") & vbCrLf &
                         lr("Please select the correct java version in the superstart tab"), lr("Could not start server"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    livebug.write(loggingLevel.Warning, "Server",
-                                  "File not found, server start cancelled:" & Jsa.executable)
+                    Log(loggingLevel.Warning, "Server",
+                        "File not found, server start cancelled:" & Jsa.executable)
                     Return 0
                     Exit Function
                 End If
 
                 'only raise after validation
                 RaiseEvent ServerStarting()
-                Threading.Thread.Sleep(50)
+                Thread.Sleep(50)
 
                 With p.StartInfo
                     .FileName = Jsa.executable
@@ -216,50 +233,51 @@ Namespace MCInterop
                     .RedirectStandardError = True
                     .RedirectStandardInput = True
                     .RedirectStandardOutput = True
-                    .StandardErrorEncoding = System.Text.Encoding.UTF8
-                    .StandardOutputEncoding = System.Text.Encoding.UTF8
+                    .StandardErrorEncoding = Encoding.UTF8
+                    .StandardOutputEncoding = Encoding.UTF8
                     .UseShellExecute = False
-                    .WorkingDirectory = Common.ServerRoot
+                    .WorkingDirectory = ServerRoot
                 End With
-                livebug.write(loggingLevel.Fine, "Server", "Starting process")
+                Log(loggingLevel.Fine, "Server", "Starting process")
                 If p.StartInfo.FileName IsNot Nothing Then p.Start() Else _
                     MessageBox.Show(Lr("Could not start the process - no executable given"),
                                     Lr("Could not start server"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Fine, "Server", "Process started")
+                Log(loggingLevel.Fine, "Server", "Process started")
                 _host = p
                 ServerStart_Common()
-                livebug.write(loggingLevel.Fine, "Server", "Server started succesfully")
+                Log(loggingLevel.Fine, "Server", "Server started succesfully")
                 RaiseEvent ServerStarted()
                 If p IsNot Nothing AndAlso p.Id > 0 Then Return (p.Id) Else Return 0
-            Catch winex As System.ComponentModel.Win32Exception
+            Catch winex As Win32Exception
                 MessageBox.Show(
                     Lr(
                         "The server could not be started. It seems like you don't have permissions to access needed files. Try running the GUI as administator"),
                     Lr("File I/O error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & winex.Message)
+                Log(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & winex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
-            Catch ioex As IO.IOException
+            Catch ioex As IOException
                 MessageBox.Show(
                     Lr(
                         "The server could not be started. It seems like you don't have permissions to access needed files. Try running the GUI as administator"),
                     Lr("File I/O error"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & ioex.Message)
+                Log(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & ioex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
-            Catch pex As Security.SecurityException
+            Catch pex As SecurityException
                 MessageBox.Show(
                     Lr(
                         "The server could not be started. It seems like you don't have permissions to do this. Try running the GUI as administator"),
                     Lr("Insufficient rights"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & pex.Message)
+                Log(loggingLevel.Warning, "Server", "Security error in Startserver (java)! " & pex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Server", "Severe error in Startserver (java)! " & ex.Message)
+                Log(loggingLevel.Severe, "Server", "Severe error in Startserver (java)! " & ex.Message)
                 If p IsNot Nothing Then Return (p.Id) Else Return 0
             End Try
         End Function
 
+        
         ''' <summary>
-        ''' Start a new executable minecraft server
+        '''     Start a new executable minecraft server
         ''' </summary>
         ''' <param name="esa">The start information to start the server</param>
         ''' <returns>Returns the ID of the started process</returns>
@@ -267,21 +285,21 @@ Namespace MCInterop
         Public Function StartServer(Esa As execStartArgs, type As McInteropType) As UInt16
             Try
                 _current_type = type
-                livebug.write(loggingLevel.Fine, "Server", "Starting server (executable)")
+                Log(loggingLevel.Fine, "Server", "Starting server (executable)")
 
-                If Not FileIO.FileSystem.FileExists(Esa.executable) Then
+                If Not FileSystem.FileExists(Esa.executable) Then
                     MessageBox.Show(
                         Lr(
                             "The program couldn't find this executable: " & Esa.executable & vbCrLf &
                             "Server start cancelled"), Lr("File not found"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    livebug.write(loggingLevel.Warning, "Server",
-                                  "File not found, server start cancelled:" & Esa.executable)
+                    Log(loggingLevel.Warning, "Server",
+                        "File not found, server start cancelled:" & Esa.executable)
                     Return 0
                     Exit Function
                 End If
 
                 RaiseEvent ServerStarting()
-                Threading.Thread.Sleep(50)
+                Thread.Sleep(50)
 
                 Dim p As New Process
                 With p.StartInfo
@@ -292,28 +310,29 @@ Namespace MCInterop
                     .RedirectStandardError = True
                     .RedirectStandardInput = True
                     .RedirectStandardOutput = True
-                    System.Console.InputEncoding = System.Text.Encoding.GetEncoding(Common.ServerEncoding)
-                    .StandardErrorEncoding = System.Text.Encoding.GetEncoding(Common.ServerEncoding)
-                    .StandardOutputEncoding = System.Text.Encoding.GetEncoding(Common.ServerEncoding)
+                    Console.InputEncoding = Encoding.GetEncoding(ServerEncoding)
+                    .StandardErrorEncoding = Encoding.GetEncoding(ServerEncoding)
+                    .StandardOutputEncoding = Encoding.GetEncoding(ServerEncoding)
                     .UseShellExecute = False
-                    .WorkingDirectory = Common.ServerRoot
+                    .WorkingDirectory = ServerRoot
                 End With
-                livebug.write(loggingLevel.Fine, "Server", "Starting process")
+                Log(loggingLevel.Fine, "Server", "Starting process")
                 p.Start()
-                livebug.write(loggingLevel.Fine, "Server", "Process started")
+                Log(loggingLevel.Fine, "Server", "Process started")
                 _host = p
                 ServerStart_Common()
-                livebug.write(loggingLevel.Fine, "Server", "Server started succesfully")
+                Log(loggingLevel.Fine, "Server", "Server started succesfully")
                 RaiseEvent ServerStarted()
                 If p IsNot Nothing AndAlso p.Id > 0 AndAlso p.HasExited = False Then Return (p.Id) Else Return 0
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Server", "Severe error in Startserver (executable)!", ex.Message)
+                Log(loggingLevel.Severe, "Server", "Severe error in Startserver (executable)!", ex.Message)
                 Return Process.GetCurrentProcess.Id
             End Try
         End Function
 
+        
         ''' <summary>
-        ''' Start an embedded remote server connection
+        '''     Start an embedded remote server connection
         ''' </summary>
         ''' <param name="Rm">A remoteServer class that inherits from RemoteServerBase</param>
         ''' <returns></returns>
@@ -321,7 +340,7 @@ Namespace MCInterop
         Public Function StartServer(Rm As RemoteServerBase) As UInt16
             Try
                 _current_type = McInteropType.remote
-                livebug.write(loggingLevel.Fine, "Server", "Starting server (Remote)")
+                Log(loggingLevel.Fine, "Server", "Starting server (Remote)")
                 RaiseEvent ServerStarting()
 
                 _remote_obj = Rm
@@ -332,19 +351,19 @@ Namespace MCInterop
                 'Serverstart_common can't be used as this server is ran inside the GUI
                 'initialize variables for new server, set streams
 
-                livebug.write(loggingLevel.Fine, "Server", "Initializing handling for new remote server")
+                Log(loggingLevel.Fine, "Server", "Initializing handling for new remote server")
                 _playerlist = New List(Of Player)
                 _serverout = Nothing
                 _servererror = Nothing
                 _serverin = Nothing
                 _timerunning = New TimeSpan(0)
 
-                tmrcounttime = New Timers.Timer
+                tmrcounttime = New Timer
                 tmrcounttime.Interval = 1000
                 tmrcounttime.AutoReset = True
                 tmrcounttime.Enabled = True
                 tmrcounttime.Start()
-                livebug.write(loggingLevel.Fine, "Server", "New remote server initialized")
+                Log(loggingLevel.Fine, "Server", "New remote server initialized")
 
                 Rm.Run()
 
@@ -352,29 +371,29 @@ Namespace MCInterop
 
                 RaiseEvent ServerStarted()
 
-                livebug.write(loggingLevel.Fine, "Server", "Server started succesfully")
+                Log(loggingLevel.Fine, "Server", "Server started succesfully")
                 Return Process.GetCurrentProcess.Id
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Server", "Severe error in Startserver (remote)!", ex.Message)
+                Log(loggingLevel.Severe, "Server", "Severe error in Startserver (remote)!", ex.Message)
                 Return Process.GetCurrentProcess.Id
             End Try
         End Function
 
         Public Sub StopServer()
-            livebug.write(loggingLevel.Info, "server", "StopServer() was called")
+            Log(loggingLevel.Info, "server", "StopServer() was called")
             RaiseEvent ServerStopping()
-            Threading.Thread.Sleep(10) 'Allow last actions before stop, triggered by event
-            If server.CurrentServerType = McInteropType.remote Then
+            Thread.Sleep(10) 'Allow last actions before stop, triggered by event
+            If CurrentServerType = McInteropType.remote Then
                 _ServerStopped()
             Else
                 SendCommand("stop", True)
             End If
-            livebug.write(loggingLevel.Info, "server", "StopServer() was executed")
+            Log(loggingLevel.Info, "server", "StopServer() was executed")
         End Sub
 
         Private Sub _ServerStopped() Handles _host.Exited, _host.Disposed
             Try
-                livebug.write(loggingLevel.Info, "server", "The server has stopped... Cleaning up...")
+                Log(loggingLevel.Info, "server", "The server has stopped... Cleaning up...")
 
                 If tmrcounttime IsNot Nothing Then
                     tmrcounttime.Enabled = False
@@ -389,13 +408,14 @@ Namespace MCInterop
                 _remote_obj = Nothing
                 RaiseEvent ServerStopped()
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Server", "Error in _serverstopped! " & ex.Message)
+                Log(loggingLevel.Severe, "Server", "Error in _serverstopped! " & ex.Message)
             End Try
-            livebug.write(loggingLevel.Info, "server", "The server has stopped... Cleanup finished")
+            Log(loggingLevel.Info, "server", "The server has stopped... Cleanup finished")
         End Sub
 
+        
         ''' <summary>
-        ''' Send a command to the server
+        '''     Send a command to the server
         ''' </summary>
         ''' <param name="command">The command to be sent</param>
         ''' <param name="suspressErrors">If errors should be suspressed</param>
@@ -408,7 +428,7 @@ Namespace MCInterop
                             csw = _host.StandardInput
 
                         Dim buffer() As Byte =
-                                System.Text.Encoding.GetEncoding(Common.ServerEncoding).GetBytes(command & vbCr)
+                                Encoding.GetEncoding(ServerEncoding).GetBytes(command & vbCr)
                         csw.BaseStream.Write(buffer, 0, buffer.Length)
                         csw.BaseStream.Flush()
 
@@ -428,8 +448,8 @@ Namespace MCInterop
                     MessageBox.Show(
                         Lr("The command could not be sent due to an error. See the log file for more information"),
                         Lr("Could not send command"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                livebug.write(loggingLevel.Severe, "Server", "Could not send command """ & command & """ exception",
-                              ex.Message)
+                Log(loggingLevel.Severe, "Server", "Could not send command """ & command & """ exception",
+                    ex.Message)
                 Return False
             End Try
             Return False
@@ -437,14 +457,14 @@ Namespace MCInterop
 
         Private Sub ServerStart_Common()
             Try
-                livebug.write(loggingLevel.Fine, "Server", "Initializing handling for new server")
+                Log(loggingLevel.Fine, "Server", "Initializing handling for new server")
                 _playerlist = New List(Of Player)
                 _serverout = _host.StandardOutput.BaseStream
                 _servererror = _host.StandardError.BaseStream
                 _serverin = _host.StandardInput.BaseStream
                 _timerunning = New TimeSpan(0)
 
-                tmrcounttime = New Timers.Timer
+                tmrcounttime = New Timer
                 tmrcounttime.Interval = 1000
                 tmrcounttime.AutoReset = True
                 tmrcounttime.Enabled = True
@@ -452,10 +472,10 @@ Namespace MCInterop
 
                 csw = _host.StandardInput
 
-                livebug.write(loggingLevel.Fine, "Server", "New server initialized")
+                Log(loggingLevel.Fine, "Server", "New server initialized")
                 _running = True
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "Server", "Severe error in ServerStart_common! ", ex.Message)
+                Log(loggingLevel.Severe, "Server", "Severe error in ServerStart_common! ", ex.Message)
             End Try
         End Sub
 

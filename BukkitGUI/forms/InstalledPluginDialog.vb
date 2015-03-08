@@ -14,22 +14,22 @@ Public Class InstalledPluginDialog
         If plugin IsNot Nothing Then Me.plugin = plugin.ToSafeObject
     End Sub
 
-    Private Sub InstalledPluginDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub InstalledPluginDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If plugin Is Nothing Then Exit Sub
 
         lblName.Text = lr("Name:") & " " & plugin.name
         Me.Text = lr("Plugin details:") & " " & plugin.name
-        LblAuthors.Text = lr("Author(s):") & " " & common.Serialize(plugin.authors)
+        LblAuthors.Text = lr("Author(s):") & " " & Serialize(plugin.authors)
         LblPath.Text = lr("Path:") & " " & plugin_dir & "/" & plugin.filename
         lblVersion.Text = lr("Version:") & " " & plugin.version
-        lblSoftdepend.Text = lr("Softdepend:") & " " & common.Serialize(plugin.softdepend)
+        lblSoftdepend.Text = lr("Softdepend:") & " " & Serialize(plugin.softdepend)
         lblNamespace.Text = lr("Main namespace:") & " " & plugin.main
 
         For Each Command As pluginCommand In plugin.commands
             Dim _
                 lvi As _
                     New ListViewItem(
-                        {Command.name, Command.description, Command.usage, common.Serialize(Command.aliases)})
+                        {Command.name, Command.description, Command.usage, Serialize(Command.aliases)})
             ALVCommands.Items.Add(lvi)
         Next
 
@@ -46,7 +46,7 @@ Public Class InstalledPluginDialog
         Next
     End Sub
 
-    Private Sub btnLatestVersion_Click(sender As System.Object, e As System.EventArgs) Handles btnLatestVersion.Click
-        If plugin IsNot Nothing Then BukGetAPI.ShowPluginDialogByNamespace(plugin.main)
+    Private Sub btnLatestVersion_Click(sender As Object, e As EventArgs) Handles btnLatestVersion.Click
+        If plugin IsNot Nothing Then ShowPluginDialogByNamespace(plugin.main)
     End Sub
 End Class

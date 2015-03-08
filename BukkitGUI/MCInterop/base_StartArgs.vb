@@ -38,8 +38,9 @@ Namespace MCInterop
             Me.custom_switch = ""
         End Sub
 
+        
         ''' <summary>
-        ''' Creates a new JavaStartArgs instance
+        '''     Creates a new JavaStartArgs instance
         ''' </summary>
         ''' <param name="jre">the java version to use, as javaAPI.Javaversion</param>
         ''' <param name="minram">the minimum amount of RAM for the VM (-xms)</param>
@@ -54,7 +55,7 @@ Namespace MCInterop
             If minram < 16 Then minram = 16
             If maxram < 16 Then maxram = 16
 
-            Me.executable = javaAPI.GetExec(jre)
+            Me.executable = GetExec(jre)
             Me.args = "-Xms" & minram & "M -Xmx" & maxram & "M "
             Me.jar = jar
             Me.custom_arg = CustomArgs
@@ -64,7 +65,7 @@ Namespace MCInterop
                 Case McInteropType.bukkit
                     Me.switches = "-nojline"
                     Me.args += "-Duser.language=en "
-                    If config.readAsBool("utf_8_compatibility", False, "output") Then _
+                    If readAsBool("utf_8_compatibility", False, "output") Then _
                         Me.args += "-Dfile.encoding=utf-8 "
 
                 Case McInteropType.vanilla
@@ -72,17 +73,16 @@ Namespace MCInterop
                 Case McInteropType.spigot
                     Me.switches = "-nojline"
                     Me.args += "-Duser.language=en -XX:MaxPermSize=128M"
-                    If config.readAsBool("utf_8_compatibility", False, "output") Then _
+                    If readAsBool("utf_8_compatibility", False, "output") Then _
                         Me.args += "-Dfile.encoding=utf-8 "
-
 
 
             End Select
         End Sub
 
-
+        
         ''' <summary>
-        ''' Compile all the variables into one argument, needed to start the process
+        '''     Compile all the variables into one argument, needed to start the process
         ''' </summary>
         ''' <value>The argument needed to start the process, as string</value>
         ''' <returns>The argument needed to start the process, as string</returns>

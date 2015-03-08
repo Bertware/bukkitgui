@@ -1,91 +1,117 @@
-﻿Imports System.Threading
+﻿Imports System.IO
+Imports System.Reflection
+Imports System.Threading
 Imports Net.Bertware.BukkitGUI.Core
 
+Namespace forms
 
-Public Class LanguageInstaller
-    Private languages As List(Of Translation)
-    Private Event LanguagesLoaded()
 
-    Private Sub LanguageInstaller_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
-        Dim t As New Threading.Thread(AddressOf getLanguages)
-        t.IsBackground = True
-        t.Name = "LanguageInstaller_getlanguages"
-        t.Start()
-    End Sub
+    Public Class LanguageInstaller
+        Private ReadOnly _languages() As String =
+                             {"bulgarian", "danish", "dutch", "french", "german", "italian", "japanese", "polish", "romanian", "russian",
+                              "simplifiedChinese", "spanish", "traditionalChinese", "turkish"}
 
-    Private Sub update_ui() Handles Me.LanguagesLoaded
-        If Me.InvokeRequired Then
-            Dim d As New ContextCallback(AddressOf update_ui)
-            Me.Invoke(d, New Object())
-        Else
-            ALVLanguages.Items.Clear()
-            If languages Is Nothing Then Exit Sub
-            For Each t As Translation In languages
-                Dim lvi As New ListViewItem({t.language, t.version, t.translator, t.comment})
-                ALVLanguages.Items.Add(lvi)
-            Next
-        End If
-    End Sub
+        Private Event LanguagesLoaded()
 
-    Private Sub getLanguages()
-        languages = New List(Of Translation)
+        Private Sub LanguageInstaller_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+            Dim t As New Thread(AddressOf GetLanguages)
+            t.IsBackground = True
+            t.Name = "LanguageInstaller_getlanguages"
+            t.Start()
+        End Sub
 
-        Dim result As String = AdvancedWebClient.downloadstring(serverinteraction.translations_list)
-        If result Is Nothing OrElse result = "" Then
-            result = AdvancedWebClient.downloadstring(serverinteraction.translations_list)
-            If result Is Nothing OrElse result = "" Then Exit Sub
-        End If
+        Private Sub update_ui() Handles Me.LanguagesLoaded
+            If Me.InvokeRequired Then
+                Dim d As New ContextCallback(AddressOf update_ui)
+                Me.Invoke(d, New Object())
+            Else
+                ALVLanguages.Items.Clear()
+                If _languages Is Nothing Then Exit Sub
+                For Each t As String In _languages
+                    Dim lvi As New ListViewItem({t})
+                    ALVLanguages.Items.Add(lvi)
+                Next
+                'For Each t As Translation In _languages
+                '    Dim lvi As New ListViewItem({t.language, t.version, t.translator, t.comment})
+                '    ALVLanguages.Items.Add(lvi)
+                'Next
+            End If
+        End Sub
 
-        Dim langxml As New fxml
-        langxml.Owner = "LanguageInstaller"
-        langxml.LoadXML(result)
-        For Each xmle As Xml.XmlElement In langxml.GetElementsByName("language")
-            Try
-                Dim t As New Translation
-                t.language = xmle.GetAttribute("name")
-                t.translator = xmle.GetElementsByTagName("translator")(0).InnerText
-                t.comment = xmle.GetElementsByTagName("comment")(0).InnerText
-                t.version = xmle.GetElementsByTagName("version")(0).InnerText
-                t.url = xmle.GetElementsByTagName("url")(0).InnerText
-                languages.Add(t)
-            Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "LanguageInstaller", "Could not parse translation info", ex.Message)
-            End Try
-        Next
+        Private Sub GetLanguages()
+            RaiseEvent LanguagesLoaded()
+            Exit Sub
 
-        RaiseEvent LanguagesLoaded()
-    End Sub
+            'Dim result As String = downloadstring(translations_list)
+            'If result Is Nothing OrElse result = "" Then
+            '    result = downloadstring(translations_list)
+            '    If result Is Nothing OrElse result = "" Then Exit Sub
+            'End If
 
-    Private Sub BtnInstall_Click(sender As System.Object, e As System.EventArgs) Handles BtnInstall.Click
-        If ALVLanguages.SelectedItems.Count < 1 Then Exit Sub
+            'Dim langxml As New fxml
+            'langxml.Owner = "LanguageInstaller"
+            'langxml.LoadXML(result)
+            'For Each xmle As XmlElement In langxml.GetElementsByName("language")
+            '    Try
+            '        Dim t As New Translation
+            '        t.language = xmle.GetAttribute("name")
+            '        t.translator = xmle.GetElementsByTagName("translator")(0).InnerText
+            '        t.comment = xmle.GetElementsByTagName("comment")(0).InnerText
+            '        t.version = xmle.GetElementsByTagName("version")(0).InnerText
+            '        t.url = xmle.GetElementsByTagName("url")(0).InnerText
+            '        languages.Add(t)
+            '    Catch ex As Exception
+            '        Log(loggingLevel.Severe, "LanguageInstaller", "Could not parse translation info", ex.Message)
+            '    End Try
+            'Next
 
-        Dim language As String = ALVLanguages.SelectedItems(0).SubItems(0).Text
-        livebug.write(loggingLevel.Fine, "LanguageInstaller", "Installing language: " & language)
-        Dim t As Translation = Nothing
-        For Each lang As Translation In languages
-            If lang.language = language Then t = lang
-        Next
+            'RaiseEvent LanguagesLoaded()
+        End Sub
 
-        If t Is Nothing Then Exit Sub
+        Private Sub BtnInstall_Click(sender As Object, e As EventArgs) Handles BtnInstall.Click
+            If ALVLanguages.SelectedItems.Count < 1 Then Exit Sub
 
-        livebug.write(loggingLevel.Fine, "LanguageInstaller", "Downloading language: " & t.url)
+            Dim language As String = ALVLanguages.SelectedItems(0).SubItems(0).Text
+            Log(livebug.loggingLevel.Fine, "LanguageInstaller", "Installing language: " & language)
 
-        Dim _
-            fd As _
-                New FileDownloader(t.url, common.LocalizationPath & "/" & t.language & ".xml",
-                                   lr("Installing language:") & " " & t.language)
-        fd.ShowDialog()
 
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
-    End Sub
+            ' livebug.write(loggingLevel.Fine, "Common", "DLL requested:" & args.Name)
+            Dim resourceName As [String] = "Net.Bertware.BukkitGUI." & New AssemblyName("lang_" & language).Name & ".xml"
+            Using reader = New StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                File.WriteAllText(GetLanguageFilePath(language), reader.ReadToEnd())
+            End Using
 
-    Private Sub BtnCancel_Click(sender As System.Object, e As System.EventArgs) Handles BtnCancel.Click
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
-        Me.Close()
-    End Sub
-End Class
 
-Class Translation
-    Public language As String, translator As String, version As String, url As String, comment As String
-End Class
+            'Dim t As Translation = Nothing
+            'For Each lang As Translation In languages
+            '    If lang.language = language Then t = lang
+            'Next
+
+            'If t Is Nothing Then Exit Sub
+
+            'Log(loggingLevel.Fine, "LanguageInstaller", "Downloading language: " & t.url)
+
+            'Dim _
+            '    fd As _
+            '        New FileDownloader(t.url, LocalizationPath & "/" & t.language & ".xml",
+            '                           Lr("Installing language:") & " " & t.language)
+            'fd.ShowDialog()
+
+            Me.DialogResult = DialogResult.OK
+            Me.Close()
+        End Sub
+
+        Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
+            Me.DialogResult = DialogResult.Cancel
+            Me.Close()
+        End Sub
+    End Class
+
+    Class Translation
+        Public Language As String
+        Public Translator As String
+        Public Version As String
+        Public Url As String
+        Public Comment As String
+    End Class
+End Namespace

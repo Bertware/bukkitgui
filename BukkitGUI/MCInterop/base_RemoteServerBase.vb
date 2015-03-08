@@ -1,18 +1,19 @@
 ﻿
 
 Namespace MCInterop
-    ''' <summary>
-    ''' Base class for built-in remote server support. Each remote server class should inherit this, and use these properties to allow integration with server.vb
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public MustInherit Class RemoteServerBase
+''' <summary>
+'''     Base class for built-in remote server support. Each remote server class should inherit this, and use these
+'''     properties to allow integration with server.vb
+''' </summary>
+''' <remarks></remarks>
+                   Public MustInherit Class RemoteServerBase
         Private _instream As RemoteServerCache 'input stream for the server
         Private _outstream As RemoteServerCache 'output stream for the server
         Private _cred As RemoteCredentials
 
-
+        
         ''' <summary>
-        ''' Input stream, commands etc. should be written to this stream
+        '''     Input stream, commands etc. should be written to this stream
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -23,8 +24,9 @@ Namespace MCInterop
             End Get
         End Property
 
+        
         ''' <summary>
-        ''' Output stream, console output should be read from this stream
+        '''     Output stream, console output should be read from this stream
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
@@ -49,8 +51,10 @@ Namespace MCInterop
             _outstream = New RemoteServerCache
         End Sub
 
+        
         ''' <summary>
-        ''' This routine must be overridden with the start routine of the server, and will be called in the server module in order to start the server.
+        '''     This routine must be overridden with the start routine of the server, and will be called in the server module in
+        '''     order to start the server.
         ''' </summary>
         ''' <remarks>No variables are passed, everything must be set before launch of this routine</remarks>
         Public Overridable Sub Run()
@@ -61,7 +65,7 @@ Namespace MCInterop
         Public Overridable Sub Close()
             _instream = Nothing
             _outstream = Nothing
-            server.StopServer()
+            StopServer()
         End Sub
     End Class
 

@@ -1,18 +1,18 @@
-﻿Imports com.ramblingwood.minecraft.jsonapi
-Imports System.Threading
-Imports System.IO
-Imports Jayrock.Json.Conversion
-Imports Jayrock.Json
-Imports Net.Bertware.BukkitGUI.Core
+﻿Imports System.IO
 Imports System.Net.Sockets
+Imports System.Threading
+Imports com.ramblingwood.minecraft.jsonapi
+Imports Jayrock.Json
+Imports Jayrock.Json.Conversion
+Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
-    ''' <summary>
-    ''' A class for remote server communication with the JSONAPI plugin. Inherits from RemoteServerBase.vb and imports the JSONAPI.dll
-    ''' </summary>
-    ''' <remarks></remarks>
-    ''' 
-    Public Class RemoteJSONAPI
+''' <summary>
+'''     A class for remote server communication with the JSONAPI plugin. Inherits from RemoteServerBase.vb and imports the
+'''     JSONAPI.dll
+''' </summary>
+''' <remarks></remarks>
+                   Public Class RemoteJSONAPI
         Inherits RemoteServerBase
         Private api As JSONAPI
         Private thd_connection_recv As Thread
@@ -33,21 +33,21 @@ Namespace MCInterop
             thd_connection_send.IsBackground = True
             thd_connection_send.Name = "Remote_JSONAPI_send_" & Me.Credentials.Host
             thd_connection_send.Start()
-            livebug.write(livebug.loggingLevel.Fine, "RemoteJSONAPI", "Remote server started...")
+            Log(livebug.loggingLevel.Fine, "RemoteJSONAPI", "Remote server started...")
         End Sub
 
         Public Overrides Sub Close()
-            livebug.write(loggingLevel.Fine, "RemoteJSONAPI", "Remote server stopping...")
+            Log(loggingLevel.Fine, "RemoteJSONAPI", "Remote server stopping...")
 
             MyBase.Close()
 
             running = False
             Thread.Sleep(10)
-            livebug.write(loggingLevel.Fine, "RemoteJSONAPI", "Remote server stopped")
+            Log(loggingLevel.Fine, "RemoteJSONAPI", "Remote server stopped")
         End Sub
 
         Private Sub run_connection_send()
-            livebug.write(loggingLevel.Fine, "RemoteJSONAPI", "Remote sender thread started...")
+            Log(loggingLevel.Fine, "RemoteJSONAPI", "Remote sender thread started...")
             Try
                 While running AndAlso server.running AndAlso Me.StandardIn IsNot Nothing
                     If StandardIn.EOS = False Then
@@ -55,7 +55,7 @@ Namespace MCInterop
                         If cmd Is Nothing OrElse cmd = "" Then Continue While
                         cmd = cmd.Replace("&", "")
                         cmd = cmd.Replace("""", "'")
-                        AdvancedWebClient.downloadstring(
+                        downloadstring(
                             "http://" & Me.Credentials.Host & ":" & Me.Credentials.port &
                             "/api/call?method=runConsoleCommand&args=%5B%22" & cmd & "%22%5D&key=" &
                             api.createKey("runConsoleCommand"), True)
@@ -63,26 +63,26 @@ Namespace MCInterop
                     Thread.Sleep(10)
                 End While
             Catch ex As Exception
-                livebug.write(loggingLevel.Severe, "RemoteJSONAPI", "Severe exception at run_connection_send! ",
-                              ex.Message)
+                Log(loggingLevel.Severe, "RemoteJSONAPI", "Severe exception at run_connection_send! ",
+                    ex.Message)
             End Try
-            livebug.write(loggingLevel.Fine, "RemoteJSONAPI", "Remote sender thread stopped...")
+            Log(loggingLevel.Fine, "RemoteJSONAPI", "Remote sender thread stopped...")
             If running = True Then Me.Close()
         End Sub
 
         Private Sub run_connection_receive()
-            livebug.write(loggingLevel.Fine, "RemoteJSONAPI", "Remote receiver thread started...")
+            Log(loggingLevel.Fine, "RemoteJSONAPI", "Remote receiver thread started...")
             Try
                 Dim _
                     sock As _
-                        New Socket(System.Net.Sockets.AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
+                        New Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
                 Try
                     sock.Connect(Me.Credentials.Host, Me.Credentials.port + 1)
                 Catch con_ex As Exception
                     MessageBox.Show(lr("Failed to connect to remote server. Are the credentials correct?"),
                                     lr("Failed to connect"), MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    livebug.write(loggingLevel.Warning, "RemoteJSONAPI",
-                                  "Failed to connect to remote server. Are the credentials correct? ", con_ex.Message)
+                    Log(loggingLevel.Warning, "RemoteJSONAPI",
+                        "Failed to connect to remote server. Are the credentials correct? ", con_ex.Message)
                 End Try
 
                 If sock.Connected Then
@@ -106,9 +106,9 @@ Namespace MCInterop
                             End While
                             If sr IsNot Nothing Then l = sr.ReadLine()
                         Catch readex As Exception
-                            livebug.write(loggingLevel.Warning, "RemoteJSONAPI",
-                                          "exception at run_connection_receive, while reading from networkstream " &
-                                          readex.Message) 'don't flag as critical error
+                            Log(loggingLevel.Warning, "RemoteJSONAPI",
+                                "exception at run_connection_receive, while reading from networkstream " &
+                                readex.Message) 'don't flag as critical error
                         End Try
 
                         If _
@@ -124,9 +124,9 @@ Namespace MCInterop
 
                 If sock IsNot Nothing AndAlso sock.Connected Then sock.Close()
             Catch ex As Exception
-                livebug.write(loggingLevel.Warning, "RemoteJSONAPI", "Exception at run_connection_receive!", ex.Message)
+                Log(loggingLevel.Warning, "RemoteJSONAPI", "Exception at run_connection_receive!", ex.Message)
             End Try
-            livebug.write(loggingLevel.Fine, "RemoteJSONAPI", "Remote receiver thread stopped...")
+            Log(loggingLevel.Fine, "RemoteJSONAPI", "Remote receiver thread stopped...")
             If running = True Then Me.Close()
         End Sub
     End Class

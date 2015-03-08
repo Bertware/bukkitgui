@@ -19,22 +19,22 @@ Public Class BackupDialog
         bs = backup
     End Sub
 
-    Private Sub BackupDialog_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub BackupDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If bs IsNot Nothing Then
             If bs.name IsNot Nothing Then TxtName.Text = bs.name
             If bs.folders IsNot Nothing AndAlso bs.folders.Count > 0 Then _
-                TxtFolders.Text = Core.common.Serialize(bs.folders, ";")
+                TxtFolders.Text = Serialize(bs.folders, ";")
             If bs.destination IsNot Nothing Then TxtDestination.Text = bs.destination
             ChkCompression.Checked = bs.compression
         End If
     End Sub
 
-    Private Sub BtnCancel_Click(sender As System.Object, e As System.EventArgs) Handles BtnCancel.Click
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+    Private Sub BtnCancel_Click(sender As Object, e As EventArgs) Handles BtnCancel.Click
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-    Private Sub BtnOk_Click(sender As System.Object, e As System.EventArgs) Handles BtnOk.Click
+    Private Sub BtnOk_Click(sender As Object, e As EventArgs) Handles BtnOk.Click
         bs = New BackupSetting
         bs.name = TxtName.Text
         bs.folders = New List(Of String)
@@ -43,23 +43,23 @@ Public Class BackupDialog
         Next
         bs.destination = TxtDestination.Text
         bs.compression = ChkCompression.Checked
-        Me.DialogResult = Windows.Forms.DialogResult.OK
+        Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
-    Private Sub BtnBrowseSourceFolders_Click(sender As System.Object, e As System.EventArgs) _
+    Private Sub BtnBrowseSourceFolders_Click(sender As Object, e As EventArgs) _
         Handles BtnBrowseSourceFolders.Click
         Dim fb As New FolderBrowserDialog
         fb.Description = lr("Select folders to backup")
-        If fb.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
+        If fb.ShowDialog() <> DialogResult.OK Then Exit Sub
         If TxtFolders.Text = "" Then TxtFolders.Text = fb.SelectedPath Else TxtFolders.Text += ";" & fb.SelectedPath
     End Sub
 
-    Private Sub BtnBrowseDestination_Click(sender As System.Object, e As System.EventArgs) _
+    Private Sub BtnBrowseDestination_Click(sender As Object, e As EventArgs) _
         Handles BtnBrowseDestination.Click
         Dim fb As New FolderBrowserDialog
         fb.Description = lr("Select folder to store backup")
-        If fb.ShowDialog() <> Windows.Forms.DialogResult.OK Then Exit Sub
+        If fb.ShowDialog() <> DialogResult.OK Then Exit Sub
         TxtDestination.Text = fb.SelectedPath
     End Sub
 

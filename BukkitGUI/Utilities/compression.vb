@@ -1,23 +1,24 @@
 ﻿'Compression module, ported from beta
 'NEEDS REVIEW
 Imports System.IO
-Imports Net.Bertware.BukkitGUI.Core
 Imports ICSharpCode.SharpZipLib.Zip
+Imports Microsoft.VisualBasic.FileIO
+Imports Net.Bertware.BukkitGUI.Core
 
 Namespace Utilities
-    ''' <summary>
-    ''' Compress and decompress zip files.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Module compression
-        ''' <summary>
-        ''' Compress the content of a directory to a zip file
-        ''' </summary>
-        ''' <param name="DirectoryToZip">The directory that should be compressed</param>
-        ''' <param name="TheZipFile">The output file path</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function compress(ByVal DirectoryToZip As String, ByVal TheZipFile As String) As Boolean
+''' <summary>
+'''     Compress and decompress zip files.
+''' </summary>
+''' <remarks></remarks>
+                   Module compression
+                   ''' <summary>
+                   '''     Compress the content of a directory to a zip file
+                   ''' </summary>
+                   ''' <param name="DirectoryToZip">The directory that should be compressed</param>
+                   ''' <param name="TheZipFile">The output file path</param>
+                   ''' <returns></returns>
+                   ''' <remarks></remarks>
+                                     Public Function compress(ByVal DirectoryToZip As String, ByVal TheZipFile As String) As Boolean
             ' Compress file (DirectoryToZip is source, ZipFile is output file)
             ' Example:  compression("c:/Directory", "c:/Directory.zip")
 
@@ -27,7 +28,7 @@ Namespace Utilities
                 Dim mylength As Integer ' length of index
 
                 ' Get complete name of files to compress
-                Dim filestozip() As String = Directory.GetFiles(DirectoryToZip, "*.*", SearchOption.AllDirectories)
+                Dim filestozip() As String = Directory.GetFiles(DirectoryToZip, "*.*", IO.SearchOption.AllDirectories)
 
                 ' mydirname : name of directory to compress
                 Dim mydirname As String = New DirectoryInfo(DirectoryToZip).Name
@@ -67,18 +68,19 @@ Namespace Utilities
                 Return True
             Catch ex As Exception
                 Return False
-                livebug.write(livebug.loggingLevel.Severe, "Compression", "Error while compressing files!", ex.Message)
+                Log(livebug.loggingLevel.Severe, "Compression", "Error while compressing files!", ex.Message)
             End Try
         End Function
 
-        ''' <summary>
-        ''' Decompress a zip compatible archive
-        ''' </summary>
-        ''' <param name="destinationDirectory">the directory where the files should be decompressed</param>
-        ''' <param name="myzipfile">the zip file to decompress</param>
-        ''' <returns>true if success</returns>
-        ''' <remarks></remarks>
-        Public Function decompress(ByVal destinationDirectory As String, ByVal myzipfile As String) As Boolean
+                                     
+                                     ''' <summary>
+                                     '''     Decompress a zip compatible archive
+                                     ''' </summary>
+                                     ''' <param name="destinationDirectory">the directory where the files should be decompressed</param>
+                                     ''' <param name="myzipfile">the zip file to decompress</param>
+                                     ''' <returns>true if success</returns>
+                                     ''' <remarks></remarks>
+                                     Public Function decompress(ByVal destinationDirectory As String, ByVal myzipfile As String) As Boolean
             'Decompress zip archive in DestinationDirectory
             'Example: decompression("c:/DossierResultat", "c:/Dossier.zip")
 
@@ -102,7 +104,7 @@ Namespace Utilities
                         Dim myFile As New FileInfo(destinationDirectory & "/" & theEntry.Name)
 
                         ' Create directory
-                        If Not FileIO.FileSystem.DirectoryExists(myFile.DirectoryName) Then _
+                        If Not FileSystem.DirectoryExists(myFile.DirectoryName) Then _
                             Directory.CreateDirectory(myFile.DirectoryName)
 
                         ' Create end file
@@ -123,7 +125,7 @@ Namespace Utilities
                 Return True
             Catch ex As Exception
                 Return False
-                livebug.write(loggingLevel.Severe, "Compression", "Error while decompressing files!", ex.Message)
+                Log(loggingLevel.Severe, "Compression", "Error while decompressing files!", ex.Message)
             End Try
         End Function
     End Module

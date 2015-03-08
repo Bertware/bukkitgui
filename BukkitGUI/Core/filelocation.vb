@@ -1,5 +1,8 @@
-﻿Imports Microsoft.Win32
+﻿Imports System.IO
+Imports System.Security
 Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
+Imports Microsoft.Win32
 
 
 Namespace Core
@@ -9,7 +12,7 @@ Namespace Core
         ' Due to this, translations and config aren't available to use here.
         '
 
-        Public ReadOnly filelocation_xml As String = common.AppdataPath & "/filelocation.xml"
+        Public ReadOnly filelocation_xml As String = AppdataPath & "/filelocation.xml"
 
         Enum filelocation
             global_files
@@ -22,32 +25,32 @@ Namespace Core
 
         Public Sub init()
             Try
-                If IsRunningOnMono Then BasePath = LocalPath : common.updateLocations() : Exit Sub
+                If IsRunningOnMono Then BasePath = LocalPath : UpdateLocations() : Exit Sub
 
-                If Not FileIO.FileSystem.FileExists(filelocation_xml) Then
+                If Not FileSystem.FileExists(filelocation_xml) Then
                     Debug.WriteLine("filelocation.xml missing")
                     Dim newlocation As String = REG_VAL_GLOBAL
-                    If FileIO.FileSystem.DirectoryExists(My.Application.Info.DirectoryPath & "\BukkitGUI\Config\") Then _
+                    If FileSystem.DirectoryExists(My.Application.Info.DirectoryPath & "\BukkitGUI\Config\") Then _
                         newlocation = REG_VAL_LOCAL : Debug.WriteLine("Local settings detected")
                     Debug.WriteLine("Set filelocation to " & newlocation)
-                    common.Create_file(filelocation_xml,
-                                       "<filelocation><location>" & newlocation & "</location></filelocation>")
+                    Create_file(filelocation_xml,
+                                "<filelocation><location>" & newlocation & "</location></filelocation>")
                 End If
 
 
                 Select Case location
                     Case filelocation.global_files
                         BasePath = AppdataPath
-                        common.updateLocations()
+                        UpdateLocations()
                         Debug.WriteLine("file location set to " & BasePath)
                     Case filelocation.local_files
                         BasePath = LocalPath
-                        common.updateLocations()
+                        UpdateLocations()
                         Debug.WriteLine("file location set to " & BasePath)
                 End Select
             Catch ex As Exception
                 BasePath = LocalPath
-                common.updateLocations()
+                UpdateLocations()
                 Debug.WriteLine("AppData unavailable: file location set to " & BasePath)
             End Try
         End Sub
@@ -59,7 +62,7 @@ Namespace Core
                     If Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware) Is Nothing Then _
                         Registry.CurrentUser.CreateSubKey(RegistryHkcuSoftware)
 
-                    Dim regKey As Microsoft.Win32.RegistryKey
+                    Dim regKey As RegistryKey
                     regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                     If regKey.GetValue(REG_VAL) Is Nothing Then 'If still on the old system, use the old system
 
@@ -115,13 +118,13 @@ Namespace Core
 
                 If value = filelocation.local_files Then
                     Try
-                        livebug.write(loggingLevel.Fine, "FileLocation", "Changing file location to local")
+                        Log(loggingLevel.Fine, "FileLocation", "Changing file location to local")
                         livebug.dispose()
 
-                        If Not IO.Directory.Exists(LocalPath) Then IO.Directory.CreateDirectory(LocalPath)
-                        FileIO.FileSystem.CopyDirectory(Common.AppdataPath, Common.LocalPath, True)
+                        If Not Directory.Exists(LocalPath) Then Directory.CreateDirectory(LocalPath)
+                        FileSystem.CopyDirectory(AppdataPath, LocalPath, True)
 
-                        Dim regKey As Microsoft.Win32.RegistryKey
+                        Dim regKey As RegistryKey
                         regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                         regKey.SetValue(REG_VAL, REG_VAL_LOCAL)
 
@@ -137,12 +140,12 @@ Namespace Core
                         MessageBox.Show(
                             "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
                             "Cyclic operation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Catch dnfex As IO.DirectoryNotFoundException
+                    Catch dnfex As DirectoryNotFoundException
                         'source doesn't exist
                         MessageBox.Show(
                             "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
                             "Source folder doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Catch sex As Security.SecurityException
+                    Catch sex As SecurityException
                         'no permissions
                         MessageBox.Show(
                             "Something went wrong while copying files from appdata to the local folder:" & vbCrLf &
@@ -162,16 +165,16 @@ Namespace Core
                     End Try
                 Else
                     Try
-                        livebug.write(loggingLevel.Fine, "FileLocation", "Changing file location to global")
+                        Log(loggingLevel.Fine, "FileLocation", "Changing file location to global")
                         livebug.dispose()
 
-                        If FileIO.FileSystem.DirectoryExists(Common.LocalPath) Then _
-                            FileIO.FileSystem.CopyDirectory(Common.LocalPath, Common.AppdataPath, True)
-                        If FileIO.FileSystem.DirectoryExists(Common.LocalPath) Then _
-                            FileIO.FileSystem.DeleteDirectory(Common.LocalPath,
-                                                              FileIO.DeleteDirectoryOption.DeleteAllContents)
+                        If FileSystem.DirectoryExists(LocalPath) Then _
+                            FileSystem.CopyDirectory(LocalPath, AppdataPath, True)
+                        If FileSystem.DirectoryExists(LocalPath) Then _
+                            FileSystem.DeleteDirectory(LocalPath,
+                                                       DeleteDirectoryOption.DeleteAllContents)
 
-                        Dim regKey As Microsoft.Win32.RegistryKey
+                        Dim regKey As RegistryKey
                         regKey = Registry.CurrentUser.OpenSubKey(RegistryHkcuSoftware, True)
                         regKey.SetValue(REG_VAL, REG_VAL_GLOBAL)
 
@@ -187,12 +190,12 @@ Namespace Core
                         MessageBox.Show(
                             "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
                             "Cyclic operation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Catch dnfex As IO.DirectoryNotFoundException
+                    Catch dnfex As DirectoryNotFoundException
                         'source doesn't exist
                         MessageBox.Show(
                             "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &
                             "Source folder doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Catch sex As Security.SecurityException
+                    Catch sex As SecurityException
                         'no permissions
                         MessageBox.Show(
                             "Something went wrong while copying files from the local folder to appdata:" & vbCrLf &

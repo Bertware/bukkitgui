@@ -178,4 +178,46 @@
   <data name="spigot_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\img\spigot_logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="lang_bulgarian" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_bulgarian.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_danish" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_danish.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_dutch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_dutch.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_french" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_french.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_german" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_german.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_italian" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_italian.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_japanese" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_japanese.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_polish" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_polish.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_romanian" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_romanian.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_russian" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_russian.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_simplifiedChinese" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_simplifiedchinese.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_spanish" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_spanish.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_traditionalChinese" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_traditionalchinese.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="lang_turkish" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\lang\lang_turkish.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
