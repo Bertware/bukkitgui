@@ -8,15 +8,20 @@ Namespace Utilities
         Const default_x64_jre6x64 As String = "C:/Program Files/Java/jre6/bin/java.exe"
         Const default_x64_jre7x32 As String = "C:/Program Files (x86)/Java/jre7/bin/java.exe"
         Const default_x64_jre7x64 As String = "C:/Program Files/Java/jre7/bin/java.exe"
+        Const default_x64_jre8x32 As String = "C:/Program Files (x86)/Java/jre8/bin/java.exe"
+        Const default_x64_jre8x64 As String = "C:/Program Files/Java/jre8/bin/java.exe"
 
         Const default_x32_jre6x32 As String = "C:/Program Files/Java/jre6/bin/java.exe"
         Const default_x32_jre7x32 As String = "C:/Program Files/Java/jre7/bin/java.exe"
+        Const default_x32_jre8x32 As String = "C:/Program Files/Java/jre8/bin/java.exe"
 
         Enum javaVersion
             jre6x32 = 0
             jre6x64 = 1
             jre7x32 = 2
             jre7x64 = 3
+            jre8x32 = 4
+            jre8x64 = 5
         End Enum
 
         Public Property jre6x32 As String
@@ -88,6 +93,39 @@ Namespace Utilities
             End Set
         End Property
 
+        Public Property jre8x32 As String
+            Get
+                Dim path As String = read("jre8x32", "undefined", "java")
+                If path = "undefined" Then
+                    Select Case Is64BitOs
+                        Case True
+                            If FileSystem.FileExists(default_x64_jre8x32) Then path = default_x64_jre8x32
+                        Case False
+                            If FileSystem.FileExists(default_x32_jre8x32) Then path = default_x32_jre8x32
+                    End Select
+                    write("jre8x32", path, "java")
+                End If
+                Return path
+            End Get
+            Set(value As String)
+                write("jre8x32", value, "java")
+            End Set
+        End Property
+
+        Public Property jre8x64 As String
+            Get
+                Dim path As String = read("jre8x64", "undefined", "java")
+                If path = "undefined" Then
+                    If FileSystem.FileExists(default_x64_jre8x64) Then path = default_x64_jre8x64
+                    write("jre8x64", path, "java")
+                End If
+                Return path
+            End Get
+            Set(value As String)
+                write("jre8x64", value, "java")
+            End Set
+        End Property
+
         
         ''' <summary>
         '''     Get the path of java.exe for the given java version
@@ -105,6 +143,10 @@ Namespace Utilities
                     Return jre7x32
                 Case javaVersion.jre7x64
                     Return jre7x64
+                Case javaVersion.jre8x32
+                    Return jre8x32
+                Case javaVersion.jre8x64
+                    Return jre8x64
                 Case Else
                     Dim jp As String = read("alternative_java", "", "java")
                     If jp Is Nothing OrElse jp = "" OrElse File.Exists(jp) = False Then

@@ -1503,7 +1503,7 @@ Namespace Core
                 Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.CBSuperstartJavaJRE.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
             Me.CBSuperstartJavaJRE.FormattingEnabled = True
-            Me.CBSuperstartJavaJRE.Items.AddRange(New Object() {"Jre6x32", "Jre6x64", "Jre7x32", "Jre7x64", "Alternative java path (select to set)"})
+            Me.CBSuperstartJavaJRE.Items.AddRange(New Object() {"Jre6x32", "Jre6x64", "Jre7x32", "Jre7x64", "Jre8x32", "Jre8x64", "Alternative java path (select to set)"})
             Me.CBSuperstartJavaJRE.Location = New System.Drawing.Point(120, 19)
             Me.CBSuperstartJavaJRE.Name = "CBSuperstartJavaJRE"
             Me.CBSuperstartJavaJRE.Size = New System.Drawing.Size(372, 21)

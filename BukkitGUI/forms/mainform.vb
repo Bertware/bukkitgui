@@ -2142,7 +2142,7 @@ KeyUp
                 write("maxram", TBSuperstartJavaMaxRam.Value, "superstart")
             End If
 
-            If CBSuperstartJavaJRE.SelectedIndex = 4 Then
+            If CBSuperstartJavaJRE.SelectedIndex = 6 Then
                 SelectAlternativeJava()
             End If
         End Sub
