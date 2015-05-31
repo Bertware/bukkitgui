@@ -64,17 +64,17 @@ Namespace MCInterop
             Select Case server
                 Case McInteropType.bukkit
                     Me.switches = "-nojline"
-                    Me.args += "-Duser.language=en "
+                    Me.args += " -Duser.language=en "
                     If readAsBool("utf_8_compatibility", False, "output") Then _
-                        Me.args += "-Dfile.encoding=utf-8 "
+                        Me.args += " -Dfile.encoding=utf-8 "
 
                 Case McInteropType.vanilla
                     Me.switches = "nogui"
                 Case McInteropType.spigot
                     Me.switches = "-nojline"
-                    Me.args += "-Duser.language=en -XX:MaxPermSize=128M"
+                    Me.args += " -Duser.language=en -XX:MaxPermSize=128M"
                     If readAsBool("utf_8_compatibility", False, "output") Then _
-                        Me.args += "-Dfile.encoding=utf-8 "
+                        Me.args += " -Dfile.encoding=utf-8 "
 
 
             End Select
