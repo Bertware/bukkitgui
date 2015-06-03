@@ -1,17 +1,31 @@
-﻿
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+
 
 Namespace MCInterop
-''' <summary>
-'''     Base class for built-in remote server support. Each remote server class should inherit this, and use these
-'''     properties to allow integration with server.vb
-''' </summary>
-''' <remarks></remarks>
-                   Public MustInherit Class RemoteServerBase
+    ' <summary>
+    '     Base class for built-in remote server support. Each remote server class should inherit this, and use these
+    '     properties to allow integration with server.vb
+    ' </summary>
+    ' <remarks></remarks>
+    Public MustInherit Class RemoteServerBase
         Private _instream As RemoteServerCache 'input stream for the server
         Private _outstream As RemoteServerCache 'output stream for the server
         Private _cred As RemoteCredentials
 
-        
+
         ''' <summary>
         '''     Input stream, commands etc. should be written to this stream
         ''' </summary>
@@ -24,7 +38,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     Output stream, console output should be read from this stream
         ''' </summary>
@@ -51,7 +65,7 @@ Namespace MCInterop
             _outstream = New RemoteServerCache
         End Sub
 
-        
+
         ''' <summary>
         '''     This routine must be overridden with the start routine of the server, and will be called in the server module in
         '''     order to start the server.

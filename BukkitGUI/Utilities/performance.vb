@@ -1,4 +1,18 @@
-﻿'Read the memory and CPU usage of the server.host process, the GUI and total
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+'Read the memory and CPU usage of the server.host process, the GUI and total
 'After init, other threads will continue to sample.
 'Values can be read at any moment.
 '

@@ -1,4 +1,18 @@
-﻿
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+
 
 'This file contains classes to pass items to a sub that executes thread safe
 'As these routines can only accept one item, multiple parameters are bundled here

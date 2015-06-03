@@ -105,3 +105,4 @@ If it is not possible or desirable to put the notice in a particular file, then 
 You may add additional accurate notices of copyright ownership.
 
 Exhibit B - “Incompatible With Secondary Licenses” Notice This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
+Exhibit C - compiled files may only be redistributed if they comply with the mozilla MPL2 license, and may not be monetized in any way, including but not limited to selling the software or distributing it through ad-sponsored channels.

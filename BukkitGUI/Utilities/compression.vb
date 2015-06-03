@@ -1,4 +1,18 @@
-﻿'Compression module, ported from beta
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+'Compression module, ported from beta
 'NEEDS REVIEW
 Imports System.IO
 Imports ICSharpCode.SharpZipLib.Zip
@@ -6,19 +20,19 @@ Imports Microsoft.VisualBasic.FileIO
 Imports Net.Bertware.BukkitGUI.Core
 
 Namespace Utilities
-''' <summary>
-'''     Compress and decompress zip files.
-''' </summary>
-''' <remarks></remarks>
-                   Module compression
-                   ''' <summary>
-                   '''     Compress the content of a directory to a zip file
-                   ''' </summary>
-                   ''' <param name="DirectoryToZip">The directory that should be compressed</param>
-                   ''' <param name="TheZipFile">The output file path</param>
-                   ''' <returns></returns>
-                   ''' <remarks></remarks>
-                                     Public Function compress(ByVal DirectoryToZip As String, ByVal TheZipFile As String) As Boolean
+    ' <summary>
+    '     Compress and decompress zip files.
+    ' </summary>
+    ' <remarks></remarks>
+    Module compression
+        ''' <summary>
+        '''     Compress the content of a directory to a zip file
+        ''' </summary>
+        ''' <param name="DirectoryToZip">The directory that should be compressed</param>
+        ''' <param name="TheZipFile">The output file path</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function compress(ByVal DirectoryToZip As String, ByVal TheZipFile As String) As Boolean
             ' Compress file (DirectoryToZip is source, ZipFile is output file)
             ' Example:  compression("c:/Directory", "c:/Directory.zip")
 
@@ -72,15 +86,15 @@ Namespace Utilities
             End Try
         End Function
 
-                                     
-                                     ''' <summary>
-                                     '''     Decompress a zip compatible archive
-                                     ''' </summary>
-                                     ''' <param name="destinationDirectory">the directory where the files should be decompressed</param>
-                                     ''' <param name="myzipfile">the zip file to decompress</param>
-                                     ''' <returns>true if success</returns>
-                                     ''' <remarks></remarks>
-                                     Public Function decompress(ByVal destinationDirectory As String, ByVal myzipfile As String) As Boolean
+
+        ''' <summary>
+        '''     Decompress a zip compatible archive
+        ''' </summary>
+        ''' <param name="destinationDirectory">the directory where the files should be decompressed</param>
+        ''' <param name="myzipfile">the zip file to decompress</param>
+        ''' <returns>true if success</returns>
+        ''' <remarks></remarks>
+        Public Function decompress(ByVal destinationDirectory As String, ByVal myzipfile As String) As Boolean
             'Decompress zip archive in DestinationDirectory
             'Example: decompression("c:/DossierResultat", "c:/Dossier.zip")
 
