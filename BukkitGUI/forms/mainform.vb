@@ -1600,48 +1600,49 @@ KeyUp
                         GBSuperStartRemoteServer.Enabled = False
 
                         BtnSuperStartGetCurrent.Enabled = True
-                        BtnSuperStartDownloadDev.Enabled = True
-                        BtnSuperStartDownloadBeta.Enabled = True
-                        BtnSuperStartDownloadRecommended.Enabled = True
-                        BtnSuperStartDownloadCustomBuild.Enabled = True
+                        BtnSuperStartDownloadDev.Enabled = False
+                        BtnSuperStartDownloadBeta.Enabled = False
+                        BtnSuperStartDownloadRecommended.Enabled = False
+                        BtnSuperStartDownloadCustomBuild.Enabled = False
 
                         'bukkit has version info
-                        If Fetched Then
-                            lblSuperStartLatestStable.Visible = True
-                            lblSuperStartLatestBeta.Visible = True
-                            lblSuperStartLatestDev.Visible = True
 
-                            lblSuperStartLatestStable.Text = Lr("Latest stable:") & " " &
-                                                             Recommended_info.version & " (#" &
-                                                             Recommended_info.build & ")"
-                            lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & Beta_info.version &
-                                                           " (#" & Beta_info.build & ")"
-                            lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & Dev_info.version & " (#" &
-                                                          Dev_info.build & ")"
-                            Try
-                                NumSuperstartCustomBuild.Maximum = Latest_Dev _
-                                'dev build is always the latest
-                                If _
-                                    Latest_Recommended <= Latest_Dev AndAlso
-                                    Latest_Recommended > 1335 Then _
-                                    NumSuperstartCustomBuild.Value = Latest_Recommended Else _
-                                    NumSuperstartCustomBuild.Value = 1335
-                            Catch ex As Exception 'if something goes wrong, set these limits. 
-                                NumSuperstartCustomBuild.Maximum = 9999 _
-                                'this can't be set to a specific value, because we don't know the maximum
-                                NumSuperstartCustomBuild.Value = 1335 'minimum available at dl.bukkit.org
-                            End Try
-                        End If
+                        'If Fetched Then
+                        '    lblSuperStartLatestStable.Visible = True
+                        '    lblSuperStartLatestBeta.Visible = True
+                        '    lblSuperStartLatestDev.Visible = True
+
+                        '    lblSuperStartLatestStable.Text = Lr("Latest stable:") & " " &
+                        '                                     Recommended_info.version & " (#" &
+                        '                                     Recommended_info.build & ")"
+                        '    lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & Beta_info.version &
+                        '                                   " (#" & Beta_info.build & ")"
+                        '    lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & Dev_info.version & " (#" &
+                        '                                  Dev_info.build & ")"
+                        '    Try
+                        '        NumSuperstartCustomBuild.Maximum = Latest_Dev _
+                        '        'dev build is always the latest
+                        '        If _
+                        '            Latest_Recommended <= Latest_Dev AndAlso
+                        '            Latest_Recommended > 1335 Then _
+                        '            NumSuperstartCustomBuild.Value = Latest_Recommended Else _
+                        '            NumSuperstartCustomBuild.Value = 1335
+                        '    Catch ex As Exception 'if something goes wrong, set these limits. 
+                        '        NumSuperstartCustomBuild.Maximum = 9999 _
+                        '        'this can't be set to a specific value, because we don't know the maximum
+                        '        NumSuperstartCustomBuild.Value = 1335 'minimum available at dl.bukkit.org
+                        '    End Try
+                        'End If
                         llblSuperStartsite.Text = Lr("Site:") & " http://bukkit.org"
 
                         ChkSuperStartRetrieveCurrent.Enabled = True
                         ChkSuperstartAutoUpdateNotify.Enabled = True
                         ChkSuperStartRetrieveCurrent.Checked = readAsBool("bukkit_get_version", True,
                                                                           "superstart")
-                        ChkSuperstartAutoUpdateNotify.Checked = readAsBool("bukkit_auto_update", True,
-                                                                           "superstart")
-                        ChkSuperstartAutoUpdate.Checked = readAsBool("bukkit_auto_update_automatic", False,
-                                                                     "superstart")
+                        ChkSuperstartAutoUpdateNotify.Checked = False
+                        ' readAsBool("bukkit_auto_update", True,"superstart")
+                        ChkSuperstartAutoUpdate.Checked = False
+                        'readAsBool("bukkit_auto_update_automatic", False, "superstart")
                         PBSuperStartServerIcon.Image = My.Resources.bukkit_logo
 
                     Case 1 'vanilla
