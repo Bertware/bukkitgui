@@ -87,6 +87,24 @@ Namespace MCInterop
             End Get
         End Property
 
+        Public ReadOnly Property ServerName As String
+            Get
+                If IsRunningLight Then Return ""
+                If _settings Is Nothing Then LoadSettings()
+                If _settings Is Nothing Then Return "" : Exit Property
+                Return GetSetting("server-name")
+            End Get
+        End Property
+
+        Public ReadOnly Property LevelName As String
+            Get
+                If IsRunningLight Then Return ""
+                If _settings Is Nothing Then LoadSettings()
+                If _settings Is Nothing Then Return "" : Exit Property
+                Return GetSetting("level-name")
+            End Get
+        End Property
+
         Public Sub init()
             LoadSettings()
             LoadLists()

@@ -864,7 +864,16 @@ KeyUp
 
                     LoadSettings()
                     Dim motd As String = ""
-                    If Not IsRunningLight Then motd = ServerSettings.MOTD
+
+                    If Not IsRunningLight Then
+                        motd = ServerSettings.ServerName
+                        If (motd Is Nothing) Then
+                            motd = ServerSettings.MOTD
+                        End If
+                        If (motd Is Nothing) Then
+                            motd = ""
+                        End If
+                    End If
 
                     If CurrentServerType <> McInteropType.remote Then
                         If motd = "" Then
