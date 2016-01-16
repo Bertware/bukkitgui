@@ -1476,17 +1476,17 @@ KeyUp
 
                     If GuiCpu >= 0 Then
                         If GuiCpu <= 100 Then PBGeneralCPUGUI.Value = GuiCpu
-                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(2) & "%"
+                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(2, "0") & "%"
                     End If
 
                     If TotalCpu >= 0 Then
                         If TotalCpu <= 100 Then PBGeneralCPUTotal.Value = TotalCpu
-                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(2) & "%"
+                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(2, "0") & "%"
                     End If
 
                     If ServerCpu >= 0 Then
                         If ServerCpu <= 100 Then PBGeneralCPUServer.Value = ServerCpu
-                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(2) & "%"
+                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(2, "0") & "%"
                     End If
 
                     If GuiMem >= 0 Then

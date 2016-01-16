@@ -366,7 +366,7 @@ Namespace Core
             Me.GBGeneralGeneral.Size = New System.Drawing.Size(817, 349)
             Me.GBGeneralGeneral.TabIndex = 0
             Me.GBGeneralGeneral.TabStop = False
-            Me.GBGeneralGeneral.Text = Lr("General")
+            Me.GBGeneralGeneral.Text = "General"
             '
             'SplitGeneral
             '
@@ -397,7 +397,7 @@ Namespace Core
             Me.BtnGeneralClearOutput.Name = "BtnGeneralClearOutput"
             Me.BtnGeneralClearOutput.Size = New System.Drawing.Size(63, 23)
             Me.BtnGeneralClearOutput.TabIndex = 4
-            Me.BtnGeneralClearOutput.Text = Lr("Clear")
+            Me.BtnGeneralClearOutput.Text = "Clear"
             Me.MainToolTip.SetToolTip(Me.BtnGeneralClearOutput, "Clear the output of the log textbox")
             Me.BtnGeneralClearOutput.UseVisualStyleBackColor = True
             '
@@ -409,7 +409,7 @@ Namespace Core
             Me.ChkGeneralSay.Name = "ChkGeneralSay"
             Me.ChkGeneralSay.Size = New System.Drawing.Size(152, 17)
             Me.ChkGeneralSay.TabIndex = 2
-            Me.ChkGeneralSay.Text = Lr("Say (Ctrl+S)")
+            Me.ChkGeneralSay.Text = "Say (Ctrl+S)"
             Me.ChkGeneralSay.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             Me.MainToolTip.SetToolTip(Me.ChkGeneralSay, "put the /say prefix in front of everything in the textbox, so you can easily chat" & _
             " with players")
@@ -434,7 +434,7 @@ Namespace Core
             '
             'GeneralColName
             '
-            Me.GeneralColName.Text = Lr("Name")
+            Me.GeneralColName.Text = "Name"
             Me.GeneralColName.Width = 125
             '
             'CmenuPlayerList
@@ -448,66 +448,66 @@ Namespace Core
             Me.BtnCMenuPlayerListOp.Image = CType(resources.GetObject("BtnCMenuPlayerListOp.Image"), System.Drawing.Image)
             Me.BtnCMenuPlayerListOp.Name = "BtnCMenuPlayerListOp"
             Me.BtnCMenuPlayerListOp.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCMenuPlayerListOp.Text = Lr("Op")
+            Me.BtnCMenuPlayerListOp.Text = "Op"
             '
             'BtnCMenuPlayerListDeop
             '
             Me.BtnCMenuPlayerListDeop.Image = CType(resources.GetObject("BtnCMenuPlayerListDeop.Image"), System.Drawing.Image)
             Me.BtnCMenuPlayerListDeop.Name = "BtnCMenuPlayerListDeop"
             Me.BtnCMenuPlayerListDeop.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCMenuPlayerListDeop.Text = Lr("De-op")
+            Me.BtnCMenuPlayerListDeop.Text = "De-op"
             '
             'BtnCMenuPlayerListKick
             '
             Me.BtnCMenuPlayerListKick.Image = CType(resources.GetObject("BtnCMenuPlayerListKick.Image"), System.Drawing.Image)
             Me.BtnCMenuPlayerListKick.Name = "BtnCMenuPlayerListKick"
             Me.BtnCMenuPlayerListKick.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCMenuPlayerListKick.Text = Lr("Kick")
+            Me.BtnCMenuPlayerListKick.Text = "Kick"
             '
             'BtnCMenuPlayerListBan
             '
             Me.BtnCMenuPlayerListBan.Image = CType(resources.GetObject("BtnCMenuPlayerListBan.Image"), System.Drawing.Image)
             Me.BtnCMenuPlayerListBan.Name = "BtnCMenuPlayerListBan"
             Me.BtnCMenuPlayerListBan.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCMenuPlayerListBan.Text = Lr("Ban")
+            Me.BtnCMenuPlayerListBan.Text = "Ban"
             '
             'BtnCMenuPlayerListGameMode
             '
             Me.BtnCMenuPlayerListGameMode.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BtnCMenuPlayerListGamemodeSurvival, Me.BtnCMenuPlayerListGamemodeCreative, Me.BtnCMenuPlayerListGamemodeAdventure})
             Me.BtnCMenuPlayerListGameMode.Name = "BtnCMenuPlayerListGameMode"
             Me.BtnCMenuPlayerListGameMode.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCMenuPlayerListGameMode.Text = Lr("Gamemode")
+            Me.BtnCMenuPlayerListGameMode.Text = "Gamemode"
             '
             'BtnCMenuPlayerListGamemodeSurvival
             '
             Me.BtnCMenuPlayerListGamemodeSurvival.Name = "BtnCMenuPlayerListGamemodeSurvival"
             Me.BtnCMenuPlayerListGamemodeSurvival.Size = New System.Drawing.Size(129, 22)
-            Me.BtnCMenuPlayerListGamemodeSurvival.Text = Lr("Survival")
+            Me.BtnCMenuPlayerListGamemodeSurvival.Text = "Survival"
             '
             'BtnCMenuPlayerListGamemodeCreative
             '
             Me.BtnCMenuPlayerListGamemodeCreative.Name = "BtnCMenuPlayerListGamemodeCreative"
             Me.BtnCMenuPlayerListGamemodeCreative.Size = New System.Drawing.Size(129, 22)
-            Me.BtnCMenuPlayerListGamemodeCreative.Text = Lr("Creative")
+            Me.BtnCMenuPlayerListGamemodeCreative.Text = "Creative"
             '
             'BtnCMenuPlayerListGamemodeAdventure
             '
             Me.BtnCMenuPlayerListGamemodeAdventure.Name = "BtnCMenuPlayerListGamemodeAdventure"
             Me.BtnCMenuPlayerListGamemodeAdventure.Size = New System.Drawing.Size(129, 22)
-            Me.BtnCMenuPlayerListGamemodeAdventure.Text = Lr("Adventure")
+            Me.BtnCMenuPlayerListGamemodeAdventure.Text = "Adventure"
             '
             'BtnCMenuPlayerListGive
             '
             Me.BtnCMenuPlayerListGive.Name = "BtnCMenuPlayerListGive"
             Me.BtnCMenuPlayerListGive.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCMenuPlayerListGive.Text = Lr("Give...")
+            Me.BtnCMenuPlayerListGive.Text = "Give..."
             '
             'BtnCmenuPlayerListRefresh
             '
             Me.BtnCmenuPlayerListRefresh.Image = CType(resources.GetObject("BtnCmenuPlayerListRefresh.Image"), System.Drawing.Image)
             Me.BtnCmenuPlayerListRefresh.Name = "BtnCmenuPlayerListRefresh"
             Me.BtnCmenuPlayerListRefresh.Size = New System.Drawing.Size(136, 22)
-            Me.BtnCmenuPlayerListRefresh.Text = Lr("Refresh list")
+            Me.BtnCmenuPlayerListRefresh.Text = "Refresh list"
             '
             'ImgListPlayerAvatars
             '
@@ -522,7 +522,7 @@ Namespace Core
             Me.BtnBrowseOutput.Name = "BtnBrowseOutput"
             Me.BtnBrowseOutput.Size = New System.Drawing.Size(98, 23)
             Me.BtnBrowseOutput.TabIndex = 6
-            Me.BtnBrowseOutput.Text = Lr("Browse output")
+            Me.BtnBrowseOutput.Text = "Browse output"
             Me.MainToolTip.SetToolTip(Me.BtnBrowseOutput, "Send a command")
             Me.BtnBrowseOutput.UseVisualStyleBackColor = True
             '
@@ -549,7 +549,7 @@ Namespace Core
             Me.ARTXTServerOutput.ReadOnly = True
             Me.ARTXTServerOutput.Size = New System.Drawing.Size(643, 295)
             Me.ARTXTServerOutput.TabIndex = 1
-            Me.ARTXTServerOutput.Text = Lr("")
+            Me.ARTXTServerOutput.Text = ""
             '
             'BtnGeneralSendCmd
             '
@@ -558,7 +558,7 @@ Namespace Core
             Me.BtnGeneralSendCmd.Name = "BtnGeneralSendCmd"
             Me.BtnGeneralSendCmd.Size = New System.Drawing.Size(75, 23)
             Me.BtnGeneralSendCmd.TabIndex = 4
-            Me.BtnGeneralSendCmd.Text = Lr("Send")
+            Me.BtnGeneralSendCmd.Text = "Send"
             Me.MainToolTip.SetToolTip(Me.BtnGeneralSendCmd, "Send a command")
             Me.BtnGeneralSendCmd.UseVisualStyleBackColor = True
             '
@@ -594,7 +594,7 @@ Namespace Core
             Me.TabGeneral.Padding = New System.Windows.Forms.Padding(3)
             Me.TabGeneral.Size = New System.Drawing.Size(831, 516)
             Me.TabGeneral.TabIndex = 0
-            Me.TabGeneral.Text = Lr("General")
+            Me.TabGeneral.Text = "General"
             Me.TabGeneral.UseVisualStyleBackColor = True
             '
             'GbGeneralInfo
@@ -613,7 +613,7 @@ Namespace Core
             Me.GbGeneralInfo.Size = New System.Drawing.Size(814, 139)
             Me.GbGeneralInfo.TabIndex = 1
             Me.GbGeneralInfo.TabStop = False
-            Me.GbGeneralInfo.Text = Lr("Info")
+            Me.GbGeneralInfo.Text = "Info"
             '
             'LblGeneralTimeSinceStartValue
             '
@@ -622,7 +622,7 @@ Namespace Core
             Me.LblGeneralTimeSinceStartValue.Name = "LblGeneralTimeSinceStartValue"
             Me.LblGeneralTimeSinceStartValue.Size = New System.Drawing.Size(49, 13)
             Me.LblGeneralTimeSinceStartValue.TabIndex = 26
-            Me.LblGeneralTimeSinceStartValue.Text = Lr("00:00:00")
+            Me.LblGeneralTimeSinceStartValue.Text = "00:00:00"
             '
             'PanelPerformanceInfo
             '
@@ -656,7 +656,7 @@ Namespace Core
             Me.lblGeneralCPUGUI.Name = "lblGeneralCPUGUI"
             Me.lblGeneralCPUGUI.Size = New System.Drawing.Size(135, 13)
             Me.lblGeneralCPUGUI.TabIndex = 11
-            Me.lblGeneralCPUGUI.Text = Lr("GUI CPU Usage:")
+            Me.lblGeneralCPUGUI.Text = "GUI CPU Usage:"
             Me.lblGeneralCPUGUI.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblGeneralRAMServerValue
@@ -667,7 +667,7 @@ Namespace Core
             Me.lblGeneralRAMServerValue.Name = "lblGeneralRAMServerValue"
             Me.lblGeneralRAMServerValue.Size = New System.Drawing.Size(82, 13)
             Me.lblGeneralRAMServerValue.TabIndex = 23
-            Me.lblGeneralRAMServerValue.Text = Lr("000% [0000MB]")
+            Me.lblGeneralRAMServerValue.Text = "000% [0000MB]"
             '
             'PBGeneralCPUGUI
             '
@@ -692,7 +692,7 @@ Namespace Core
             Me.lblGeneralRAMGUIValue.Name = "lblGeneralRAMGUIValue"
             Me.lblGeneralRAMGUIValue.Size = New System.Drawing.Size(82, 13)
             Me.lblGeneralRAMGUIValue.TabIndex = 22
-            Me.lblGeneralRAMGUIValue.Text = Lr("000% [0000MB]")
+            Me.lblGeneralRAMGUIValue.Text = "000% [0000MB]"
             '
             'PBGeneralCPUServer
             '
@@ -715,9 +715,9 @@ Namespace Core
             Me.lblGeneralRAMTotalValue.Location = New System.Drawing.Point(480, 48)
             Me.lblGeneralRAMTotalValue.Margin = New System.Windows.Forms.Padding(1, 0, 3, 0)
             Me.lblGeneralRAMTotalValue.Name = "lblGeneralRAMTotalValue"
-            Me.lblGeneralRAMTotalValue.Size = New System.Drawing.Size(88, 13)
+            Me.lblGeneralRAMTotalValue.Size = New System.Drawing.Size(82, 13)
             Me.lblGeneralRAMTotalValue.TabIndex = 21
-            Me.lblGeneralRAMTotalValue.Text = Lr("000% [00000MB]")
+            Me.lblGeneralRAMTotalValue.Text = "000% [0000MB]"
             '
             'PBGeneralCPUTotal
             '
@@ -741,7 +741,7 @@ Namespace Core
             Me.lblGeneralCPUServer.Name = "lblGeneralCPUServer"
             Me.lblGeneralCPUServer.Size = New System.Drawing.Size(132, 13)
             Me.lblGeneralCPUServer.TabIndex = 12
-            Me.lblGeneralCPUServer.Text = Lr("Server CPU Usage:")
+            Me.lblGeneralCPUServer.Text = "Server CPU Usage:"
             Me.lblGeneralCPUServer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblGeneralRAMTotal
@@ -751,7 +751,7 @@ Namespace Core
             Me.lblGeneralRAMTotal.Name = "lblGeneralRAMTotal"
             Me.lblGeneralRAMTotal.Size = New System.Drawing.Size(143, 13)
             Me.lblGeneralRAMTotal.TabIndex = 16
-            Me.lblGeneralRAMTotal.Text = Lr("Total RAM Usage:")
+            Me.lblGeneralRAMTotal.Text = "Total RAM Usage:"
             Me.lblGeneralRAMTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblGeneralCPUTotal
@@ -761,7 +761,7 @@ Namespace Core
             Me.lblGeneralCPUTotal.Name = "lblGeneralCPUTotal"
             Me.lblGeneralCPUTotal.Size = New System.Drawing.Size(135, 13)
             Me.lblGeneralCPUTotal.TabIndex = 13
-            Me.lblGeneralCPUTotal.Text = Lr("Total CPU Usage:")
+            Me.lblGeneralCPUTotal.Text = "Total CPU Usage:"
             Me.lblGeneralCPUTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblGeneralRAMServer
@@ -771,18 +771,18 @@ Namespace Core
             Me.lblGeneralRAMServer.Name = "lblGeneralRAMServer"
             Me.lblGeneralRAMServer.Size = New System.Drawing.Size(140, 13)
             Me.lblGeneralRAMServer.TabIndex = 15
-            Me.lblGeneralRAMServer.Text = Lr("Server RAM Usage:")
+            Me.lblGeneralRAMServer.Text = "Server RAM Usage:"
             Me.lblGeneralRAMServer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblGeneralCPUTotalValue
             '
-            Me.lblGeneralCPUTotalValue.AutoSize = True
             Me.lblGeneralCPUTotalValue.Location = New System.Drawing.Point(140, 48)
             Me.lblGeneralCPUTotalValue.Margin = New System.Windows.Forms.Padding(3)
             Me.lblGeneralCPUTotalValue.Name = "lblGeneralCPUTotalValue"
             Me.lblGeneralCPUTotalValue.Size = New System.Drawing.Size(33, 13)
             Me.lblGeneralCPUTotalValue.TabIndex = 20
-            Me.lblGeneralCPUTotalValue.Text = Lr("000%")
+            Me.lblGeneralCPUTotalValue.Text = "00%"
+            Me.lblGeneralCPUTotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblGeneralRAMGUI
             '
@@ -791,7 +791,7 @@ Namespace Core
             Me.lblGeneralRAMGUI.Name = "lblGeneralRAMGUI"
             Me.lblGeneralRAMGUI.Size = New System.Drawing.Size(143, 13)
             Me.lblGeneralRAMGUI.TabIndex = 14
-            Me.lblGeneralRAMGUI.Text = Lr("GUI RAM Usage:")
+            Me.lblGeneralRAMGUI.Text = "GUI RAM Usage:"
             Me.lblGeneralRAMGUI.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'PBGeneralRAMTotal
@@ -811,13 +811,13 @@ Namespace Core
             '
             'lblGeneralCPUGUIValue
             '
-            Me.lblGeneralCPUGUIValue.AutoSize = True
             Me.lblGeneralCPUGUIValue.Location = New System.Drawing.Point(140, 6)
             Me.lblGeneralCPUGUIValue.Margin = New System.Windows.Forms.Padding(3)
             Me.lblGeneralCPUGUIValue.Name = "lblGeneralCPUGUIValue"
             Me.lblGeneralCPUGUIValue.Size = New System.Drawing.Size(33, 13)
             Me.lblGeneralCPUGUIValue.TabIndex = 18
-            Me.lblGeneralCPUGUIValue.Text = Lr("000%")
+            Me.lblGeneralCPUGUIValue.Text = "00%"
+            Me.lblGeneralCPUGUIValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'PBGeneralRAMServer
             '
@@ -836,13 +836,13 @@ Namespace Core
             '
             'lblGeneralCPUServerValue
             '
-            Me.lblGeneralCPUServerValue.AutoSize = True
             Me.lblGeneralCPUServerValue.Location = New System.Drawing.Point(140, 27)
             Me.lblGeneralCPUServerValue.Margin = New System.Windows.Forms.Padding(3)
             Me.lblGeneralCPUServerValue.Name = "lblGeneralCPUServerValue"
             Me.lblGeneralCPUServerValue.Size = New System.Drawing.Size(33, 13)
             Me.lblGeneralCPUServerValue.TabIndex = 19
-            Me.lblGeneralCPUServerValue.Text = Lr("000%")
+            Me.lblGeneralCPUServerValue.Text = "00%"
+            Me.lblGeneralCPUServerValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'PBGeneralRAMGUI
             '
@@ -866,7 +866,7 @@ Namespace Core
             Me.lblGeneralTimeSinceStartText.Name = "lblGeneralTimeSinceStartText"
             Me.lblGeneralTimeSinceStartText.Size = New System.Drawing.Size(132, 13)
             Me.lblGeneralTimeSinceStartText.TabIndex = 17
-            Me.lblGeneralTimeSinceStartText.Text = Lr("Time since start:")
+            Me.lblGeneralTimeSinceStartText.Text = "Time since start:"
             Me.lblGeneralTimeSinceStartText.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'BtnGeneralKill
@@ -876,7 +876,7 @@ Namespace Core
             Me.BtnGeneralKill.Name = "BtnGeneralKill"
             Me.BtnGeneralKill.Size = New System.Drawing.Size(75, 23)
             Me.BtnGeneralKill.TabIndex = 8
-            Me.BtnGeneralKill.Text = Lr("Kill")
+            Me.BtnGeneralKill.Text = "Kill"
             Me.MainToolTip.SetToolTip(Me.BtnGeneralKill, "Kill the server, this will instantly close the java process. This might corrupt y" & _
             "our data!")
             Me.BtnGeneralKill.UseVisualStyleBackColor = True
@@ -888,7 +888,7 @@ Namespace Core
             Me.BtnGeneralReload.Name = "BtnGeneralReload"
             Me.BtnGeneralReload.Size = New System.Drawing.Size(75, 23)
             Me.BtnGeneralReload.TabIndex = 7
-            Me.BtnGeneralReload.Text = Lr("Reload")
+            Me.BtnGeneralReload.Text = "Reload"
             Me.MainToolTip.SetToolTip(Me.BtnGeneralReload, "Reload the server" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.BtnGeneralReload.UseVisualStyleBackColor = True
             '
@@ -899,7 +899,7 @@ Namespace Core
             Me.BtnGeneralRestart.Name = "BtnGeneralRestart"
             Me.BtnGeneralRestart.Size = New System.Drawing.Size(75, 23)
             Me.BtnGeneralRestart.TabIndex = 6
-            Me.BtnGeneralRestart.Text = Lr("Restart")
+            Me.BtnGeneralRestart.Text = "Restart"
             Me.MainToolTip.SetToolTip(Me.BtnGeneralRestart, "Restart the server. In the case of a remote server, restart the connection." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.BtnGeneralRestart.UseVisualStyleBackColor = True
             '
@@ -910,7 +910,7 @@ Namespace Core
             Me.BtnGeneralStartStop.Name = "BtnGeneralStartStop"
             Me.BtnGeneralStartStop.Size = New System.Drawing.Size(75, 23)
             Me.BtnGeneralStartStop.TabIndex = 5
-            Me.BtnGeneralStartStop.Text = Lr("Start")
+            Me.BtnGeneralStartStop.Text = "Start"
             Me.MainToolTip.SetToolTip(Me.BtnGeneralStartStop, "Start/Stop the server. In the case of a remote server, connect to/disconnect from" & _
             " the server.")
             Me.BtnGeneralStartStop.UseVisualStyleBackColor = True
@@ -926,7 +926,7 @@ Namespace Core
             Me.TabPlayers.Padding = New System.Windows.Forms.Padding(3)
             Me.TabPlayers.Size = New System.Drawing.Size(831, 516)
             Me.TabPlayers.TabIndex = 1
-            Me.TabPlayers.Text = Lr("Players")
+            Me.TabPlayers.Text = "Players"
             Me.TabPlayers.UseVisualStyleBackColor = True
             '
             'LblPlayersViewMode
@@ -936,7 +936,7 @@ Namespace Core
             Me.LblPlayersViewMode.Name = "LblPlayersViewMode"
             Me.LblPlayersViewMode.Size = New System.Drawing.Size(70, 13)
             Me.LblPlayersViewMode.TabIndex = 2
-            Me.LblPlayersViewMode.Text = Lr("View:")
+            Me.LblPlayersViewMode.Text = "View:"
             Me.LblPlayersViewMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'ALVPlayersPlayers
@@ -960,32 +960,32 @@ Namespace Core
             '
             'ColPlayersPlayersName
             '
-            Me.ColPlayersPlayersName.Text = Lr("Name")
+            Me.ColPlayersPlayersName.Text = "Name"
             Me.ColPlayersPlayersName.Width = 180
             '
             'ColPlayersPlayersIP
             '
-            Me.ColPlayersPlayersIP.Text = Lr("IP")
+            Me.ColPlayersPlayersIP.Text = "IP"
             Me.ColPlayersPlayersIP.Width = 115
             '
             'ColPlayersPlayersLocation
             '
-            Me.ColPlayersPlayersLocation.Text = Lr("Location")
+            Me.ColPlayersPlayersLocation.Text = "Location"
             Me.ColPlayersPlayersLocation.Width = 180
             '
             'ColPlayersPlayersTJoined
             '
-            Me.ColPlayersPlayersTJoined.Text = Lr("Time Joined")
+            Me.ColPlayersPlayersTJoined.Text = "Time Joined"
             Me.ColPlayersPlayersTJoined.Width = 109
             '
             'ColPlayersPlayersWhitelist
             '
-            Me.ColPlayersPlayersWhitelist.Text = Lr("Whitelisted")
+            Me.ColPlayersPlayersWhitelist.Text = "Whitelisted"
             Me.ColPlayersPlayersWhitelist.Width = 67
             '
             'ColPlayersPlayersOP
             '
-            Me.ColPlayersPlayersOP.Text = Lr("OP")
+            Me.ColPlayersPlayersOP.Text = "OP"
             '
             'TBPlayersPlayersView
             '
@@ -1015,7 +1015,7 @@ Namespace Core
             Me.TabSuperStart.Padding = New System.Windows.Forms.Padding(3)
             Me.TabSuperStart.Size = New System.Drawing.Size(831, 516)
             Me.TabSuperStart.TabIndex = 2
-            Me.TabSuperStart.Text = Lr("SuperStart")
+            Me.TabSuperStart.Text = "SuperStart"
             Me.TabSuperStart.UseVisualStyleBackColor = True
             '
             'BtnSuperStartPortForwarding
@@ -1026,7 +1026,7 @@ Namespace Core
             Me.BtnSuperStartPortForwarding.Name = "BtnSuperStartPortForwarding"
             Me.BtnSuperStartPortForwarding.Size = New System.Drawing.Size(804, 23)
             Me.BtnSuperStartPortForwarding.TabIndex = 14
-            Me.BtnSuperStartPortForwarding.Text = Lr("Set-up port forwarding... (experimental)")
+            Me.BtnSuperStartPortForwarding.Text = "Set-up port forwarding... (experimental)"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartPortForwarding, "Set-up port forwarding. Port forwarding is required to allow people from outside " & _
             "your network to join your server. Warning! Experimental feature" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.BtnSuperStartPortForwarding.UseVisualStyleBackColor = True
@@ -1039,7 +1039,7 @@ Namespace Core
             Me.BtnSuperStartLaunch.Name = "BtnSuperStartLaunch"
             Me.BtnSuperStartLaunch.Size = New System.Drawing.Size(804, 23)
             Me.BtnSuperStartLaunch.TabIndex = 13
-            Me.BtnSuperStartLaunch.Text = Lr("Launch Server")
+            Me.BtnSuperStartLaunch.Text = "Launch Server"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartLaunch, "Launch the server. This button does the same as the ""start"" button in the general" & _
             " tab" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.BtnSuperStartLaunch.UseVisualStyleBackColor = True
@@ -1067,7 +1067,7 @@ Namespace Core
             Me.GBSuperStartMaintainance.Size = New System.Drawing.Size(300, 337)
             Me.GBSuperStartMaintainance.TabIndex = 7
             Me.GBSuperStartMaintainance.TabStop = False
-            Me.GBSuperStartMaintainance.Text = Lr("Maintainance")
+            Me.GBSuperStartMaintainance.Text = "Maintainance"
             '
             'Label7
             '
@@ -1075,7 +1075,7 @@ Namespace Core
             Me.Label7.Name = "Label7"
             Me.Label7.Size = New System.Drawing.Size(101, 13)
             Me.Label7.TabIndex = 13
-            Me.Label7.Text = Lr("Download #")
+            Me.Label7.Text = "Download #"
             Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'NumSuperstartCustomBuild
@@ -1095,7 +1095,7 @@ Namespace Core
             Me.ChkSuperstartAutoUpdate.Name = "ChkSuperstartAutoUpdate"
             Me.ChkSuperstartAutoUpdate.Size = New System.Drawing.Size(219, 17)
             Me.ChkSuperstartAutoUpdate.TabIndex = 23
-            Me.ChkSuperstartAutoUpdate.Text = Lr("Auto-update when an update is available")
+            Me.ChkSuperstartAutoUpdate.Text = "Auto-update when an update is available"
             Me.MainToolTip.SetToolTip(Me.ChkSuperstartAutoUpdate, resources.GetString("ChkSuperstartAutoUpdate.ToolTip"))
             Me.ChkSuperstartAutoUpdate.UseVisualStyleBackColor = True
             '
@@ -1107,7 +1107,7 @@ Namespace Core
             Me.BtnSuperStartGetCurrent.Name = "BtnSuperStartGetCurrent"
             Me.BtnSuperStartGetCurrent.Size = New System.Drawing.Size(169, 23)
             Me.BtnSuperStartGetCurrent.TabIndex = 22
-            Me.BtnSuperStartGetCurrent.Text = Lr("Get current version #")
+            Me.BtnSuperStartGetCurrent.Text = "Get current version #"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartGetCurrent, "Get the current version of the server. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This is not supported by vanilla!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.BtnSuperStartGetCurrent.UseVisualStyleBackColor = True
             '
@@ -1118,7 +1118,7 @@ Namespace Core
             Me.ChkSuperStartRetrieveCurrent.Name = "ChkSuperStartRetrieveCurrent"
             Me.ChkSuperStartRetrieveCurrent.Size = New System.Drawing.Size(227, 17)
             Me.ChkSuperStartRetrieveCurrent.TabIndex = 21
-            Me.ChkSuperStartRetrieveCurrent.Text = Lr("Retrieve the current version on server start")
+            Me.ChkSuperStartRetrieveCurrent.Text = "Retrieve the current version on server start"
             Me.MainToolTip.SetToolTip(Me.ChkSuperStartRetrieveCurrent, "Retrieve the current version when the server starts, and display this in the GUI." & _
             "" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "IMPORTANT: this is NOT supported by vanilla servers!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Vanilla servers will fai" & _
             "l to start if this option is enabled.")
@@ -1131,7 +1131,7 @@ Namespace Core
             Me.ChkSuperstartAutoUpdateNotify.Name = "ChkSuperstartAutoUpdateNotify"
             Me.ChkSuperstartAutoUpdateNotify.Size = New System.Drawing.Size(231, 17)
             Me.ChkSuperstartAutoUpdateNotify.TabIndex = 20
-            Me.ChkSuperstartAutoUpdateNotify.Text = Lr("Notify me when a server update is available")
+            Me.ChkSuperstartAutoUpdateNotify.Text = "Notify me when a server update is available"
             Me.MainToolTip.SetToolTip(Me.ChkSuperstartAutoUpdateNotify, resources.GetString("ChkSuperstartAutoUpdateNotify.ToolTip"))
             Me.ChkSuperstartAutoUpdateNotify.UseVisualStyleBackColor = True
             '
@@ -1143,7 +1143,7 @@ Namespace Core
             Me.llblSuperStartsite.Size = New System.Drawing.Size(28, 13)
             Me.llblSuperStartsite.TabIndex = 19
             Me.llblSuperStartsite.TabStop = True
-            Me.llblSuperStartsite.Text = Lr("Site:")
+            Me.llblSuperStartsite.Text = "Site:"
             Me.MainToolTip.SetToolTip(Me.llblSuperStartsite, "The homepage of the selected server." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             '
             'lblSuperStartLatestDev
@@ -1153,7 +1153,7 @@ Namespace Core
             Me.lblSuperStartLatestDev.Name = "lblSuperStartLatestDev"
             Me.lblSuperStartLatestDev.Size = New System.Drawing.Size(60, 13)
             Me.lblSuperStartLatestDev.TabIndex = 9
-            Me.lblSuperStartLatestDev.Text = Lr("Latest dev:")
+            Me.lblSuperStartLatestDev.Text = "Latest dev:"
             '
             'lblSuperStartLatestBeta
             '
@@ -1162,7 +1162,7 @@ Namespace Core
             Me.lblSuperStartLatestBeta.Name = "lblSuperStartLatestBeta"
             Me.lblSuperStartLatestBeta.Size = New System.Drawing.Size(63, 13)
             Me.lblSuperStartLatestBeta.TabIndex = 8
-            Me.lblSuperStartLatestBeta.Text = Lr("Latest beta:")
+            Me.lblSuperStartLatestBeta.Text = "Latest beta:"
             '
             'lblSuperStartLatestStable
             '
@@ -1171,7 +1171,7 @@ Namespace Core
             Me.lblSuperStartLatestStable.Name = "lblSuperStartLatestStable"
             Me.lblSuperStartLatestStable.Size = New System.Drawing.Size(70, 13)
             Me.lblSuperStartLatestStable.TabIndex = 7
-            Me.lblSuperStartLatestStable.Text = Lr("Latest stable:")
+            Me.lblSuperStartLatestStable.Text = "Latest stable:"
             '
             'BtnSuperStartDownloadCustomBuild
             '
@@ -1179,7 +1179,7 @@ Namespace Core
             Me.BtnSuperStartDownloadCustomBuild.Name = "BtnSuperStartDownloadCustomBuild"
             Me.BtnSuperStartDownloadCustomBuild.Size = New System.Drawing.Size(109, 23)
             Me.BtnSuperStartDownloadCustomBuild.TabIndex = 18
-            Me.BtnSuperStartDownloadCustomBuild.Text = Lr("Download")
+            Me.BtnSuperStartDownloadCustomBuild.Text = "Download"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartDownloadCustomBuild, "Download the build, given by its build number, of the selected server")
             Me.BtnSuperStartDownloadCustomBuild.UseVisualStyleBackColor = True
             '
@@ -1191,7 +1191,7 @@ Namespace Core
             Me.BtnSuperStartDownloadDev.Name = "BtnSuperStartDownloadDev"
             Me.BtnSuperStartDownloadDev.Size = New System.Drawing.Size(288, 23)
             Me.BtnSuperStartDownloadDev.TabIndex = 16
-            Me.BtnSuperStartDownloadDev.Text = Lr("Download Latest Development Build")
+            Me.BtnSuperStartDownloadDev.Text = "Download Latest Development Build"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartDownloadDev, "Download the latest development build of the selected server")
             Me.BtnSuperStartDownloadDev.UseVisualStyleBackColor = True
             '
@@ -1203,7 +1203,7 @@ Namespace Core
             Me.BtnSuperStartDownloadBeta.Name = "BtnSuperStartDownloadBeta"
             Me.BtnSuperStartDownloadBeta.Size = New System.Drawing.Size(288, 23)
             Me.BtnSuperStartDownloadBeta.TabIndex = 15
-            Me.BtnSuperStartDownloadBeta.Text = Lr("Download Latest Beta Build")
+            Me.BtnSuperStartDownloadBeta.Text = "Download Latest Beta Build"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartDownloadBeta, "Download the latest beta build of the selected server")
             Me.BtnSuperStartDownloadBeta.UseVisualStyleBackColor = True
             '
@@ -1215,7 +1215,7 @@ Namespace Core
             Me.BtnSuperStartDownloadRecommended.Name = "BtnSuperStartDownloadRecommended"
             Me.BtnSuperStartDownloadRecommended.Size = New System.Drawing.Size(288, 23)
             Me.BtnSuperStartDownloadRecommended.TabIndex = 14
-            Me.BtnSuperStartDownloadRecommended.Text = Lr("Download Latest Recommended Build")
+            Me.BtnSuperStartDownloadRecommended.Text = "Download Latest Recommended Build"
             Me.MainToolTip.SetToolTip(Me.BtnSuperStartDownloadRecommended, "Download the latest recommended build of the selected server")
             Me.BtnSuperStartDownloadRecommended.UseVisualStyleBackColor = True
             '
@@ -1247,7 +1247,7 @@ Namespace Core
             Me.GBSuperStartRemoteServer.Size = New System.Drawing.Size(498, 107)
             Me.GBSuperStartRemoteServer.TabIndex = 7
             Me.GBSuperStartRemoteServer.TabStop = False
-            Me.GBSuperStartRemoteServer.Text = Lr("Remote Server")
+            Me.GBSuperStartRemoteServer.Text = "Remote Server"
             '
             'MTxtSuperstartRemotePassword
             '
@@ -1275,7 +1275,7 @@ Namespace Core
             Me.Label5.Name = "Label5"
             Me.Label5.Size = New System.Drawing.Size(72, 13)
             Me.Label5.TabIndex = 9
-            Me.Label5.Text = Lr("salt:")
+            Me.Label5.Text = "salt:"
             Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'Label4
@@ -1284,7 +1284,7 @@ Namespace Core
             Me.Label4.Name = "Label4"
             Me.Label4.Size = New System.Drawing.Size(90, 13)
             Me.Label4.TabIndex = 8
-            Me.Label4.Text = Lr("port:")
+            Me.Label4.Text = "port:"
             Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'Label3
@@ -1293,7 +1293,7 @@ Namespace Core
             Me.Label3.Name = "Label3"
             Me.Label3.Size = New System.Drawing.Size(93, 13)
             Me.Label3.TabIndex = 7
-            Me.Label3.Text = Lr("password:")
+            Me.Label3.Text = "password:"
             Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'Label2
@@ -1302,7 +1302,7 @@ Namespace Core
             Me.Label2.Name = "Label2"
             Me.Label2.Size = New System.Drawing.Size(72, 13)
             Me.Label2.TabIndex = 6
-            Me.Label2.Text = Lr("username:")
+            Me.Label2.Text = "username:"
             Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'Label1
@@ -1311,7 +1311,7 @@ Namespace Core
             Me.Label1.Name = "Label1"
             Me.Label1.Size = New System.Drawing.Size(72, 13)
             Me.Label1.TabIndex = 5
-            Me.Label1.Text = Lr("host:")
+            Me.Label1.Text = "host:"
             Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'NumSuperstartRemotePort
@@ -1367,7 +1367,7 @@ Namespace Core
             Me.GBSuperstartJavaServer.Size = New System.Drawing.Size(498, 195)
             Me.GBSuperstartJavaServer.TabIndex = 6
             Me.GBSuperstartJavaServer.TabStop = False
-            Me.GBSuperstartJavaServer.Text = Lr("Java Server")
+            Me.GBSuperstartJavaServer.Text = "Java Server"
             '
             'TxtSuperstartJavaCustomSwitch
             '
@@ -1386,7 +1386,7 @@ Namespace Core
             Me.LblSuperStartCustomSwitches.Name = "LblSuperStartCustomSwitches"
             Me.LblSuperStartCustomSwitches.Size = New System.Drawing.Size(108, 13)
             Me.LblSuperStartCustomSwitches.TabIndex = 15
-            Me.LblSuperStartCustomSwitches.Text = Lr("Custom switches:")
+            Me.LblSuperStartCustomSwitches.Text = "Custom switches:"
             Me.LblSuperStartCustomSwitches.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'BtnSuperstartJavaJarFileBrowse
@@ -1396,7 +1396,7 @@ Namespace Core
             Me.BtnSuperstartJavaJarFileBrowse.Name = "BtnSuperstartJavaJarFileBrowse"
             Me.BtnSuperstartJavaJarFileBrowse.Size = New System.Drawing.Size(32, 23)
             Me.BtnSuperstartJavaJarFileBrowse.TabIndex = 6
-            Me.BtnSuperstartJavaJarFileBrowse.Text = Lr("...")
+            Me.BtnSuperstartJavaJarFileBrowse.Text = "..."
             Me.MainToolTip.SetToolTip(Me.BtnSuperstartJavaJarFileBrowse, "Browse for .jar file")
             Me.BtnSuperstartJavaJarFileBrowse.UseVisualStyleBackColor = True
             '
@@ -1458,7 +1458,7 @@ Namespace Core
             Me.lblSuperStartCustomArg.Name = "lblSuperStartCustomArg"
             Me.lblSuperStartCustomArg.Size = New System.Drawing.Size(108, 13)
             Me.lblSuperStartCustomArg.TabIndex = 13
-            Me.lblSuperStartCustomArg.Text = Lr("Custom arguments:")
+            Me.lblSuperStartCustomArg.Text = "Custom arguments:"
             Me.lblSuperStartCustomArg.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblSuperStartJarFile
@@ -1467,7 +1467,7 @@ Namespace Core
             Me.lblSuperStartJarFile.Name = "lblSuperStartJarFile"
             Me.lblSuperStartJarFile.Size = New System.Drawing.Size(105, 13)
             Me.lblSuperStartJarFile.TabIndex = 12
-            Me.lblSuperStartJarFile.Text = Lr("JAR file:")
+            Me.lblSuperStartJarFile.Text = "JAR file:"
             Me.lblSuperStartJarFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblSuperStartMaxRam
@@ -1476,7 +1476,7 @@ Namespace Core
             Me.lblSuperStartMaxRam.Name = "lblSuperStartMaxRam"
             Me.lblSuperStartMaxRam.Size = New System.Drawing.Size(108, 13)
             Me.lblSuperStartMaxRam.TabIndex = 11
-            Me.lblSuperStartMaxRam.Text = Lr("Max. RAM:")
+            Me.lblSuperStartMaxRam.Text = "Max. RAM:"
             Me.lblSuperStartMaxRam.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'LblSuperStartMinRam
@@ -1485,7 +1485,7 @@ Namespace Core
             Me.LblSuperStartMinRam.Name = "LblSuperStartMinRam"
             Me.LblSuperStartMinRam.Size = New System.Drawing.Size(105, 13)
             Me.LblSuperStartMinRam.TabIndex = 10
-            Me.LblSuperStartMinRam.Text = Lr("Min. RAM:")
+            Me.LblSuperStartMinRam.Text = "Min. RAM:"
             Me.LblSuperStartMinRam.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblSuperStartJavaVersion
@@ -1494,7 +1494,7 @@ Namespace Core
             Me.lblSuperStartJavaVersion.Name = "lblSuperStartJavaVersion"
             Me.lblSuperStartJavaVersion.Size = New System.Drawing.Size(108, 13)
             Me.lblSuperStartJavaVersion.TabIndex = 9
-            Me.lblSuperStartJavaVersion.Text = Lr("Java Version:")
+            Me.lblSuperStartJavaVersion.Text = "Java Version:"
             Me.lblSuperStartJavaVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'CBSuperstartJavaJRE
@@ -1529,7 +1529,7 @@ Namespace Core
             Me.lblSuperStartType.Name = "lblSuperStartType"
             Me.lblSuperStartType.Size = New System.Drawing.Size(114, 13)
             Me.lblSuperStartType.TabIndex = 3
-            Me.lblSuperStartType.Text = Lr("Server Type:")
+            Me.lblSuperStartType.Text = "Server Type:"
             Me.lblSuperStartType.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'TabErrorLogging
@@ -1545,7 +1545,7 @@ Namespace Core
             Me.TabErrorLogging.Name = "TabErrorLogging"
             Me.TabErrorLogging.Size = New System.Drawing.Size(831, 516)
             Me.TabErrorLogging.TabIndex = 6
-            Me.TabErrorLogging.Text = Lr("Error Logging")
+            Me.TabErrorLogging.Text = "Error Logging"
             Me.TabErrorLogging.UseVisualStyleBackColor = True
             '
             'BtnErrorLoggingCopy
@@ -1555,7 +1555,7 @@ Namespace Core
             Me.BtnErrorLoggingCopy.Name = "BtnErrorLoggingCopy"
             Me.BtnErrorLoggingCopy.Size = New System.Drawing.Size(75, 23)
             Me.BtnErrorLoggingCopy.TabIndex = 5
-            Me.BtnErrorLoggingCopy.Text = Lr("Copy")
+            Me.BtnErrorLoggingCopy.Text = "Copy"
             Me.MainToolTip.SetToolTip(Me.BtnErrorLoggingCopy, "Copy the selected items to your clipboard")
             Me.BtnErrorLoggingCopy.UseVisualStyleBackColor = True
             '
@@ -1566,7 +1566,7 @@ Namespace Core
             Me.ChkErrorsHideStackTrace.Name = "ChkErrorsHideStackTrace"
             Me.ChkErrorsHideStackTrace.Size = New System.Drawing.Size(210, 24)
             Me.ChkErrorsHideStackTrace.TabIndex = 4
-            Me.ChkErrorsHideStackTrace.Text = Lr("Hide stacktraces from server output")
+            Me.ChkErrorsHideStackTrace.Text = "Hide stacktraces from server output"
             Me.ChkErrorsHideStackTrace.UseVisualStyleBackColor = True
             '
             'ChkErrorsHideError
@@ -1576,7 +1576,7 @@ Namespace Core
             Me.ChkErrorsHideError.Name = "ChkErrorsHideError"
             Me.ChkErrorsHideError.Size = New System.Drawing.Size(210, 24)
             Me.ChkErrorsHideError.TabIndex = 3
-            Me.ChkErrorsHideError.Text = Lr("Hide errors from server output")
+            Me.ChkErrorsHideError.Text = "Hide errors from server output"
             Me.ChkErrorsHideError.UseVisualStyleBackColor = True
             '
             'ChkErrorsHideWarning
@@ -1586,7 +1586,7 @@ Namespace Core
             Me.ChkErrorsHideWarning.Name = "ChkErrorsHideWarning"
             Me.ChkErrorsHideWarning.Size = New System.Drawing.Size(210, 24)
             Me.ChkErrorsHideWarning.TabIndex = 2
-            Me.ChkErrorsHideWarning.Text = Lr("Hide warnings from server output")
+            Me.ChkErrorsHideWarning.Text = "Hide warnings from server output"
             Me.ChkErrorsHideWarning.UseVisualStyleBackColor = True
             '
             'BtnErrorLoggingDetails
@@ -1596,7 +1596,7 @@ Namespace Core
             Me.BtnErrorLoggingDetails.Name = "BtnErrorLoggingDetails"
             Me.BtnErrorLoggingDetails.Size = New System.Drawing.Size(75, 23)
             Me.BtnErrorLoggingDetails.TabIndex = 1
-            Me.BtnErrorLoggingDetails.Text = Lr("Details...")
+            Me.BtnErrorLoggingDetails.Text = "Details..."
             Me.BtnErrorLoggingDetails.UseVisualStyleBackColor = True
             '
             'ALVErrors
@@ -1617,21 +1617,21 @@ Namespace Core
             '
             'ColErrorID
             '
-            Me.ColErrorID.Text = Lr("ID")
+            Me.ColErrorID.Text = "ID"
             Me.ColErrorID.Width = 68
             '
             'ColErrorType
             '
-            Me.ColErrorType.Text = Lr("Type")
+            Me.ColErrorType.Text = "Type"
             Me.ColErrorType.Width = 119
             '
             'ColErrorTime
             '
-            Me.ColErrorTime.Text = Lr("Time")
+            Me.ColErrorTime.Text = "Time"
             '
             'ColErrorMsg
             '
-            Me.ColErrorMsg.Text = Lr("Text")
+            Me.ColErrorMsg.Text = "Text"
             Me.ColErrorMsg.Width = 540
             '
             'ImgListErrorManager
@@ -1656,7 +1656,7 @@ Namespace Core
             Me.TabTaskManager.Padding = New System.Windows.Forms.Padding(3)
             Me.TabTaskManager.Size = New System.Drawing.Size(831, 516)
             Me.TabTaskManager.TabIndex = 5
-            Me.TabTaskManager.Text = Lr("Task manager")
+            Me.TabTaskManager.Text = "Task manager"
             Me.TabTaskManager.UseVisualStyleBackColor = True
             '
             'BtnTaskManagerTest
@@ -1668,7 +1668,7 @@ Namespace Core
             Me.BtnTaskManagerTest.Name = "BtnTaskManagerTest"
             Me.BtnTaskManagerTest.Size = New System.Drawing.Size(90, 23)
             Me.BtnTaskManagerTest.TabIndex = 6
-            Me.BtnTaskManagerTest.Text = Lr("Test")
+            Me.BtnTaskManagerTest.Text = "Test"
             Me.BtnTaskManagerTest.UseVisualStyleBackColor = True
             '
             'BtnTaskManagerImport
@@ -1680,7 +1680,7 @@ Namespace Core
             Me.BtnTaskManagerImport.Name = "BtnTaskManagerImport"
             Me.BtnTaskManagerImport.Size = New System.Drawing.Size(90, 23)
             Me.BtnTaskManagerImport.TabIndex = 5
-            Me.BtnTaskManagerImport.Text = Lr("Import...")
+            Me.BtnTaskManagerImport.Text = "Import..."
             Me.BtnTaskManagerImport.UseVisualStyleBackColor = True
             '
             'BtnTaskManagerExport
@@ -1692,7 +1692,7 @@ Namespace Core
             Me.BtnTaskManagerExport.Name = "BtnTaskManagerExport"
             Me.BtnTaskManagerExport.Size = New System.Drawing.Size(90, 23)
             Me.BtnTaskManagerExport.TabIndex = 4
-            Me.BtnTaskManagerExport.Text = Lr("Export...")
+            Me.BtnTaskManagerExport.Text = "Export..."
             Me.BtnTaskManagerExport.UseVisualStyleBackColor = True
             '
             'BtnTaskManagerAdd
@@ -1704,7 +1704,7 @@ Namespace Core
             Me.BtnTaskManagerAdd.Name = "BtnTaskManagerAdd"
             Me.BtnTaskManagerAdd.Size = New System.Drawing.Size(90, 23)
             Me.BtnTaskManagerAdd.TabIndex = 1
-            Me.BtnTaskManagerAdd.Text = Lr("Add...")
+            Me.BtnTaskManagerAdd.Text = "Add..."
             Me.BtnTaskManagerAdd.UseVisualStyleBackColor = True
             '
             'BtnTaskManagerEdit
@@ -1716,7 +1716,7 @@ Namespace Core
             Me.BtnTaskManagerEdit.Name = "BtnTaskManagerEdit"
             Me.BtnTaskManagerEdit.Size = New System.Drawing.Size(90, 23)
             Me.BtnTaskManagerEdit.TabIndex = 2
-            Me.BtnTaskManagerEdit.Text = Lr("Edit...")
+            Me.BtnTaskManagerEdit.Text = "Edit..."
             Me.BtnTaskManagerEdit.UseVisualStyleBackColor = True
             '
             'ALVTaskPlanner
@@ -1735,32 +1735,32 @@ Namespace Core
             '
             'ALVTaskPlannerColName
             '
-            Me.ALVTaskPlannerColName.Text = Lr("Name")
+            Me.ALVTaskPlannerColName.Text = "Name"
             Me.ALVTaskPlannerColName.Width = 150
             '
             'ALVTaskPlannerColTriggerType
             '
-            Me.ALVTaskPlannerColTriggerType.Text = Lr("Trigger Type")
+            Me.ALVTaskPlannerColTriggerType.Text = "Trigger Type"
             Me.ALVTaskPlannerColTriggerType.Width = 110
             '
             'ALVTaskPlannerColTriggerParam
             '
-            Me.ALVTaskPlannerColTriggerParam.Text = Lr("Trigger Parameters")
+            Me.ALVTaskPlannerColTriggerParam.Text = "Trigger Parameters"
             Me.ALVTaskPlannerColTriggerParam.Width = 187
             '
             'ALVTaskPlannerColActionType
             '
-            Me.ALVTaskPlannerColActionType.Text = Lr("Action type")
+            Me.ALVTaskPlannerColActionType.Text = "Action type"
             Me.ALVTaskPlannerColActionType.Width = 110
             '
             'ALVTaskPlannerColActionParam
             '
-            Me.ALVTaskPlannerColActionParam.Text = Lr("Action parameters")
+            Me.ALVTaskPlannerColActionParam.Text = "Action parameters"
             Me.ALVTaskPlannerColActionParam.Width = 190
             '
             'ALVTaskPlannerColisEnabled
             '
-            Me.ALVTaskPlannerColisEnabled.Text = Lr("Enabled")
+            Me.ALVTaskPlannerColisEnabled.Text = "Enabled"
             '
             'BtnTaskManagerRemove
             '
@@ -1771,7 +1771,7 @@ Namespace Core
             Me.BtnTaskManagerRemove.Name = "BtnTaskManagerRemove"
             Me.BtnTaskManagerRemove.Size = New System.Drawing.Size(90, 23)
             Me.BtnTaskManagerRemove.TabIndex = 3
-            Me.BtnTaskManagerRemove.Text = Lr("Remove")
+            Me.BtnTaskManagerRemove.Text = "Remove"
             Me.BtnTaskManagerRemove.UseVisualStyleBackColor = True
             '
             'TabPlugins
@@ -1783,7 +1783,7 @@ Namespace Core
             Me.TabPlugins.Padding = New System.Windows.Forms.Padding(3)
             Me.TabPlugins.Size = New System.Drawing.Size(831, 516)
             Me.TabPlugins.TabIndex = 3
-            Me.TabPlugins.Text = Lr("Plugins")
+            Me.TabPlugins.Text = "Plugins"
             Me.TabPlugins.UseVisualStyleBackColor = True
             '
             'TabCtrlPlugins
@@ -1814,7 +1814,7 @@ Namespace Core
             Me.TabPluginsInstall.Padding = New System.Windows.Forms.Padding(3)
             Me.TabPluginsInstall.Size = New System.Drawing.Size(817, 483)
             Me.TabPluginsInstall.TabIndex = 0
-            Me.TabPluginsInstall.Text = Lr("Install Plugins")
+            Me.TabPluginsInstall.Text = "Install Plugins"
             Me.TabPluginsInstall.UseVisualStyleBackColor = True
             '
             'LblInstallPluginsLoading
@@ -1826,7 +1826,7 @@ Namespace Core
             Me.LblInstallPluginsLoading.Name = "LblInstallPluginsLoading"
             Me.LblInstallPluginsLoading.Size = New System.Drawing.Size(811, 477)
             Me.LblInstallPluginsLoading.TabIndex = 8
-            Me.LblInstallPluginsLoading.Text = Lr("Loading...")
+            Me.LblInstallPluginsLoading.Text = "Loading..."
             Me.LblInstallPluginsLoading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
             '
             'BtnInstallPluginsSearch
@@ -1836,7 +1836,7 @@ Namespace Core
             Me.BtnInstallPluginsSearch.Name = "BtnInstallPluginsSearch"
             Me.BtnInstallPluginsSearch.Size = New System.Drawing.Size(75, 23)
             Me.BtnInstallPluginsSearch.TabIndex = 9
-            Me.BtnInstallPluginsSearch.Text = Lr("Search!")
+            Me.BtnInstallPluginsSearch.Text = "Search!"
             Me.BtnInstallPluginsSearch.UseVisualStyleBackColor = True
             '
             'LblInstallPluginsInfo
@@ -1847,7 +1847,7 @@ Namespace Core
             Me.LblInstallPluginsInfo.Name = "LblInstallPluginsInfo"
             Me.LblInstallPluginsInfo.Size = New System.Drawing.Size(223, 13)
             Me.LblInstallPluginsInfo.TabIndex = 6
-            Me.LblInstallPluginsInfo.Text = Lr("Right click for options, double click for details.")
+            Me.LblInstallPluginsInfo.Text = "Right click for options, double click for details."
             '
             'lblInstallPluginsCategory
             '
@@ -1856,7 +1856,7 @@ Namespace Core
             Me.lblInstallPluginsCategory.Name = "lblInstallPluginsCategory"
             Me.lblInstallPluginsCategory.Size = New System.Drawing.Size(247, 13)
             Me.lblInstallPluginsCategory.TabIndex = 5
-            Me.lblInstallPluginsCategory.Text = Lr("or browse a category:")
+            Me.lblInstallPluginsCategory.Text = "or browse a category:"
             Me.lblInstallPluginsCategory.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'LblInstallPluginsFilter
@@ -1866,7 +1866,7 @@ Namespace Core
             Me.LblInstallPluginsFilter.Name = "LblInstallPluginsFilter"
             Me.LblInstallPluginsFilter.Size = New System.Drawing.Size(44, 13)
             Me.LblInstallPluginsFilter.TabIndex = 4
-            Me.LblInstallPluginsFilter.Text = Lr("Search:")
+            Me.LblInstallPluginsFilter.Text = "Search:"
             '
             'CBInstallPluginsCategory
             '
@@ -1905,24 +1905,24 @@ Namespace Core
             '
             'ColBukgetPluginName
             '
-            Me.ColBukgetPluginName.Text = Lr("Name")
+            Me.ColBukgetPluginName.Text = "Name"
             Me.ColBukgetPluginName.Width = 275
             '
             'ColBukgetPluginDescription
             '
-            Me.ColBukgetPluginDescription.Text = Lr("Description")
+            Me.ColBukgetPluginDescription.Text = "Description"
             Me.ColBukgetPluginDescription.Width = 275
             '
             'ColBukgetPluginVersion
             '
             Me.ColBukgetPluginVersion.Tag = ""
-            Me.ColBukgetPluginVersion.Text = Lr("Version")
+            Me.ColBukgetPluginVersion.Text = "Version"
             Me.ColBukgetPluginVersion.Width = 80
             '
             'ColBukgetPluginBukkitVersion
             '
             Me.ColBukgetPluginBukkitVersion.Tag = ""
-            Me.ColBukgetPluginBukkitVersion.Text = Lr("Bukkit")
+            Me.ColBukgetPluginBukkitVersion.Text = "Bukkit"
             Me.ColBukgetPluginBukkitVersion.Width = 160
             '
             'CMenuBukGetPlugins
@@ -1936,28 +1936,28 @@ Namespace Core
             Me.btnCMenuBukGetPluginsMoreInfo.Image = CType(resources.GetObject("btnCMenuBukGetPluginsMoreInfo.Image"), System.Drawing.Image)
             Me.btnCMenuBukGetPluginsMoreInfo.Name = "btnCMenuBukGetPluginsMoreInfo"
             Me.btnCMenuBukGetPluginsMoreInfo.Size = New System.Drawing.Size(172, 22)
-            Me.btnCMenuBukGetPluginsMoreInfo.Text = Lr("More info")
+            Me.btnCMenuBukGetPluginsMoreInfo.Text = "More info"
             '
             'BtnCMenuBukGetPluginsInstallPlugin
             '
             Me.BtnCMenuBukGetPluginsInstallPlugin.Image = CType(resources.GetObject("BtnCMenuBukGetPluginsInstallPlugin.Image"), System.Drawing.Image)
             Me.BtnCMenuBukGetPluginsInstallPlugin.Name = "BtnCMenuBukGetPluginsInstallPlugin"
             Me.BtnCMenuBukGetPluginsInstallPlugin.Size = New System.Drawing.Size(172, 22)
-            Me.BtnCMenuBukGetPluginsInstallPlugin.Text = Lr("Install plugin")
+            Me.BtnCMenuBukGetPluginsInstallPlugin.Text = "Install plugin"
             '
             'BtnCMenuBukGetPluginsProjectPage
             '
             Me.BtnCMenuBukGetPluginsProjectPage.Image = CType(resources.GetObject("BtnCMenuBukGetPluginsProjectPage.Image"), System.Drawing.Image)
             Me.BtnCMenuBukGetPluginsProjectPage.Name = "BtnCMenuBukGetPluginsProjectPage"
             Me.BtnCMenuBukGetPluginsProjectPage.Size = New System.Drawing.Size(172, 22)
-            Me.BtnCMenuBukGetPluginsProjectPage.Text = Lr("Go to project page")
+            Me.BtnCMenuBukGetPluginsProjectPage.Text = "Go to project page"
             '
             'BtnCMenuBukGetPluginsRefresh
             '
             Me.BtnCMenuBukGetPluginsRefresh.Image = CType(resources.GetObject("BtnCMenuBukGetPluginsRefresh.Image"), System.Drawing.Image)
             Me.BtnCMenuBukGetPluginsRefresh.Name = "BtnCMenuBukGetPluginsRefresh"
             Me.BtnCMenuBukGetPluginsRefresh.Size = New System.Drawing.Size(172, 22)
-            Me.BtnCMenuBukGetPluginsRefresh.Text = Lr("Refresh list")
+            Me.BtnCMenuBukGetPluginsRefresh.Text = "Refresh list"
             '
             'TabPluginsInstalled
             '
@@ -1969,7 +1969,7 @@ Namespace Core
             Me.TabPluginsInstalled.Padding = New System.Windows.Forms.Padding(3)
             Me.TabPluginsInstalled.Size = New System.Drawing.Size(817, 483)
             Me.TabPluginsInstalled.TabIndex = 1
-            Me.TabPluginsInstalled.Text = Lr("Installed Plugins")
+            Me.TabPluginsInstalled.Text = "Installed Plugins"
             Me.TabPluginsInstalled.UseVisualStyleBackColor = True
             '
             'lblinstalledpluginsInfo
@@ -1980,7 +1980,7 @@ Namespace Core
             Me.lblinstalledpluginsInfo.Name = "lblinstalledpluginsInfo"
             Me.lblinstalledpluginsInfo.Size = New System.Drawing.Size(444, 13)
             Me.lblinstalledpluginsInfo.TabIndex = 1
-            Me.lblinstalledpluginsInfo.Text = Lr("Right click for options, double click for details. Ctrl+click or Shift+click to s") & _
+            Me.lblinstalledpluginsInfo.Text = "Right click for options, double click for details. Ctrl+click or Shift+click to s" & _
         "elect multiple items."
             '
             'ALVInstalledPlugins
@@ -2001,28 +2001,28 @@ Namespace Core
             '
             'ColName
             '
-            Me.ColName.Text = Lr("Name")
+            Me.ColName.Text = "Name"
             Me.ColName.Width = 160
             '
             'ColVersion
             '
-            Me.ColVersion.Text = Lr("Version")
+            Me.ColVersion.Text = "Version"
             Me.ColVersion.Width = 100
             '
             'ColAuthor
             '
-            Me.ColAuthor.Text = Lr("Author(s)")
+            Me.ColAuthor.Text = "Author(s)"
             Me.ColAuthor.Width = 160
             '
             'ColDescription
             '
-            Me.ColDescription.Text = Lr("Description")
+            Me.ColDescription.Text = "Description"
             Me.ColDescription.Width = 275
             '
             'ColUpdateDate
             '
             Me.ColUpdateDate.Tag = "nosort"
-            Me.ColUpdateDate.Text = Lr("Updated")
+            Me.ColUpdateDate.Text = "Updated"
             Me.ColUpdateDate.Width = 98
             '
             'CMenuInstalledPlugins
@@ -2036,49 +2036,49 @@ Namespace Core
             Me.CmenuInstalledPluginsMoreInfo.Image = CType(resources.GetObject("CmenuInstalledPluginsMoreInfo.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsMoreInfo.Name = "CmenuInstalledPluginsMoreInfo"
             Me.CmenuInstalledPluginsMoreInfo.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsMoreInfo.Text = Lr("More info")
+            Me.CmenuInstalledPluginsMoreInfo.Text = "More info"
             '
             'CmenuInstalledPluginsViewVersions
             '
             Me.CmenuInstalledPluginsViewVersions.Image = CType(resources.GetObject("CmenuInstalledPluginsViewVersions.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsViewVersions.Name = "CmenuInstalledPluginsViewVersions"
             Me.CmenuInstalledPluginsViewVersions.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsViewVersions.Text = Lr("View versions")
+            Me.CmenuInstalledPluginsViewVersions.Text = "View versions"
             '
             'CmenuInstalledPluginsUpdate
             '
             Me.CmenuInstalledPluginsUpdate.Image = CType(resources.GetObject("CmenuInstalledPluginsUpdate.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsUpdate.Name = "CmenuInstalledPluginsUpdate"
             Me.CmenuInstalledPluginsUpdate.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsUpdate.Text = Lr("Update")
+            Me.CmenuInstalledPluginsUpdate.Text = "Update"
             '
             'CmenuInstalledPluginsProjectPage
             '
             Me.CmenuInstalledPluginsProjectPage.Image = CType(resources.GetObject("CmenuInstalledPluginsProjectPage.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsProjectPage.Name = "CmenuInstalledPluginsProjectPage"
             Me.CmenuInstalledPluginsProjectPage.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsProjectPage.Text = Lr("Project page...")
+            Me.CmenuInstalledPluginsProjectPage.Text = "Project page..."
             '
             'CmenuInstalledPluginsRemove
             '
             Me.CmenuInstalledPluginsRemove.Image = CType(resources.GetObject("CmenuInstalledPluginsRemove.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsRemove.Name = "CmenuInstalledPluginsRemove"
             Me.CmenuInstalledPluginsRemove.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsRemove.Text = Lr("Remove")
+            Me.CmenuInstalledPluginsRemove.Text = "Remove"
             '
             'CmenuInstalledPluginsRefresh
             '
             Me.CmenuInstalledPluginsRefresh.Image = CType(resources.GetObject("CmenuInstalledPluginsRefresh.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsRefresh.Name = "CmenuInstalledPluginsRefresh"
             Me.CmenuInstalledPluginsRefresh.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsRefresh.Text = Lr("Refresh list")
+            Me.CmenuInstalledPluginsRefresh.Text = "Refresh list"
             '
             'CmenuInstalledPluginsOpenFolder
             '
             Me.CmenuInstalledPluginsOpenFolder.Image = CType(resources.GetObject("CmenuInstalledPluginsOpenFolder.Image"), System.Drawing.Image)
             Me.CmenuInstalledPluginsOpenFolder.Name = "CmenuInstalledPluginsOpenFolder"
             Me.CmenuInstalledPluginsOpenFolder.Size = New System.Drawing.Size(149, 22)
-            Me.CmenuInstalledPluginsOpenFolder.Text = Lr("Open folder...")
+            Me.CmenuInstalledPluginsOpenFolder.Text = "Open folder..."
             '
             'ImgListTabIcons
             '
@@ -2120,7 +2120,7 @@ Namespace Core
             Me.TabServerOptions.Name = "TabServerOptions"
             Me.TabServerOptions.Size = New System.Drawing.Size(831, 516)
             Me.TabServerOptions.TabIndex = 7
-            Me.TabServerOptions.Text = Lr("Server options")
+            Me.TabServerOptions.Text = "Server options"
             Me.TabServerOptions.UseVisualStyleBackColor = True
             '
             'TxtServerSettingsAddIPBan
@@ -2163,7 +2163,7 @@ Namespace Core
             Me.Label6.Name = "Label6"
             Me.Label6.Size = New System.Drawing.Size(184, 13)
             Me.Label6.TabIndex = 13
-            Me.Label6.Text = Lr("Right-click to see all available actions")
+            Me.Label6.Text = "Right-click to see all available actions"
             '
             'BtnServerSettingsAddIPBan
             '
@@ -2172,7 +2172,7 @@ Namespace Core
             Me.BtnServerSettingsAddIPBan.Name = "BtnServerSettingsAddIPBan"
             Me.BtnServerSettingsAddIPBan.Size = New System.Drawing.Size(36, 23)
             Me.BtnServerSettingsAddIPBan.TabIndex = 12
-            Me.BtnServerSettingsAddIPBan.Text = Lr("Add")
+            Me.BtnServerSettingsAddIPBan.Text = "Add"
             Me.BtnServerSettingsAddIPBan.UseVisualStyleBackColor = True
             '
             'BtnServerSettingsAddPlayerBan
@@ -2182,7 +2182,7 @@ Namespace Core
             Me.BtnServerSettingsAddPlayerBan.Name = "BtnServerSettingsAddPlayerBan"
             Me.BtnServerSettingsAddPlayerBan.Size = New System.Drawing.Size(36, 23)
             Me.BtnServerSettingsAddPlayerBan.TabIndex = 10
-            Me.BtnServerSettingsAddPlayerBan.Text = Lr("Add")
+            Me.BtnServerSettingsAddPlayerBan.Text = "Add"
             Me.BtnServerSettingsAddPlayerBan.UseVisualStyleBackColor = True
             '
             'BtnServerSettingsAddOP
@@ -2192,7 +2192,7 @@ Namespace Core
             Me.BtnServerSettingsAddOP.Name = "BtnServerSettingsAddOP"
             Me.BtnServerSettingsAddOP.Size = New System.Drawing.Size(36, 23)
             Me.BtnServerSettingsAddOP.TabIndex = 8
-            Me.BtnServerSettingsAddOP.Text = Lr("Add")
+            Me.BtnServerSettingsAddOP.Text = "Add"
             Me.BtnServerSettingsAddOP.UseVisualStyleBackColor = True
             '
             'BtnServerSettingsAddWhitelist
@@ -2202,7 +2202,7 @@ Namespace Core
             Me.BtnServerSettingsAddWhitelist.Name = "BtnServerSettingsAddWhitelist"
             Me.BtnServerSettingsAddWhitelist.Size = New System.Drawing.Size(36, 23)
             Me.BtnServerSettingsAddWhitelist.TabIndex = 6
-            Me.BtnServerSettingsAddWhitelist.Text = Lr("Add")
+            Me.BtnServerSettingsAddWhitelist.Text = "Add"
             Me.BtnServerSettingsAddWhitelist.UseVisualStyleBackColor = True
             '
             'ALVServerSettingsBannedIP
@@ -2222,7 +2222,7 @@ Namespace Core
             '
             'ColServerSettingsBannedIp
             '
-            Me.ColServerSettingsBannedIp.Text = Lr("Banned IPs")
+            Me.ColServerSettingsBannedIp.Text = "Banned IPs"
             Me.ColServerSettingsBannedIp.Width = 180
             '
             'CmenuServerLists
@@ -2236,14 +2236,14 @@ Namespace Core
             Me.BtnCmenuServerListsRemove.Image = CType(resources.GetObject("BtnCmenuServerListsRemove.Image"), System.Drawing.Image)
             Me.BtnCmenuServerListsRemove.Name = "BtnCmenuServerListsRemove"
             Me.BtnCmenuServerListsRemove.Size = New System.Drawing.Size(117, 22)
-            Me.BtnCmenuServerListsRemove.Text = Lr("Remove")
+            Me.BtnCmenuServerListsRemove.Text = "Remove"
             '
             'BtnCmenuServerListRefresh
             '
             Me.BtnCmenuServerListRefresh.Image = CType(resources.GetObject("BtnCmenuServerListRefresh.Image"), System.Drawing.Image)
             Me.BtnCmenuServerListRefresh.Name = "BtnCmenuServerListRefresh"
             Me.BtnCmenuServerListRefresh.Size = New System.Drawing.Size(117, 22)
-            Me.BtnCmenuServerListRefresh.Text = Lr("Refresh")
+            Me.BtnCmenuServerListRefresh.Text = "Refresh"
             '
             'ALVServerSettingsBannedPlayer
             '
@@ -2262,7 +2262,7 @@ Namespace Core
             '
             'ColServerSettingsBannedPlayers
             '
-            Me.ColServerSettingsBannedPlayers.Text = Lr("Banned Players")
+            Me.ColServerSettingsBannedPlayers.Text = "Banned Players"
             Me.ColServerSettingsBannedPlayers.Width = 185
             '
             'ALVServerSettingsOPs
@@ -2282,7 +2282,7 @@ Namespace Core
             '
             'ColServerSettingsOps
             '
-            Me.ColServerSettingsOps.Text = Lr("OPs")
+            Me.ColServerSettingsOps.Text = "OPs"
             Me.ColServerSettingsOps.Width = 185
             '
             'ALVServerSettingsWhiteList
@@ -2302,7 +2302,7 @@ Namespace Core
             '
             'ColServerSettingsWhitelist
             '
-            Me.ColServerSettingsWhitelist.Text = Lr("Whitelist")
+            Me.ColServerSettingsWhitelist.Text = "Whitelist"
             Me.ColServerSettingsWhitelist.Width = 185
             '
             'ALVServerSettings
@@ -2323,12 +2323,12 @@ Namespace Core
             '
             'ColServerSettingsName
             '
-            Me.ColServerSettingsName.Text = Lr("Name")
+            Me.ColServerSettingsName.Text = "Name"
             Me.ColServerSettingsName.Width = 200
             '
             'ColServerSettingsValue
             '
-            Me.ColServerSettingsValue.Text = Lr("Value")
+            Me.ColServerSettingsValue.Text = "Value"
             Me.ColServerSettingsValue.Width = 400
             '
             'CmenuServerSettings
@@ -2342,28 +2342,28 @@ Namespace Core
             Me.BtnCmenuServerSettingsAdd.Image = CType(resources.GetObject("BtnCmenuServerSettingsAdd.Image"), System.Drawing.Image)
             Me.BtnCmenuServerSettingsAdd.Name = "BtnCmenuServerSettingsAdd"
             Me.BtnCmenuServerSettingsAdd.Size = New System.Drawing.Size(117, 22)
-            Me.BtnCmenuServerSettingsAdd.Text = Lr("Add...")
+            Me.BtnCmenuServerSettingsAdd.Text = "Add..."
             '
             'BtnCmenuServerSettingsEdit
             '
             Me.BtnCmenuServerSettingsEdit.Image = CType(resources.GetObject("BtnCmenuServerSettingsEdit.Image"), System.Drawing.Image)
             Me.BtnCmenuServerSettingsEdit.Name = "BtnCmenuServerSettingsEdit"
             Me.BtnCmenuServerSettingsEdit.Size = New System.Drawing.Size(117, 22)
-            Me.BtnCmenuServerSettingsEdit.Text = Lr("Edit...")
+            Me.BtnCmenuServerSettingsEdit.Text = "Edit..."
             '
             'BtnCmenuServerSettingsRemove
             '
             Me.BtnCmenuServerSettingsRemove.Image = CType(resources.GetObject("BtnCmenuServerSettingsRemove.Image"), System.Drawing.Image)
             Me.BtnCmenuServerSettingsRemove.Name = "BtnCmenuServerSettingsRemove"
             Me.BtnCmenuServerSettingsRemove.Size = New System.Drawing.Size(117, 22)
-            Me.BtnCmenuServerSettingsRemove.Text = Lr("Remove")
+            Me.BtnCmenuServerSettingsRemove.Text = "Remove"
             '
             'BtnCmenuServerSettingsRefresh
             '
             Me.BtnCmenuServerSettingsRefresh.Image = CType(resources.GetObject("BtnCmenuServerSettingsRefresh.Image"), System.Drawing.Image)
             Me.BtnCmenuServerSettingsRefresh.Name = "BtnCmenuServerSettingsRefresh"
             Me.BtnCmenuServerSettingsRefresh.Size = New System.Drawing.Size(117, 22)
-            Me.BtnCmenuServerSettingsRefresh.Text = Lr("Refresh")
+            Me.BtnCmenuServerSettingsRefresh.Text = "Refresh"
             '
             'TabBackups
             '
@@ -2379,7 +2379,7 @@ Namespace Core
             Me.TabBackups.Name = "TabBackups"
             Me.TabBackups.Size = New System.Drawing.Size(831, 516)
             Me.TabBackups.TabIndex = 8
-            Me.TabBackups.Text = Lr("Backup")
+            Me.TabBackups.Text = "Backup"
             Me.TabBackups.UseVisualStyleBackColor = True
             '
             'BtnBackupExecute
@@ -2389,7 +2389,7 @@ Namespace Core
             Me.BtnBackupExecute.Name = "BtnBackupExecute"
             Me.BtnBackupExecute.Size = New System.Drawing.Size(75, 23)
             Me.BtnBackupExecute.TabIndex = 12
-            Me.BtnBackupExecute.Text = Lr("Execute")
+            Me.BtnBackupExecute.Text = "Execute"
             Me.BtnBackupExecute.UseVisualStyleBackColor = True
             '
             'BtnBackupImport
@@ -2399,7 +2399,7 @@ Namespace Core
             Me.BtnBackupImport.Name = "BtnBackupImport"
             Me.BtnBackupImport.Size = New System.Drawing.Size(75, 22)
             Me.BtnBackupImport.TabIndex = 11
-            Me.BtnBackupImport.Text = Lr("Import...")
+            Me.BtnBackupImport.Text = "Import..."
             Me.BtnBackupImport.UseVisualStyleBackColor = True
             '
             'BtnBackupExport
@@ -2409,7 +2409,7 @@ Namespace Core
             Me.BtnBackupExport.Name = "BtnBackupExport"
             Me.BtnBackupExport.Size = New System.Drawing.Size(75, 23)
             Me.BtnBackupExport.TabIndex = 10
-            Me.BtnBackupExport.Text = Lr("Export...")
+            Me.BtnBackupExport.Text = "Export..."
             Me.BtnBackupExport.UseVisualStyleBackColor = True
             '
             'BtnBackupAdd
@@ -2419,7 +2419,7 @@ Namespace Core
             Me.BtnBackupAdd.Name = "BtnBackupAdd"
             Me.BtnBackupAdd.Size = New System.Drawing.Size(75, 23)
             Me.BtnBackupAdd.TabIndex = 7
-            Me.BtnBackupAdd.Text = Lr("Add...")
+            Me.BtnBackupAdd.Text = "Add..."
             Me.BtnBackupAdd.UseVisualStyleBackColor = True
             '
             'BtnBackupEdit
@@ -2429,7 +2429,7 @@ Namespace Core
             Me.BtnBackupEdit.Name = "BtnBackupEdit"
             Me.BtnBackupEdit.Size = New System.Drawing.Size(75, 23)
             Me.BtnBackupEdit.TabIndex = 8
-            Me.BtnBackupEdit.Text = Lr("Edit...")
+            Me.BtnBackupEdit.Text = "Edit..."
             Me.BtnBackupEdit.UseVisualStyleBackColor = True
             '
             'ALVBackups
@@ -2448,22 +2448,22 @@ Namespace Core
             '
             'ColBackupName
             '
-            Me.ColBackupName.Text = Lr("Name")
+            Me.ColBackupName.Text = "Name"
             Me.ColBackupName.Width = 150
             '
             'ColBackupFolders
             '
-            Me.ColBackupFolders.Text = Lr("Folders")
+            Me.ColBackupFolders.Text = "Folders"
             Me.ColBackupFolders.Width = 280
             '
             'ColBackupDestination
             '
-            Me.ColBackupDestination.Text = Lr("Destination")
+            Me.ColBackupDestination.Text = "Destination"
             Me.ColBackupDestination.Width = 280
             '
             'ColBackupCompression
             '
-            Me.ColBackupCompression.Text = Lr("Compression")
+            Me.ColBackupCompression.Text = "Compression"
             Me.ColBackupCompression.Width = 80
             '
             'BtnBackupRemove
@@ -2473,7 +2473,7 @@ Namespace Core
             Me.BtnBackupRemove.Name = "BtnBackupRemove"
             Me.BtnBackupRemove.Size = New System.Drawing.Size(75, 23)
             Me.BtnBackupRemove.TabIndex = 9
-            Me.BtnBackupRemove.Text = Lr("Remove")
+            Me.BtnBackupRemove.Text = "Remove"
             Me.BtnBackupRemove.UseVisualStyleBackColor = True
             '
             'TabOptionsInfo
@@ -2492,7 +2492,7 @@ Namespace Core
             Me.TabOptionsInfo.Padding = New System.Windows.Forms.Padding(3)
             Me.TabOptionsInfo.Size = New System.Drawing.Size(831, 516)
             Me.TabOptionsInfo.TabIndex = 4
-            Me.TabOptionsInfo.Text = Lr("Options & Info")
+            Me.TabOptionsInfo.Text = "Options & Info"
             Me.TabOptionsInfo.UseVisualStyleBackColor = True
             '
             'LblDonateInfo
@@ -2512,7 +2512,7 @@ Namespace Core
             Me.BtnFeedback.Name = "BtnFeedback"
             Me.BtnFeedback.Size = New System.Drawing.Size(233, 52)
             Me.BtnFeedback.TabIndex = 5
-            Me.BtnFeedback.Text = Lr("Tell us what you think!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Give feedback by clicking here") & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+            Me.BtnFeedback.Text = "Tell us what you think!" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Give feedback by clicking here" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
             Me.BtnFeedback.UseVisualStyleBackColor = True
             '
             'GBInfoSettings
@@ -2538,7 +2538,7 @@ Namespace Core
             Me.GBInfoSettings.Size = New System.Drawing.Size(280, 348)
             Me.GBInfoSettings.TabIndex = 4
             Me.GBInfoSettings.TabStop = False
-            Me.GBInfoSettings.Text = Lr("Application Settings")
+            Me.GBInfoSettings.Text = "Application Settings"
             '
             'ChkOptionsLightMode
             '
@@ -2547,7 +2547,7 @@ Namespace Core
             Me.ChkOptionsLightMode.Name = "ChkOptionsLightMode"
             Me.ChkOptionsLightMode.Size = New System.Drawing.Size(108, 17)
             Me.ChkOptionsLightMode.TabIndex = 19
-            Me.ChkOptionsLightMode.Text = Lr("Run in light mode")
+            Me.ChkOptionsLightMode.Text = "Run in light mode"
             Me.MainToolTip.SetToolTip(Me.ChkOptionsLightMode, "Run the GUI in light mode." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "This will disable all functionallity that isn't neede" & _
             "d." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Usefull to reduce system load or as a ""safe mode"" in case of problems." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.ChkOptionsLightMode.UseVisualStyleBackColor = True
@@ -2559,7 +2559,7 @@ Namespace Core
             Me.ChkAutoStartWindows.Name = "ChkAutoStartWindows"
             Me.ChkAutoStartWindows.Size = New System.Drawing.Size(169, 17)
             Me.ChkAutoStartWindows.TabIndex = 18
-            Me.ChkAutoStartWindows.Text = Lr("Run GUI when windows starts")
+            Me.ChkAutoStartWindows.Text = "Run GUI when windows starts"
             Me.MainToolTip.SetToolTip(Me.ChkAutoStartWindows, "Start the server when the GUI starts, using the settings from the SuperStart tab." & _
             "")
             Me.ChkAutoStartWindows.UseVisualStyleBackColor = True
@@ -2570,7 +2570,7 @@ Namespace Core
             Me.BtnOptionsResetAll.Name = "BtnOptionsResetAll"
             Me.BtnOptionsResetAll.Size = New System.Drawing.Size(268, 23)
             Me.BtnOptionsResetAll.TabIndex = 9
-            Me.BtnOptionsResetAll.Text = Lr("Reset all settings")
+            Me.BtnOptionsResetAll.Text = "Reset all settings"
             Me.BtnOptionsResetAll.UseVisualStyleBackColor = True
             '
             'ChkOptionsCheckUpdates
@@ -2580,7 +2580,7 @@ Namespace Core
             Me.ChkOptionsCheckUpdates.Name = "ChkOptionsCheckUpdates"
             Me.ChkOptionsCheckUpdates.Size = New System.Drawing.Size(163, 17)
             Me.ChkOptionsCheckUpdates.TabIndex = 7
-            Me.ChkOptionsCheckUpdates.Text = Lr("Check for updates on startup")
+            Me.ChkOptionsCheckUpdates.Text = "Check for updates on startup"
             Me.MainToolTip.SetToolTip(Me.ChkOptionsCheckUpdates, "Check for GUI updates on startup. Highly recommended." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.ChkOptionsCheckUpdates.UseVisualStyleBackColor = True
             '
@@ -2590,7 +2590,7 @@ Namespace Core
             Me.LbloptionsRestartRequiredInfo.Name = "LbloptionsRestartRequiredInfo"
             Me.LbloptionsRestartRequiredInfo.Size = New System.Drawing.Size(268, 33)
             Me.LbloptionsRestartRequiredInfo.TabIndex = 17
-            Me.LbloptionsRestartRequiredInfo.Text = Lr("You might need to restart the GUI, in order for " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "these settings to take full eff") & _
+            Me.LbloptionsRestartRequiredInfo.Text = "You might need to restart the GUI, in order for " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "these settings to take full eff" & _
         "ect."
             '
             'lblSettingsTabPages
@@ -2600,7 +2600,7 @@ Namespace Core
             Me.lblSettingsTabPages.Name = "lblSettingsTabPages"
             Me.lblSettingsTabPages.Size = New System.Drawing.Size(58, 13)
             Me.lblSettingsTabPages.TabIndex = 16
-            Me.lblSettingsTabPages.Text = Lr("Tabpages:")
+            Me.lblSettingsTabPages.Text = "Tabpages:"
             '
             'ChkOptionsTabServeroptions
             '
@@ -2609,7 +2609,7 @@ Namespace Core
             Me.ChkOptionsTabServeroptions.Name = "ChkOptionsTabServeroptions"
             Me.ChkOptionsTabServeroptions.Size = New System.Drawing.Size(140, 17)
             Me.ChkOptionsTabServeroptions.TabIndex = 15
-            Me.ChkOptionsTabServeroptions.Text = Lr("Show server options tab")
+            Me.ChkOptionsTabServeroptions.Text = "Show server options tab"
             Me.ChkOptionsTabServeroptions.UseVisualStyleBackColor = True
             '
             'ChkOptionsTabPlugins
@@ -2619,7 +2619,7 @@ Namespace Core
             Me.ChkOptionsTabPlugins.Name = "ChkOptionsTabPlugins"
             Me.ChkOptionsTabPlugins.Size = New System.Drawing.Size(107, 17)
             Me.ChkOptionsTabPlugins.TabIndex = 14
-            Me.ChkOptionsTabPlugins.Text = Lr("Show plugins tab")
+            Me.ChkOptionsTabPlugins.Text = "Show plugins tab"
             Me.ChkOptionsTabPlugins.UseVisualStyleBackColor = True
             '
             'ChkOptionsTabTaskManager
@@ -2629,7 +2629,7 @@ Namespace Core
             Me.ChkOptionsTabTaskManager.Name = "ChkOptionsTabTaskManager"
             Me.ChkOptionsTabTaskManager.Size = New System.Drawing.Size(138, 17)
             Me.ChkOptionsTabTaskManager.TabIndex = 13
-            Me.ChkOptionsTabTaskManager.Text = Lr("Show task manager tab")
+            Me.ChkOptionsTabTaskManager.Text = "Show task manager tab"
             Me.ChkOptionsTabTaskManager.UseVisualStyleBackColor = True
             '
             'ChkOptionsTaberrors
@@ -2639,7 +2639,7 @@ Namespace Core
             Me.ChkOptionsTaberrors.Name = "ChkOptionsTaberrors"
             Me.ChkOptionsTaberrors.Size = New System.Drawing.Size(132, 17)
             Me.ChkOptionsTaberrors.TabIndex = 12
-            Me.ChkOptionsTaberrors.Text = Lr("Show error logging tab")
+            Me.ChkOptionsTaberrors.Text = "Show error logging tab"
             Me.ChkOptionsTaberrors.UseVisualStyleBackColor = True
             '
             'ChkOptionsTabplayers
@@ -2649,7 +2649,7 @@ Namespace Core
             Me.ChkOptionsTabplayers.Name = "ChkOptionsTabplayers"
             Me.ChkOptionsTabplayers.Size = New System.Drawing.Size(107, 17)
             Me.ChkOptionsTabplayers.TabIndex = 11
-            Me.ChkOptionsTabplayers.Text = Lr("Show players tab")
+            Me.ChkOptionsTabplayers.Text = "Show players tab"
             Me.ChkOptionsTabplayers.UseVisualStyleBackColor = True
             '
             'lblOptionsConfigLocation
@@ -2658,7 +2658,7 @@ Namespace Core
             Me.lblOptionsConfigLocation.Name = "lblOptionsConfigLocation"
             Me.lblOptionsConfigLocation.Size = New System.Drawing.Size(97, 13)
             Me.lblOptionsConfigLocation.TabIndex = 5
-            Me.lblOptionsConfigLocation.Text = Lr("Config location:")
+            Me.lblOptionsConfigLocation.Text = "Config location:"
             Me.lblOptionsConfigLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'CBInfoSettingsFileLocation
@@ -2678,7 +2678,7 @@ Namespace Core
             Me.ChkRunServerOnGUIStart.Name = "ChkRunServerOnGUIStart"
             Me.ChkRunServerOnGUIStart.Size = New System.Drawing.Size(157, 17)
             Me.ChkRunServerOnGUIStart.TabIndex = 3
-            Me.ChkRunServerOnGUIStart.Text = Lr("Run server when GUI starts")
+            Me.ChkRunServerOnGUIStart.Text = "Run server when GUI starts"
             Me.MainToolTip.SetToolTip(Me.ChkRunServerOnGUIStart, "Start the server when the GUI starts, using the settings from the SuperStart tab." & _
             "")
             Me.ChkRunServerOnGUIStart.UseVisualStyleBackColor = True
@@ -2689,7 +2689,7 @@ Namespace Core
             Me.lblInfoSettingsLanguage.Name = "lblInfoSettingsLanguage"
             Me.lblInfoSettingsLanguage.Size = New System.Drawing.Size(97, 13)
             Me.lblInfoSettingsLanguage.TabIndex = 1
-            Me.lblInfoSettingsLanguage.Text = Lr("Language:")
+            Me.lblInfoSettingsLanguage.Text = "Language:"
             Me.lblInfoSettingsLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'CBInfoSettingsLanguage
@@ -2714,7 +2714,7 @@ Namespace Core
             Me.GBOptionsInfoSound.Size = New System.Drawing.Size(233, 113)
             Me.GBOptionsInfoSound.TabIndex = 3
             Me.GBOptionsInfoSound.TabStop = False
-            Me.GBOptionsInfoSound.Text = Lr("Sound settings")
+            Me.GBOptionsInfoSound.Text = "Sound settings"
             '
             'ChkInfoSoundOnSevere
             '
@@ -2724,7 +2724,7 @@ Namespace Core
             Me.ChkInfoSoundOnSevere.Name = "ChkInfoSoundOnSevere"
             Me.ChkInfoSoundOnSevere.Size = New System.Drawing.Size(173, 17)
             Me.ChkInfoSoundOnSevere.TabIndex = 13
-            Me.ChkInfoSoundOnSevere.Text = Lr("Play sound on severe message")
+            Me.ChkInfoSoundOnSevere.Text = "Play sound on severe message"
             Me.MainToolTip.SetToolTip(Me.ChkInfoSoundOnSevere, "Play a sound when the server sends a severe message")
             Me.ChkInfoSoundOnSevere.UseVisualStyleBackColor = True
             '
@@ -2736,7 +2736,7 @@ Namespace Core
             Me.ChkInfoSoundOnWarning.Name = "ChkInfoSoundOnWarning"
             Me.ChkInfoSoundOnWarning.Size = New System.Drawing.Size(178, 17)
             Me.ChkInfoSoundOnWarning.TabIndex = 12
-            Me.ChkInfoSoundOnWarning.Text = Lr("Play sound on warning message")
+            Me.ChkInfoSoundOnWarning.Text = "Play sound on warning message"
             Me.MainToolTip.SetToolTip(Me.ChkInfoSoundOnWarning, "Play a sound when the server sends a warning" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.ChkInfoSoundOnWarning.UseVisualStyleBackColor = True
             '
@@ -2748,7 +2748,7 @@ Namespace Core
             Me.ChkInfoSoundOnLeave.Name = "ChkInfoSoundOnLeave"
             Me.ChkInfoSoundOnLeave.Size = New System.Drawing.Size(153, 17)
             Me.ChkInfoSoundOnLeave.TabIndex = 11
-            Me.ChkInfoSoundOnLeave.Text = Lr("Play sound on player leave")
+            Me.ChkInfoSoundOnLeave.Text = "Play sound on player leave"
             Me.MainToolTip.SetToolTip(Me.ChkInfoSoundOnLeave, "Play a sound when a player leaves the server")
             Me.ChkInfoSoundOnLeave.UseVisualStyleBackColor = True
             '
@@ -2760,7 +2760,7 @@ Namespace Core
             Me.ChkInfoSoundOnJoin.Name = "ChkInfoSoundOnJoin"
             Me.ChkInfoSoundOnJoin.Size = New System.Drawing.Size(143, 17)
             Me.ChkInfoSoundOnJoin.TabIndex = 10
-            Me.ChkInfoSoundOnJoin.Text = Lr("Play sound on player join")
+            Me.ChkInfoSoundOnJoin.Text = "Play sound on player join"
             Me.MainToolTip.SetToolTip(Me.ChkInfoSoundOnJoin, "Play a sound when a player connects to the server")
             Me.ChkInfoSoundOnJoin.UseVisualStyleBackColor = True
             '
@@ -2778,7 +2778,7 @@ Namespace Core
             Me.GBOptionsInfoAboutTray.Size = New System.Drawing.Size(233, 150)
             Me.GBOptionsInfoAboutTray.TabIndex = 2
             Me.GBOptionsInfoAboutTray.TabStop = False
-            Me.GBOptionsInfoAboutTray.Text = Lr("Tray and sound")
+            Me.GBOptionsInfoAboutTray.Text = "Tray and sound"
             '
             'ChkInfoTrayOnWarning
             '
@@ -2788,7 +2788,7 @@ Namespace Core
             Me.ChkInfoTrayOnWarning.Name = "ChkInfoTrayOnWarning"
             Me.ChkInfoTrayOnWarning.Size = New System.Drawing.Size(80, 17)
             Me.ChkInfoTrayOnWarning.TabIndex = 5
-            Me.ChkInfoTrayOnWarning.Text = Lr("On warning")
+            Me.ChkInfoTrayOnWarning.Text = "On warning"
             Me.MainToolTip.SetToolTip(Me.ChkInfoTrayOnWarning, "Show a tray balloon when the server throws a warning message" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10))
             Me.ChkInfoTrayOnWarning.UseVisualStyleBackColor = True
             '
@@ -2800,7 +2800,7 @@ Namespace Core
             Me.ChkInfoTrayOnLeave.Name = "ChkInfoTrayOnLeave"
             Me.ChkInfoTrayOnLeave.Size = New System.Drawing.Size(100, 17)
             Me.ChkInfoTrayOnLeave.TabIndex = 4
-            Me.ChkInfoTrayOnLeave.Text = Lr("On player leave")
+            Me.ChkInfoTrayOnLeave.Text = "On player leave"
             Me.MainToolTip.SetToolTip(Me.ChkInfoTrayOnLeave, "Show a tray balloon when a player leaves.")
             Me.ChkInfoTrayOnLeave.UseVisualStyleBackColor = True
             '
@@ -2812,7 +2812,7 @@ Namespace Core
             Me.ChkInfoTrayOnJoin.Name = "ChkInfoTrayOnJoin"
             Me.ChkInfoTrayOnJoin.Size = New System.Drawing.Size(90, 17)
             Me.ChkInfoTrayOnJoin.TabIndex = 3
-            Me.ChkInfoTrayOnJoin.Text = Lr("On player join")
+            Me.ChkInfoTrayOnJoin.Text = "On player join"
             Me.MainToolTip.SetToolTip(Me.ChkInfoTrayOnJoin, "Show a tray balloon when a player joins.")
             Me.ChkInfoTrayOnJoin.UseVisualStyleBackColor = True
             '
@@ -2824,7 +2824,7 @@ Namespace Core
             Me.ChkInfoTrayOnSevere.Name = "ChkInfoTrayOnSevere"
             Me.ChkInfoTrayOnSevere.Size = New System.Drawing.Size(75, 17)
             Me.ChkInfoTrayOnSevere.TabIndex = 2
-            Me.ChkInfoTrayOnSevere.Text = Lr("On severe")
+            Me.ChkInfoTrayOnSevere.Text = "On severe"
             Me.MainToolTip.SetToolTip(Me.ChkInfoTrayOnSevere, "Show a tray balloon when the server throws a severe message")
             Me.ChkInfoTrayOnSevere.UseVisualStyleBackColor = True
             '
@@ -2836,7 +2836,7 @@ Namespace Core
             Me.ChkInfoTrayAlways.Name = "ChkInfoTrayAlways"
             Me.ChkInfoTrayAlways.Size = New System.Drawing.Size(129, 17)
             Me.ChkInfoTrayAlways.TabIndex = 1
-            Me.ChkInfoTrayAlways.Text = Lr("Always show balloons")
+            Me.ChkInfoTrayAlways.Text = "Always show balloons"
             Me.MainToolTip.SetToolTip(Me.ChkInfoTrayAlways, "Always show tray balloons, even if the GUI isn't minimized to tray.")
             Me.ChkInfoTrayAlways.UseVisualStyleBackColor = True
             '
@@ -2848,7 +2848,7 @@ Namespace Core
             Me.ChkInfoTrayMinimize.Name = "ChkInfoTrayMinimize"
             Me.ChkInfoTrayMinimize.Size = New System.Drawing.Size(98, 17)
             Me.ChkInfoTrayMinimize.TabIndex = 0
-            Me.ChkInfoTrayMinimize.Text = Lr("Minimize to tray")
+            Me.ChkInfoTrayMinimize.Text = "Minimize to tray"
             Me.MainToolTip.SetToolTip(Me.ChkInfoTrayMinimize, "Minimize the GUI to tray when the minimize button is clicked.")
             Me.ChkInfoTrayMinimize.UseVisualStyleBackColor = True
             '
@@ -2880,7 +2880,7 @@ Namespace Core
             Me.GBOptionsInfoAboutText.Size = New System.Drawing.Size(285, 348)
             Me.GBOptionsInfoAboutText.TabIndex = 3
             Me.GBOptionsInfoAboutText.TabStop = False
-            Me.GBOptionsInfoAboutText.Text = Lr("Text output")
+            Me.GBOptionsInfoAboutText.Text = "Text output"
             '
             'ChkTextUTF8
             '
@@ -2889,7 +2889,7 @@ Namespace Core
             Me.ChkTextUTF8.Name = "ChkTextUTF8"
             Me.ChkTextUTF8.Size = New System.Drawing.Size(145, 17)
             Me.ChkTextUTF8.TabIndex = 24
-            Me.ChkTextUTF8.Text = Lr("UTF-8 compatibility mode")
+            Me.ChkTextUTF8.Text = "UTF-8 compatibility mode"
             Me.MainToolTip.SetToolTip(Me.ChkTextUTF8, "Enable this if you need to read chinese (or other UTF-8) text from the server out" & _
             "put, or need to write chinese (or other UTF-8) text to the server input.")
             Me.ChkTextUTF8.UseVisualStyleBackColor = True
@@ -2914,7 +2914,7 @@ Namespace Core
             Me.TxtSettingsTextFontPreview.ReadOnly = True
             Me.TxtSettingsTextFontPreview.Size = New System.Drawing.Size(235, 33)
             Me.TxtSettingsTextFontPreview.TabIndex = 22
-            Me.TxtSettingsTextFontPreview.Text = Lr("font preview")
+            Me.TxtSettingsTextFontPreview.Text = "font preview"
             Me.TxtSettingsTextFontPreview.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
             '
             'LblTextSettingsFontSize
@@ -2923,7 +2923,7 @@ Namespace Core
             Me.LblTextSettingsFontSize.Name = "LblTextSettingsFontSize"
             Me.LblTextSettingsFontSize.Size = New System.Drawing.Size(97, 13)
             Me.LblTextSettingsFontSize.TabIndex = 21
-            Me.LblTextSettingsFontSize.Text = Lr("Font size:")
+            Me.LblTextSettingsFontSize.Text = "Font size:"
             Me.LblTextSettingsFontSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'LblTextSettingsFont
@@ -2932,7 +2932,7 @@ Namespace Core
             Me.LblTextSettingsFont.Name = "LblTextSettingsFont"
             Me.LblTextSettingsFont.Size = New System.Drawing.Size(97, 13)
             Me.LblTextSettingsFont.TabIndex = 20
-            Me.LblTextSettingsFont.Text = Lr("Font :")
+            Me.LblTextSettingsFont.Text = "Font :"
             Me.LblTextSettingsFont.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'NumTextOptionsFontSize
@@ -2953,7 +2953,7 @@ Namespace Core
             Me.LblSettingsTextFontPreview.Name = "LblSettingsTextFontPreview"
             Me.LblSettingsTextFontPreview.Size = New System.Drawing.Size(71, 13)
             Me.LblSettingsTextFontPreview.TabIndex = 13
-            Me.LblSettingsTextFontPreview.Text = Lr("Font preview:")
+            Me.LblSettingsTextFontPreview.Text = "Font preview:"
             '
             'TxtSettingsTextColorUnknown
             '
@@ -2969,7 +2969,7 @@ Namespace Core
             Me.LblSettingsTextColorUnknown.Name = "LblSettingsTextColorUnknown"
             Me.LblSettingsTextColorUnknown.Size = New System.Drawing.Size(97, 13)
             Me.LblSettingsTextColorUnknown.TabIndex = 10
-            Me.LblSettingsTextColorUnknown.Text = Lr("Unknown :")
+            Me.LblSettingsTextColorUnknown.Text = "Unknown :"
             Me.LblSettingsTextColorUnknown.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'TxtSettingsTextColorSevere
@@ -2986,7 +2986,7 @@ Namespace Core
             Me.LblSettingsTextColorSevere.Name = "LblSettingsTextColorSevere"
             Me.LblSettingsTextColorSevere.Size = New System.Drawing.Size(97, 13)
             Me.LblSettingsTextColorSevere.TabIndex = 8
-            Me.LblSettingsTextColorSevere.Text = Lr("[SEVERE] :")
+            Me.LblSettingsTextColorSevere.Text = "[SEVERE] :"
             Me.LblSettingsTextColorSevere.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'TxtSettingsTextColorWarning
@@ -3003,7 +3003,7 @@ Namespace Core
             Me.LblSettingsTextColorWarning.Name = "LblSettingsTextColorWarning"
             Me.LblSettingsTextColorWarning.Size = New System.Drawing.Size(97, 13)
             Me.LblSettingsTextColorWarning.TabIndex = 6
-            Me.LblSettingsTextColorWarning.Text = Lr("[WARNING] :")
+            Me.LblSettingsTextColorWarning.Text = "[WARNING] :"
             Me.LblSettingsTextColorWarning.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'TxtSettingsTextColorPlayer
@@ -3020,7 +3020,7 @@ Namespace Core
             Me.LblSettingsTextColorPlayer.Name = "LblSettingsTextColorPlayer"
             Me.LblSettingsTextColorPlayer.Size = New System.Drawing.Size(94, 13)
             Me.LblSettingsTextColorPlayer.TabIndex = 4
-            Me.LblSettingsTextColorPlayer.Text = Lr("Player event :")
+            Me.LblSettingsTextColorPlayer.Text = "Player event :"
             Me.LblSettingsTextColorPlayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'TxtSettingsTextColorInfo
@@ -3037,7 +3037,7 @@ Namespace Core
             Me.LblSettingsTextColorInfo.Name = "LblSettingsTextColorInfo"
             Me.LblSettingsTextColorInfo.Size = New System.Drawing.Size(97, 13)
             Me.LblSettingsTextColorInfo.TabIndex = 2
-            Me.LblSettingsTextColorInfo.Text = Lr("[INFO] :")
+            Me.LblSettingsTextColorInfo.Text = "[INFO] :"
             Me.LblSettingsTextColorInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'ChkShowDate
@@ -3047,7 +3047,7 @@ Namespace Core
             Me.ChkShowDate.Name = "ChkShowDate"
             Me.ChkShowDate.Size = New System.Drawing.Size(77, 17)
             Me.ChkShowDate.TabIndex = 1
-            Me.ChkShowDate.Text = Lr("Show date")
+            Me.ChkShowDate.Text = "Show date"
             Me.MainToolTip.SetToolTip(Me.ChkShowDate, "Show the date in front of each entry in the log (general tab)")
             Me.ChkShowDate.UseVisualStyleBackColor = True
             '
@@ -3058,7 +3058,7 @@ Namespace Core
             Me.ChkShowTime.Name = "ChkShowTime"
             Me.ChkShowTime.Size = New System.Drawing.Size(75, 17)
             Me.ChkShowTime.TabIndex = 0
-            Me.ChkShowTime.Text = Lr("Show time")
+            Me.ChkShowTime.Text = "Show time"
             Me.MainToolTip.SetToolTip(Me.ChkShowTime, "Show the time in front of each entry in the log (general tab)")
             Me.ChkShowTime.UseVisualStyleBackColor = True
             '
@@ -3077,7 +3077,7 @@ Namespace Core
             Me.GBOptionsInfoAboutComputerInfo.Size = New System.Drawing.Size(285, 150)
             Me.GBOptionsInfoAboutComputerInfo.TabIndex = 1
             Me.GBOptionsInfoAboutComputerInfo.TabStop = False
-            Me.GBOptionsInfoAboutComputerInfo.Text = Lr("Computer Info")
+            Me.GBOptionsInfoAboutComputerInfo.Text = "Computer Info"
             '
             'LblInfoComputerExtIP
             '
@@ -3087,7 +3087,7 @@ Namespace Core
             Me.LblInfoComputerExtIP.Size = New System.Drawing.Size(41, 13)
             Me.LblInfoComputerExtIP.TabIndex = 13
             Me.LblInfoComputerExtIP.TabStop = True
-            Me.LblInfoComputerExtIP.Text = Lr("Ext. IP:")
+            Me.LblInfoComputerExtIP.Text = "Ext. IP:"
             Me.MainToolTip.SetToolTip(Me.LblInfoComputerExtIP, "Your external IP. This is what people outside your house need to connect to your " & _
             "server. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Click to copy to clipboard.")
             '
@@ -3099,7 +3099,7 @@ Namespace Core
             Me.LblInfoComputerLocIP.Size = New System.Drawing.Size(49, 13)
             Me.LblInfoComputerLocIP.TabIndex = 14
             Me.LblInfoComputerLocIP.TabStop = True
-            Me.LblInfoComputerLocIP.Text = Lr("Local IP:")
+            Me.LblInfoComputerLocIP.Text = "Local IP:"
             Me.MainToolTip.SetToolTip(Me.LblInfoComputerLocIP, "Your internal IP. This is what people inside your house need to connect to your s" & _
             "erver. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Click to copy to clipboard.")
             '
@@ -3111,7 +3111,7 @@ Namespace Core
             Me.LblInfoComputerOS.Name = "LblInfoComputerOS"
             Me.LblInfoComputerOS.Size = New System.Drawing.Size(25, 13)
             Me.LblInfoComputerOS.TabIndex = 12
-            Me.LblInfoComputerOS.Text = Lr("OS:")
+            Me.LblInfoComputerOS.Text = "OS:"
             '
             'LblInfoComputerCPU
             '
@@ -3121,7 +3121,7 @@ Namespace Core
             Me.LblInfoComputerCPU.Name = "LblInfoComputerCPU"
             Me.LblInfoComputerCPU.Size = New System.Drawing.Size(32, 13)
             Me.LblInfoComputerCPU.TabIndex = 11
-            Me.LblInfoComputerCPU.Text = Lr("CPU:")
+            Me.LblInfoComputerCPU.Text = "CPU:"
             '
             'LblInfoComputerRAM
             '
@@ -3131,7 +3131,7 @@ Namespace Core
             Me.LblInfoComputerRAM.Name = "LblInfoComputerRAM"
             Me.LblInfoComputerRAM.Size = New System.Drawing.Size(34, 13)
             Me.LblInfoComputerRAM.TabIndex = 10
-            Me.LblInfoComputerRAM.Text = Lr("RAM:")
+            Me.LblInfoComputerRAM.Text = "RAM:"
             '
             'LblInfoComputerComputerName
             '
@@ -3141,7 +3141,7 @@ Namespace Core
             Me.LblInfoComputerComputerName.Name = "LblInfoComputerComputerName"
             Me.LblInfoComputerComputerName.Size = New System.Drawing.Size(86, 13)
             Me.LblInfoComputerComputerName.TabIndex = 9
-            Me.LblInfoComputerComputerName.Text = Lr("Computer Name:")
+            Me.LblInfoComputerComputerName.Text = "Computer Name:"
             Me.MainToolTip.SetToolTip(Me.LblInfoComputerComputerName, "The name of your computer inside your network")
             '
             'GBOptionsInfoAbout
@@ -3158,7 +3158,7 @@ Namespace Core
             Me.GBOptionsInfoAbout.Size = New System.Drawing.Size(280, 150)
             Me.GBOptionsInfoAbout.TabIndex = 0
             Me.GBOptionsInfoAbout.TabStop = False
-            Me.GBOptionsInfoAbout.Text = Lr("About")
+            Me.GBOptionsInfoAbout.Text = "About"
             '
             'ALlblInfoAppWeb
             '
@@ -3169,7 +3169,7 @@ Namespace Core
             Me.ALlblInfoAppWeb.Size = New System.Drawing.Size(33, 13)
             Me.ALlblInfoAppWeb.TabIndex = 6
             Me.ALlblInfoAppWeb.TabStop = True
-            Me.ALlblInfoAppWeb.Text = Lr("Web:")
+            Me.ALlblInfoAppWeb.Text = "Web:"
             '
             'BtnInfoAppUpdater
             '
@@ -3177,7 +3177,7 @@ Namespace Core
             Me.BtnInfoAppUpdater.Name = "BtnInfoAppUpdater"
             Me.BtnInfoAppUpdater.Size = New System.Drawing.Size(268, 23)
             Me.BtnInfoAppUpdater.TabIndex = 5
-            Me.BtnInfoAppUpdater.Text = Lr("Open Updater")
+            Me.BtnInfoAppUpdater.Text = "Open Updater"
             Me.BtnInfoAppUpdater.UseVisualStyleBackColor = True
             '
             'lblInfoAppLatest
@@ -3187,7 +3187,7 @@ Namespace Core
             Me.lblInfoAppLatest.Name = "lblInfoAppLatest"
             Me.lblInfoAppLatest.Size = New System.Drawing.Size(76, 13)
             Me.lblInfoAppLatest.TabIndex = 4
-            Me.lblInfoAppLatest.Text = Lr("Latest version:")
+            Me.lblInfoAppLatest.Text = "Latest version:"
             '
             'lblInfoAppCopyright
             '
@@ -3197,7 +3197,7 @@ Namespace Core
             Me.lblInfoAppCopyright.Name = "lblInfoAppCopyright"
             Me.lblInfoAppCopyright.Size = New System.Drawing.Size(54, 13)
             Me.lblInfoAppCopyright.TabIndex = 3
-            Me.lblInfoAppCopyright.Text = Lr("Copyright:")
+            Me.lblInfoAppCopyright.Text = "Copyright:"
             '
             'lblInfoAppVersion
             '
@@ -3207,7 +3207,7 @@ Namespace Core
             Me.lblInfoAppVersion.Name = "lblInfoAppVersion"
             Me.lblInfoAppVersion.Size = New System.Drawing.Size(45, 13)
             Me.lblInfoAppVersion.TabIndex = 2
-            Me.lblInfoAppVersion.Text = Lr("Version:")
+            Me.lblInfoAppVersion.Text = "Version:"
             '
             'lblInfoAppAuthors
             '
@@ -3217,7 +3217,7 @@ Namespace Core
             Me.lblInfoAppAuthors.Name = "lblInfoAppAuthors"
             Me.lblInfoAppAuthors.Size = New System.Drawing.Size(46, 13)
             Me.lblInfoAppAuthors.TabIndex = 1
-            Me.lblInfoAppAuthors.Text = Lr("Authors:")
+            Me.lblInfoAppAuthors.Text = "Authors:"
             '
             'lblInfoAppName
             '
@@ -3227,7 +3227,7 @@ Namespace Core
             Me.lblInfoAppName.Name = "lblInfoAppName"
             Me.lblInfoAppName.Size = New System.Drawing.Size(38, 13)
             Me.lblInfoAppName.TabIndex = 0
-            Me.lblInfoAppName.Text = Lr("Name:")
+            Me.lblInfoAppName.Text = "Name:"
             '
             'lblStatusBarServerState
             '
@@ -3257,7 +3257,7 @@ Namespace Core
             '
             Me.Tray.ContextMenuStrip = Me.CmenuTray
             Me.Tray.Icon = CType(resources.GetObject("Tray.Icon"), System.Drawing.Icon)
-            Me.Tray.Text = Lr("BukkitGUI")
+            Me.Tray.Text = "BukkitGUI"
             Me.Tray.Visible = True
             '
             'CmenuTray
@@ -3271,7 +3271,7 @@ Namespace Core
             Me.BtnCmenuTrayExit.Image = CType(resources.GetObject("BtnCmenuTrayExit.Image"), System.Drawing.Image)
             Me.BtnCmenuTrayExit.Name = "BtnCmenuTrayExit"
             Me.BtnCmenuTrayExit.Size = New System.Drawing.Size(92, 22)
-            Me.BtnCmenuTrayExit.Text = Lr("Exit")
+            Me.BtnCmenuTrayExit.Text = "Exit"
             '
             'lblInfo2
             '
@@ -3281,7 +3281,7 @@ Namespace Core
             Me.lblInfo2.Name = "lblInfo2"
             Me.lblInfo2.Size = New System.Drawing.Size(227, 13)
             Me.lblInfo2.TabIndex = 6
-            Me.lblInfo2.Text = Lr("BukkitGui v2 is available! visit get.bertware.net")
+            Me.lblInfo2.Text = "BukkitGui v2 is available! visit get.bertware.net"
             '
             'Mainform
             '
@@ -3293,7 +3293,7 @@ Namespace Core
             Me.Controls.Add(Me.TabCtrlMain)
             Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
             Me.Name = "Mainform"
-            Me.Text = Lr("BukkitGUI")
+            Me.Text = "BukkitGUI"
             Me.GBGeneralGeneral.ResumeLayout(False)
             Me.SplitGeneral.Panel1.ResumeLayout(False)
             Me.SplitGeneral.Panel2.ResumeLayout(False)
