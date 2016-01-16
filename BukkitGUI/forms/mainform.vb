@@ -1476,19 +1476,17 @@ KeyUp
 
                     If GuiCpu >= 0 Then
                         If GuiCpu <= 100 Then PBGeneralCPUGUI.Value = GuiCpu
+                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(2) & "%"
+                    End If
+
+                    If TotalCpu >= 0 Then
                         If TotalCpu <= 100 Then PBGeneralCPUTotal.Value = TotalCpu
+                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(2) & "%"
+                    End If
+
+                    If ServerCpu >= 0 Then
                         If ServerCpu <= 100 Then PBGeneralCPUServer.Value = ServerCpu
-                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(3) & "%"
-                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(3) & "%"
-                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(3) & "%"
-                    Else
-                        If _hndTmrUpdateStatsCpuerror = False Then
-                            lblGeneralCPUGUIValue.Text = Lr("Unknown")
-                            lblGeneralCPUServerValue.Text = Lr("Unknown")
-                            lblGeneralCPUTotalValue.Text = Lr("Unknown")
-                        Else
-                            _hndTmrUpdateStatsCpuerror = True
-                        End If
+                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(2) & "%"
                     End If
 
                     If GuiMem >= 0 Then

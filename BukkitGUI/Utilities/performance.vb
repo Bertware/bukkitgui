@@ -249,10 +249,14 @@ Namespace Utilities
                     _prevTime = _currTime
                     _prevGuiMs = _currGuiMs
                     _prevServerMs = _currServerMs
+                    Try 
+                        TotalCpu = Math.Round(_pcCpu.NextValue())
+                        If TotalCpu > 100 Then TotalCpu = 100
+                        If TotalCpu < 0 Then TotalCpu = 0
+                    Catch totalcpuex As Exception
+                    End Try
 
-                    TotalCpu = Math.Round(_pcCpu.NextValue())
-                    If TotalCpu > 100 Then TotalCpu = 100
-                    If TotalCpu < 0 Then TotalCpu = 0
+                    _fail = 0
                 Catch ovf As OverflowException
                     _prevGuiMs = 0
                     _currGuiMs = 0
@@ -272,9 +276,9 @@ Namespace Utilities
                         Log(loggingLevel.Warning, "performance", "Too many overflows, measurement disabled") _
                         'don't report this as an error. Holding the app too long will cause this too, nothing bad.
                         _measureCpu = False
-                        TotalCpu = - 1
-                        ServerCpu = - 1
-                        GuiCpu = - 1
+                        TotalCpu = -1
+                        ServerCpu = -1
+                        GuiCpu = -1
                         If _tmrMeasureCpu IsNot Nothing Then _tmrMeasureCpu.Enabled = False
                     End If
                 Catch ex As Exception _
@@ -282,9 +286,9 @@ Namespace Utilities
                     Log(loggingLevel.Warning, "performance",
                         "Could not get CPU value. CPU measurement disabled.", ex.Message)
                     _measureCpu = False
-                    TotalCpu = - 1
-                    ServerCpu = - 1
-                    GuiCpu = - 1
+                    TotalCpu = -1
+                    ServerCpu = -1
+                    GuiCpu = -1
                     If _tmrMeasureCpu IsNot Nothing Then _tmrMeasureCpu.Enabled = False
                 End Try
             End If

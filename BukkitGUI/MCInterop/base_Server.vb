@@ -405,7 +405,7 @@ Namespace MCInterop
             Log(loggingLevel.Info, "server", "StopServer() was executed")
         End Sub
 
-        Private Sub _ServerStopped() Handles _host.Exited, _host.Disposed
+        Private Sub _ServerStopped() Handles _host.Exited
             Try
                 Log(loggingLevel.Info, "server", "The server has stopped... Cleaning up...")
 
@@ -493,7 +493,7 @@ Namespace MCInterop
             End Try
         End Sub
 
-        Private Sub counttime() Handles tmrcounttime.Elapsed
+        Private Sub Counttime() Handles tmrcounttime.Elapsed
             _timerunning = _timerunning.Add(New TimeSpan(0, 0, 1))
         End Sub
     End Module
