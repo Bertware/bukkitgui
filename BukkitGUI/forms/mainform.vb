@@ -861,15 +861,14 @@ KeyUp
                             End If
                         Else
                             If ip IsNot Nothing AndAlso ip <> "" AndAlso ip.Contains("error") = False Then
-                                thds_setformCaption(_caption & " - " & Lr("Server running") & " - " & ip & " - " & motd)
+                                thds_setformCaption(motd & " - " & ip & " - " & _caption & " - " & Lr("Server running"))
                             Else
-                                thds_setformCaption(_caption & " - " & Lr("Server running") & " - " & motd)
+                                thds_setformCaption(motd & " - " & _caption & " - " & Lr("Server running"))
                             End If
                         End If
                     Else
                         thds_setformCaption(
-                            _caption & " - " & Lr("Connected to remote server") & " - " &
-                            read("remote_host", "", "superstart"))
+                             read("remote_host", "", "superstart") & " - " & _caption & " - " & Lr("Connected to remote server"))
                     End If
 
                     _threadsWork = True
