@@ -57,7 +57,7 @@ Namespace MCInterop
 
         Private _remote_obj As RemoteServerBase
 
-        
+
         ''' <summary>
         '''     Indicates if the server is running or not
         ''' </summary>
@@ -70,7 +70,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     The process that hosts the server
         ''' </summary>
@@ -83,7 +83,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     The standardOut stream of the process
         ''' </summary>
@@ -96,7 +96,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     The standardError stream of the server
         ''' </summary>
@@ -109,7 +109,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     The standardIn stream of the server, used for sending of commands etc.
         ''' </summary>
@@ -122,7 +122,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     The time that has elapsed since the start of the server
         ''' </summary>
@@ -135,7 +135,7 @@ Namespace MCInterop
             End Get
         End Property
 
-        
+
         ''' <summary>
         '''     The list of currently online players
         ''' </summary>
@@ -182,19 +182,19 @@ Namespace MCInterop
             Return p
         End Function
 
-        
+
         ''' <summary>
         '''     Raised at the beginning of the server start routine
         ''' </summary>
         ''' <remarks></remarks>
         Public Event ServerStarting() 'Raised when server is being initialized
-        
+
         ''' <summary>
         '''     Raised when the server is fully started
         ''' </summary>
         ''' <remarks></remarks>
         Public Event ServerStarted() 'Raised when server start is finished
-        
+
         ''' <summary>
         '''     Raised when the server stopped
         ''' </summary>
@@ -203,7 +203,7 @@ Namespace MCInterop
 
         Public Event ServerStopping()
 
-        
+
         ''' <summary>
         '''     Start a new minecraft server, using Java
         ''' </summary>
@@ -289,7 +289,7 @@ Namespace MCInterop
             End Try
         End Function
 
-        
+
         ''' <summary>
         '''     Start a new executable minecraft server
         ''' </summary>
@@ -344,7 +344,7 @@ Namespace MCInterop
             End Try
         End Function
 
-        
+
         ''' <summary>
         '''     Start an embedded remote server connection
         ''' </summary>
@@ -427,7 +427,7 @@ Namespace MCInterop
             Log(loggingLevel.Info, "server", "The server has stopped... Cleanup finished")
         End Sub
 
-        
+
         ''' <summary>
         '''     Send a command to the server
         ''' </summary>

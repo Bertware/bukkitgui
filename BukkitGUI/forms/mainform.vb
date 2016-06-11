@@ -61,7 +61,7 @@ KeyUp
         End Sub
 #Else
 
-            Private ReadOnly _caption As String = "BukkitGUI v" & My.Application.Info.Version.ToString
+        Private ReadOnly _caption As String = "BukkitGUI v" & My.Application.Info.Version.ToString
 
 #End If
 
