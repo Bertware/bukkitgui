@@ -1,24 +1,38 @@
-﻿Imports System.IO
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+Imports System.IO
 Imports Microsoft.VisualBasic.FileIO
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.Utilities
 
 Namespace MCInterop
-''' <summary>
-'''     Module for installing plugins from dev.bukkit.org
-''' </summary>
-''' <remarks></remarks>
-                   Public Module PluginInstaller
-                   ''' <summary>
-                   '''     Install a plugin, supports .jar and .zip files
-                   ''' </summary>
-                   ''' <param name="version">Version to install</param>
-                   ''' <param name="targetlocation">Target location, plugins/name by default</param>
-                   ''' <param name="updatelist">Update the list of installed plugins</param>
-                   ''' <param name="ShowUI">Allow pop-up dialogs</param>
-                   ''' <remarks></remarks>
-                                                Public Sub Install(version As PluginVersion, Optional ByVal targetlocation As String = "",
-                           Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
+    ' <summary>
+    '     Module for installing plugins from dev.bukkit.org
+    ' </summary>
+    ' <remarks></remarks>
+    Public Module PluginInstaller
+        ''' <summary>
+        '''     Install a plugin, supports .jar and .zip files
+        ''' </summary>
+        ''' <param name="version">Version to install</param>
+        ''' <param name="targetlocation">Target location, plugins/name by default</param>
+        ''' <param name="updatelist">Update the list of installed plugins</param>
+        ''' <param name="ShowUI">Allow pop-up dialogs</param>
+        ''' <remarks></remarks>
+        Public Sub Install(version As PluginVersion, Optional ByVal targetlocation As String = "",
+Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
             If targetlocation = "" AndAlso version.filename IsNot Nothing Then
                 targetlocation = plugin_dir & "/" & version.filename
             End If
@@ -36,17 +50,17 @@ Namespace MCInterop
             End If
         End Sub
 
-                                                
-                                                ''' <summary>
-                                                '''     Install a jarfile
-                                                ''' </summary>
-                                                ''' <param name="version">Version to install</param>
-                                                ''' <param name="targetlocation">Target location, plugins/name by default</param>
-                                                ''' <param name="updatelist">Update the list of installed plugins</param>
-                                                ''' <param name="ShowUI">Allow pop-up dialogs</param>
-                                                ''' <remarks></remarks>
-                                                Private Sub InstallJar(version As PluginVersion, Optional ByVal targetlocation As String = "",
-                               Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
+
+        ''' <summary>
+        '''     Install a jarfile
+        ''' </summary>
+        ''' <param name="version">Version to install</param>
+        ''' <param name="targetlocation">Target location, plugins/name by default</param>
+        ''' <param name="updatelist">Update the list of installed plugins</param>
+        ''' <param name="ShowUI">Allow pop-up dialogs</param>
+        ''' <remarks></remarks>
+        Private Sub InstallJar(version As PluginVersion, Optional ByVal targetlocation As String = "",
+Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
             If ShowUI Then
                 If _
                     MessageBox.Show(
@@ -76,17 +90,17 @@ Namespace MCInterop
             If updatelist Then RefreshAllInstalledPluginsAsync() 'refresh installed list
         End Sub
 
-                                                
-                                                ''' <summary>
-                                                '''     Install plguins from a zip file
-                                                ''' </summary>
-                                                ''' <param name="version">Version to install</param>
-                                                ''' <param name="targetlocation">Target location, plugins/name by default</param>
-                                                ''' <param name="updatelist">Update the list of installed plugins</param>
-                                                ''' <param name="ShowUI">Allow pop-up dialogs</param>
-                                                ''' <remarks></remarks>
-                                                Private Sub InstallZip(version As PluginVersion, Optional ByVal targetlocation As String = "",
-                               Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
+
+        ''' <summary>
+        '''     Install plguins from a zip file
+        ''' </summary>
+        ''' <param name="version">Version to install</param>
+        ''' <param name="targetlocation">Target location, plugins/name by default</param>
+        ''' <param name="updatelist">Update the list of installed plugins</param>
+        ''' <param name="ShowUI">Allow pop-up dialogs</param>
+        ''' <remarks></remarks>
+        Private Sub InstallZip(version As PluginVersion, Optional ByVal targetlocation As String = "",
+Optional updatelist As Boolean = True, Optional ByVal ShowUI As Boolean = True)
             If ShowUI Then
                 If _
                     MessageBox.Show(
@@ -137,8 +151,8 @@ Namespace MCInterop
 
                 For Each f As String In fnames
                     If f.Contains(Dir.Name) Then _
-                        copy = True : _
-                            Log(loggingLevel.Fine, "BukgetAPI",
+                        copy = True _
+                          : Log(loggingLevel.Fine, "BukgetAPI",
                                 "Config/Info folder found in .zip, marked directory for copy:" & Dir.Name)
                 Next
                 If Not copy Then
@@ -153,8 +167,8 @@ Namespace MCInterop
                     Next
                 End If
                 If copy Then _
-                    FileSystem.CopyDirectory(Dir.FullName, plugin_dir & "/" & Dir.Name, True) : installed = False : _
-                        folderinstalled = True
+                    FileSystem.CopyDirectory(Dir.FullName, plugin_dir & "/" & Dir.Name, True) : installed = False _
+                      : folderinstalled = True
 
                 'L2
                 If Not installed Then
@@ -173,8 +187,8 @@ Namespace MCInterop
                         Dim copy_2 As Boolean = False
                         For Each f As String In fnames
                             If f.Contains(Dir_2.Name) Then _
-                                copy_2 = True : _
-                                    Log(loggingLevel.Fine, "BukgetAPI",
+                                copy_2 = True _
+                                  : Log(loggingLevel.Fine, "BukgetAPI",
                                         "Config/Info folder found in .zip, marked directory for copy:" &
                                         Dir_2.Name)
                         Next
@@ -188,8 +202,8 @@ Namespace MCInterop
                             End If
                         Next
                         If copy_2 Then _
-                            FileSystem.CopyDirectory(Dir.FullName, plugin_dir & "/" & Dir_2.Name, True) : _
-                                installed = False : folderinstalled = True
+                            FileSystem.CopyDirectory(Dir.FullName, plugin_dir & "/" & Dir_2.Name, True) _
+                              : installed = False : folderinstalled = True
                     Next
                 End If
 

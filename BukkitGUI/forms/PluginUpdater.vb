@@ -1,29 +1,43 @@
-﻿Imports System.Threading
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+Imports System.Threading
 Imports Net.Bertware.BukkitGUI.Core
 Imports Net.Bertware.BukkitGUI.MCInterop
 
 Public Class PluginUpdater
-''' <summary>
-'''     The list of plugins to update
-''' </summary>
-''' <remarks></remarks>
-                          Public plugins As List(Of plugindescriptor)
+    ' <summary>
+    '     The list of plugins to update
+    ' </summary>
+    ' <remarks></remarks>
+    Public plugins As List(Of plugindescriptor)
 
-                          
-                          ''' <summary>
-                          '''     Dictionarry that links every plugin to a bukget object.
-                          ''' </summary>
-                          ''' <remarks></remarks>
-                          Private dc As IDictionary(Of plugindescriptor, BukgetPlugin)
+
+    ''' <summary>
+    '''     Dictionarry that links every plugin to a bukget object.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private dc As IDictionary(Of plugindescriptor, BukgetPlugin)
 
     Private _updated As Boolean = False
 
-                          
-                          ''' <summary>
-                          '''     Immediatly update the plugins when the form is loaded.
-                          ''' </summary>
-                          ''' <remarks></remarks>
-                          Public UpdateOnLoad As Boolean = False
+
+    ''' <summary>
+    '''     Immediatly update the plugins when the form is loaded.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public UpdateOnLoad As Boolean = False
 
     Public ReadOnly Property Updated As Boolean
         Get
@@ -71,14 +85,14 @@ Public Class PluginUpdater
         ' Add any initialization after the InitializeComponent() call.
     End Sub
 
-                          
-                          ''' <summary>
-                          '''     Init the form + start  async load of data.
-                          ''' </summary>
-                          ''' <param name="sender"></param>
-                          ''' <param name="e"></param>
-                          ''' <remarks></remarks>
-                          Private Sub PluginUpdater_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    ''' <summary>
+    '''     Init the form + start  async load of data.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub PluginUpdater_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If plugins Is Nothing OrElse plugins.Count < 1 Then Exit Sub
         If UpdateOnLoad = True Then
@@ -94,12 +108,12 @@ Public Class PluginUpdater
         t.Start()
     End Sub
 
-                          
-                          ''' <summary>
-                          '''     Load all plugin data async.
-                          ''' </summary>
-                          ''' <remarks></remarks>
-                          Private Sub LoadAsync()
+
+    ''' <summary>
+    '''     Load all plugin data async.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub LoadAsync()
         Try
             If plugins Is Nothing Then Exit Sub
 
@@ -120,7 +134,7 @@ Public Class PluginUpdater
                             "Discarded plugin data:" & plugin.name & "(" & i + 1 & "/" & plugins.Count & ")")
                     End If
 
-                    Dim tmpp As Double = Math.Round(100*((i + 1)/plugins.Count))
+                    Dim tmpp As Double = Math.Round(100 * ((i + 1) / plugins.Count))
                     If tmpp > 100 Then tmpp = 100
                     Me.SetProgress(CByte(tmpp))
 
@@ -133,12 +147,12 @@ Public Class PluginUpdater
         End Try
     End Sub
 
-                          
-                          ''' <summary>
-                          '''     Load the user interface with the listview items, once all data is loaded.
-                          ''' </summary>
-                          ''' <remarks></remarks>
-                          Private Sub LoadUI()
+
+    ''' <summary>
+    '''     Load the user interface with the listview items, once all data is loaded.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub LoadUI()
         Try
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf LoadUI)
@@ -195,12 +209,12 @@ Public Class PluginUpdater
         End Try
     End Sub
 
-                          
-                          ''' <summary>
-                          '''     Close the form, prevent cross thread exceptions.
-                          ''' </summary>
-                          ''' <remarks></remarks>
-                          Private Sub CloseThisForm() Handles BtnClose.Click
+
+    ''' <summary>
+    '''     Close the form, prevent cross thread exceptions.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub CloseThisForm() Handles BtnClose.Click
         If Me.InvokeRequired Then
             Dim d As New ContextCallback(AddressOf CloseThisForm)
             Me.Invoke(d, New Object() {})
@@ -227,12 +241,12 @@ Public Class PluginUpdater
         End If
     End Sub
 
-                          
-                          ''' <summary>
-                          '''     Update each plugin, if it's checked
-                          ''' </summary>
-                          ''' <remarks></remarks>
-                          Private Sub Plugins_Update() Handles BtnUpdate.Click
+
+    ''' <summary>
+    '''     Update each plugin, if it's checked
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub Plugins_Update() Handles BtnUpdate.Click
         Try
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf Plugins_Update)
@@ -274,7 +288,7 @@ Public Class PluginUpdater
                                 i + 1 & " / " & dc.Count & ")")
                         Log(loggingLevel.Fine, "PluginUpdater", "Skipping plugin:" & item.SubItems(0).Text)
                     End If
-                    Dim tmpp As Double = Math.Round(100*((i + 1)/dc.Count))
+                    Dim tmpp As Double = Math.Round(100 * ((i + 1) / dc.Count))
                     If tmpp > 100 Then tmpp = 100
                     Me.SetProgress(CByte(tmpp))
                     i = i + 1

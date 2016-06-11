@@ -1,15 +1,29 @@
-﻿Imports System.IO
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+Imports System.IO
 Imports System.Security
 Imports System.Threading
 Imports Microsoft.VisualBasic.FileIO
 Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
-''' <summary>
-'''     Module to read minecraft server settings + whitelist, ops, banned players and Ips
-''' </summary>
-''' <remarks></remarks>
-                   Module ServerSettings
+    ' <summary>
+    '     Module to read minecraft server settings + whitelist, ops, banned players and Ips
+    ' </summary>
+    ' <remarks></remarks>
+    Module ServerSettings
         Private _ops As List(Of String),
                 _whitelist As List(Of String),
                 _player_bans As List(Of String),
@@ -70,6 +84,24 @@ Namespace MCInterop
                 If _settings Is Nothing Then LoadSettings()
                 If _settings Is Nothing Then Return "" : Exit Property
                 Return GetSetting("motd")
+            End Get
+        End Property
+
+        Public ReadOnly Property ServerName As String
+            Get
+                If IsRunningLight Then Return ""
+                If _settings Is Nothing Then LoadSettings()
+                If _settings Is Nothing Then Return "" : Exit Property
+                Return GetSetting("server-name")
+            End Get
+        End Property
+
+        Public ReadOnly Property LevelName As String
+            Get
+                If IsRunningLight Then Return ""
+                If _settings Is Nothing Then LoadSettings()
+                If _settings Is Nothing Then Return "" : Exit Property
+                Return GetSetting("level-name")
             End Get
         End Property
 
@@ -291,7 +323,7 @@ Namespace MCInterop
             End If
         End Sub
 
-        
+
         ''' <summary>
         '''     Check if a player is an OP
         ''' </summary>
@@ -306,7 +338,7 @@ Namespace MCInterop
             Return False
         End Function
 
-        
+
         ''' <summary>
         '''     Check if a player is whitelisted
         ''' </summary>

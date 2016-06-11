@@ -1,4 +1,18 @@
-﻿Imports System.IO
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+Imports System.IO
 Imports System.Security
 Imports System.Text
 Imports System.Text.RegularExpressions
@@ -850,7 +864,16 @@ KeyUp
 
                     LoadSettings()
                     Dim motd As String = ""
-                    If Not IsRunningLight Then motd = ServerSettings.MOTD
+
+                    If Not IsRunningLight Then
+                        motd = ServerSettings.ServerName
+                        If (motd Is Nothing) Then
+                            motd = ServerSettings.MOTD
+                        End If
+                        If (motd Is Nothing) Then
+                            motd = ""
+                        End If
+                    End If
 
                     If CurrentServerType <> McInteropType.remote Then
                         If motd = "" Then
@@ -1452,19 +1475,17 @@ KeyUp
 
                     If GuiCpu >= 0 Then
                         If GuiCpu <= 100 Then PBGeneralCPUGUI.Value = GuiCpu
+                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(2, "0") & "%"
+                    End If
+
+                    If TotalCpu >= 0 Then
                         If TotalCpu <= 100 Then PBGeneralCPUTotal.Value = TotalCpu
+                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(2, "0") & "%"
+                    End If
+
+                    If ServerCpu >= 0 Then
                         If ServerCpu <= 100 Then PBGeneralCPUServer.Value = ServerCpu
-                        lblGeneralCPUGUIValue.Text = GuiCpu.ToString.PadLeft(3) & "%"
-                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(3) & "%"
-                        lblGeneralCPUTotalValue.Text = TotalCpu.ToString.PadLeft(3) & "%"
-                    Else
-                        If _hndTmrUpdateStatsCpuerror = False Then
-                            lblGeneralCPUGUIValue.Text = Lr("Unknown")
-                            lblGeneralCPUServerValue.Text = Lr("Unknown")
-                            lblGeneralCPUTotalValue.Text = Lr("Unknown")
-                        Else
-                            _hndTmrUpdateStatsCpuerror = True
-                        End If
+                        lblGeneralCPUServerValue.Text = ServerCpu.ToString.PadLeft(2, "0") & "%"
                     End If
 
                     If GuiMem >= 0 Then
@@ -1576,48 +1597,49 @@ KeyUp
                         GBSuperStartRemoteServer.Enabled = False
 
                         BtnSuperStartGetCurrent.Enabled = True
-                        BtnSuperStartDownloadDev.Enabled = True
-                        BtnSuperStartDownloadBeta.Enabled = True
-                        BtnSuperStartDownloadRecommended.Enabled = True
-                        BtnSuperStartDownloadCustomBuild.Enabled = True
+                        BtnSuperStartDownloadDev.Enabled = False
+                        BtnSuperStartDownloadBeta.Enabled = False
+                        BtnSuperStartDownloadRecommended.Enabled = False
+                        BtnSuperStartDownloadCustomBuild.Enabled = False
 
                         'bukkit has version info
-                        If Fetched Then
-                            lblSuperStartLatestStable.Visible = True
-                            lblSuperStartLatestBeta.Visible = True
-                            lblSuperStartLatestDev.Visible = True
 
-                            lblSuperStartLatestStable.Text = Lr("Latest stable:") & " " &
-                                                             Recommended_info.version & " (#" &
-                                                             Recommended_info.build & ")"
-                            lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & Beta_info.version &
-                                                           " (#" & Beta_info.build & ")"
-                            lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & Dev_info.version & " (#" &
-                                                          Dev_info.build & ")"
-                            Try
-                                NumSuperstartCustomBuild.Maximum = Latest_Dev _
-                                'dev build is always the latest
-                                If _
-                                    Latest_Recommended <= Latest_Dev AndAlso
-                                    Latest_Recommended > 1335 Then _
-                                    NumSuperstartCustomBuild.Value = Latest_Recommended Else _
-                                    NumSuperstartCustomBuild.Value = 1335
-                            Catch ex As Exception 'if something goes wrong, set these limits. 
-                                NumSuperstartCustomBuild.Maximum = 9999 _
-                                'this can't be set to a specific value, because we don't know the maximum
-                                NumSuperstartCustomBuild.Value = 1335 'minimum available at dl.bukkit.org
-                            End Try
-                        End If
+                        'If Fetched Then
+                        '    lblSuperStartLatestStable.Visible = True
+                        '    lblSuperStartLatestBeta.Visible = True
+                        '    lblSuperStartLatestDev.Visible = True
+
+                        '    lblSuperStartLatestStable.Text = Lr("Latest stable:") & " " &
+                        '                                     Recommended_info.version & " (#" &
+                        '                                     Recommended_info.build & ")"
+                        '    lblSuperStartLatestBeta.Text = Lr("Latest beta:") & " " & Beta_info.version &
+                        '                                   " (#" & Beta_info.build & ")"
+                        '    lblSuperStartLatestDev.Text = Lr("Latest dev:") & " " & Dev_info.version & " (#" &
+                        '                                  Dev_info.build & ")"
+                        '    Try
+                        '        NumSuperstartCustomBuild.Maximum = Latest_Dev _
+                        '        'dev build is always the latest
+                        '        If _
+                        '            Latest_Recommended <= Latest_Dev AndAlso
+                        '            Latest_Recommended > 1335 Then _
+                        '            NumSuperstartCustomBuild.Value = Latest_Recommended Else _
+                        '            NumSuperstartCustomBuild.Value = 1335
+                        '    Catch ex As Exception 'if something goes wrong, set these limits. 
+                        '        NumSuperstartCustomBuild.Maximum = 9999 _
+                        '        'this can't be set to a specific value, because we don't know the maximum
+                        '        NumSuperstartCustomBuild.Value = 1335 'minimum available at dl.bukkit.org
+                        '    End Try
+                        'End If
                         llblSuperStartsite.Text = Lr("Site:") & " http://bukkit.org"
 
                         ChkSuperStartRetrieveCurrent.Enabled = True
                         ChkSuperstartAutoUpdateNotify.Enabled = True
                         ChkSuperStartRetrieveCurrent.Checked = readAsBool("bukkit_get_version", True,
                                                                           "superstart")
-                        ChkSuperstartAutoUpdateNotify.Checked = readAsBool("bukkit_auto_update", True,
-                                                                           "superstart")
-                        ChkSuperstartAutoUpdate.Checked = readAsBool("bukkit_auto_update_automatic", False,
-                                                                     "superstart")
+                        ChkSuperstartAutoUpdateNotify.Checked = False
+                        ' readAsBool("bukkit_auto_update", True,"superstart")
+                        ChkSuperstartAutoUpdate.Checked = False
+                        'readAsBool("bukkit_auto_update_automatic", False, "superstart")
                         PBSuperStartServerIcon.Image = My.Resources.bukkit_logo
 
                     Case 1 'vanilla

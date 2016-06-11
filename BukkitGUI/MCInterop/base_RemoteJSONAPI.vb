@@ -1,4 +1,18 @@
-﻿Imports System.IO
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+Imports System.IO
 Imports System.Net.Sockets
 Imports System.Threading
 Imports com.ramblingwood.minecraft.jsonapi
@@ -7,12 +21,12 @@ Imports Jayrock.Json.Conversion
 Imports Net.Bertware.BukkitGUI.Core
 
 Namespace MCInterop
-''' <summary>
-'''     A class for remote server communication with the JSONAPI plugin. Inherits from RemoteServerBase.vb and imports the
-'''     JSONAPI.dll
-''' </summary>
-''' <remarks></remarks>
-                   Public Class RemoteJSONAPI
+    ' <summary>
+    '     A class for remote server communication with the JSONAPI plugin. Inherits from RemoteServerBase.vb and imports the
+    '     JSONAPI.dll
+    ' </summary>
+    ' <remarks></remarks>
+    Public Class RemoteJSONAPI
         Inherits RemoteServerBase
         Private api As JSONAPI
         Private thd_connection_recv As Thread

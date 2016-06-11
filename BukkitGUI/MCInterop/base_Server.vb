@@ -1,4 +1,18 @@
-﻿
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+
 
 'This module will handle the minecraft server.
 'Most important: the process (public property host) and the streams, as those are needed
@@ -391,7 +405,7 @@ Namespace MCInterop
             Log(loggingLevel.Info, "server", "StopServer() was executed")
         End Sub
 
-        Private Sub _ServerStopped() Handles _host.Exited, _host.Disposed
+        Private Sub _ServerStopped() Handles _host.Exited
             Try
                 Log(loggingLevel.Info, "server", "The server has stopped... Cleaning up...")
 
@@ -479,7 +493,7 @@ Namespace MCInterop
             End Try
         End Sub
 
-        Private Sub counttime() Handles tmrcounttime.Elapsed
+        Private Sub Counttime() Handles tmrcounttime.Elapsed
             _timerunning = _timerunning.Add(New TimeSpan(0, 0, 1))
         End Sub
     End Module

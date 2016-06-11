@@ -1,4 +1,18 @@
-﻿'Read the memory and CPU usage of the server.host process, the GUI and total
+﻿'============================================='''
+'
+' This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+' If a copy of the MPL was not distributed with this file,
+' you can obtain one at http://mozilla.org/MPL/2.0/.
+' 
+' Source and compiled files may only be redistributed if they comply with
+' the mozilla MPL2 license, and may not be monetized in any way,
+' including but not limited to selling the software or distributing it through ad-sponsored channels.
+'
+' ©Bertware, visit http://bertware.net
+'
+'============================================='''
+
+'Read the memory and CPU usage of the server.host process, the GUI and total
 'After init, other threads will continue to sample.
 'Values can be read at any moment.
 '
@@ -235,10 +249,14 @@ Namespace Utilities
                     _prevTime = _currTime
                     _prevGuiMs = _currGuiMs
                     _prevServerMs = _currServerMs
+                    Try 
+                        TotalCpu = Math.Round(_pcCpu.NextValue())
+                        If TotalCpu > 100 Then TotalCpu = 100
+                        If TotalCpu < 0 Then TotalCpu = 0
+                    Catch totalcpuex As Exception
+                    End Try
 
-                    TotalCpu = Math.Round(_pcCpu.NextValue())
-                    If TotalCpu > 100 Then TotalCpu = 100
-                    If TotalCpu < 0 Then TotalCpu = 0
+                    _fail = 0
                 Catch ovf As OverflowException
                     _prevGuiMs = 0
                     _currGuiMs = 0
@@ -258,9 +276,9 @@ Namespace Utilities
                         Log(loggingLevel.Warning, "performance", "Too many overflows, measurement disabled") _
                         'don't report this as an error. Holding the app too long will cause this too, nothing bad.
                         _measureCpu = False
-                        TotalCpu = - 1
-                        ServerCpu = - 1
-                        GuiCpu = - 1
+                        TotalCpu = -1
+                        ServerCpu = -1
+                        GuiCpu = -1
                         If _tmrMeasureCpu IsNot Nothing Then _tmrMeasureCpu.Enabled = False
                     End If
                 Catch ex As Exception _
@@ -268,9 +286,9 @@ Namespace Utilities
                     Log(loggingLevel.Warning, "performance",
                         "Could not get CPU value. CPU measurement disabled.", ex.Message)
                     _measureCpu = False
-                    TotalCpu = - 1
-                    ServerCpu = - 1
-                    GuiCpu = - 1
+                    TotalCpu = -1
+                    ServerCpu = -1
+                    GuiCpu = -1
                     If _tmrMeasureCpu IsNot Nothing Then _tmrMeasureCpu.Enabled = False
                 End Try
             End If
