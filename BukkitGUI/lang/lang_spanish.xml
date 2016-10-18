@@ -28,10 +28,10 @@
   <text string="Plugin Installed">Plugin Instalado</text>
   <text string="couldn't be installed. You have to visit the project page in order to install it manually.">no se puede instalar. Si quieres puedes visitar la página del proyecto para instalar el plugin manualmente.</text>
   <text string="Plugin Installation failed">No se ha podido instalar el plugin</text>
-  <text string="A restart is required in order for the changes to take effect. The GUI will now close itself">The BukkitGUI se cerrará para que puedan ser aplicados los cambios</text>
+  <text string="A restart is required in order for the changes to take effect. The GUI will now close itself">BukkitGUI se cerrará para que puedan ser aplicados los cambios</text>
   <text string="Restart required">Se necesita reiniciar</text>
   <text string="Downloading latest Bukkit version">Descargando la última versión de Bukkit</text>
-  <text string="Downloading Bukkit build">Descargando Bukkit build</text>
+  <text string="Downloading Bukkit build">Descargando la construcción de Bukkit</text>
   <text string="Ok">Ok</text>
   <text string="Cancel">Cancelar</text>
   <text string="Browse...">Buscar...</text>
@@ -60,7 +60,7 @@
   <text string="Message:">Descripción:</text>
   <text string="Send!">¡Enviar!</text>
   <text string="Send Feedback">Enviar Comentario</text>
-  <text string="You cannot send empty messages!">¡No se puede eviar sin una descripción!</text>
+  <text string="You cannot send empty messages!">¡No se puede enviar sin una descripción!</text>
   <text string="Can't send">No se puede enviar</text>
   <text string="Status:">Estado:</text>
   <text string="">
@@ -100,7 +100,7 @@
   <text string="Website:">Página Web:</text>
   <text string="Install">Instalar</text>
   <text string="Language">Idioma</text>
-  <text string="GUI Version">Versión The BukkitGUI</text>
+  <text string="GUI Version">Versión de BukkitGUI</text>
   <text string="Translator">Traductor</text>
   <text string="Comment">Comentarios</text>
   <text string="Install languages....">Instalar Idiomas....</text>
@@ -154,14 +154,12 @@
   <text string="Run this task every time a player disconnects.">Ejecuta esta tarea cada vez que se desconecta un jugador del servidor.</text>
   <text string="Optional: the player name(s) to trigger at, split by ;">Opcional: puedes especificar el nombre del jugador/es, detenidos por ;</text>
   <text string="Run this task when a player disconnects and there are no longer players online.">Ejecuta esta tarea cuando el último jugador se desconecta.</text>
-  <text
-    string="Run this task when the server doesn't respond any longer. This task will send a heartbeat to the server, and check if the server responds">
+  <text string="Run this task when the server doesn't respond any longer. This task will send a heartbeat to the server, and check if the server responds">
     Ejecuta esta tarea cuando el servidor deja de responder. Esta tarea se enviará al corazón del servidor, para comprobar si el servidor responde
   </text>
   <text string="The amount of time between 2 heartbeats, in hh:mm:ss">Cantidad de tiempo entre dos respuestas del servidor, en hh:mm:ss</text>
   <text string="Run this task when another task finished. You can set an optional timeout.">Ejecuta esta tarea cuando otra tarea finalice. Puedes configurar un tiempo de espera opcional.</text>
-  <text
-    string="the name of the task. You can add a timeout, by adding the time in /hh:mm:ss format after the task name.">
+  <text string="the name of the task. You can add a timeout, by adding the time in /hh:mm:ss format after the task name.">
     el nombre de la tarea. Puedes añadir un tiempo de espera, con el formato /hh:mm:ss después del nombre de la tarea.
   </text>
   <text string="Run a program, or a file that is associated with a default program.">Ejecuta un programa o archivo (asociado a un programa predeterminado).</text>
@@ -175,8 +173,7 @@
   <text string="Start the server, if it isn't already running. No parameters required.">Inicia el servidor, si no esta funcionando. No se necesitan parámetros.</text>
   <text string="The server will start with the settings set in the superstart tab.">El servidor se iniciará con la configuración establecida en la pestaña Inicio.</text>
   <text string="Restart the server, if it's running. No parameters required.">Reinicia el servidor, si está funcionando. No se necesitan parámetros.</text>
-  <text
-    string="Restart a server that doesn't respond, by killing it and starting it again. Might cause data loss. USE WITH CAUTION.">
+  <text string="Restart a server that doesn't respond, by killing it and starting it again. Might cause data loss. USE WITH CAUTION.">
     Reinicia el servidor si no responde, será forzado y reiniciado. Puede causar la pérdida de datos. UTILIZAR CON PRECAUCIÓN.
   </text>
   <text string="Create a backup. Enter the name of the backup to execute.">Crear una Copia de Seguridad. Introduce el nombre de la Copia de Seguridad a ejecutar.</text>
@@ -198,13 +195,12 @@
   <text string="Email">Email</text>
   <text string="Your email (optional)">Tu e-mail (opcional)</text>
   <text string="Problem report">Informar del problema</text>
-  <text
-    string="Could not get ticket ID, upload cancelled. If you want to report this error manually, you can contact us at">
+  <text string="Could not get ticket ID, upload cancelled. If you want to report this error manually, you can contact us at">
     No se ha podido obtener el ID del ticket, subida cancelada. Si quieres informar de este error, puedes contactar manualmente en
   </text>
   <text string="could not get ID">no se ha podido obtener la ID</text>
   <text string="This bug report can't be submitted automaticly: program outdated.">No se puede enviar este informe automáticamente: programa desactualizado.</text>
-  <text string="Please make sure you have the latest version">Por favor asegurate de tener la última versión</text>
+  <text string="Please make sure you have the latest version">Por favor asegúrate de tener la última versión</text>
   <text string="If you want to report this error manually, you can contact us at">Si quieres informar de este error manualmente, puedes contactar en</text>
   <text string="The log has been uploaded. Thank you for sending it towards us!">El log se ha cargado correctamente. ¡Gracias por enviarlo!</text>
   <text string="Your log ID is #">Tu nº de log ID es </text>
@@ -259,8 +255,7 @@
   <text string="Server not responding">El servidor no está respondiendo</text>
   <text string="The server is still running. Do you want to stop the server and exit the GUI?">El servidor está funcionando. ¿Quieres detener el servidor y salir de GUI?</text>
   <text string="Stop server?">¿Detener servidor?</text>
-  <text
-    string="The server could not be started: the .jar file specified could not be found. Please make sure all superstart settings are valid.">
+  <text string="The server could not be started: the .jar file specified could not be found. Please make sure all superstart settings are valid.">
     No se ha podido iniciar el servidor: el archivo .jar especificado no se encuentra. Por favor asegúrate de que esté bien configurado el Inicio.
   </text>
   <text string="Could't start server">No se ha podido iniciar el servidor</text>
@@ -345,7 +340,7 @@
   <text string="Can't access autostart functions! Are you running this as administrator?">¡No es posible acceder a las funciones del AutoInicio! ¿Estás ejecutando como administrador?</text>
   <text string="Can't access autostart">Sin acceso al AutoInicio</text>
   <text string="General">Principal</text>
-  <text string="Auto Scroll">Auto Scroll</text>
+  <text string="Auto Scroll">Desplazamiento Automático</text>
   <text string="Say (Ctrl+S)">Chatear</text>
   <text string="Name">Nombre</text>
   <text string="Op">Poner OP</text>
@@ -384,7 +379,7 @@
   <text string="Get current version #">Mostrar Versión Actual</text>
   <text string="Retrieve the current version on server start">Comprobar actualizaciones al iniciar BukkitGUI</text>
   <text string="Notify me when a server update is available">Notificarme cuando exista una actualización</text>
-  <text string="Download build #">Descargar build nº:</text>
+  <text string="Download build #">Descargar la construcción nº:</text>
   <text string="Download">Descargar</text>
   <text string="Download Latest Development Build">Descargar la Última Versión en Desarrollo</text>
   <text string="Download Latest Bèta Build">Descargar la Última Versión Beta</text>
@@ -399,7 +394,7 @@
   <text string="Custom switches:">Opciones:</text>
   <text string="...">...</text>
   <text string="Custom arguments:">Argumentos:</text>
-  <text string="JAR file:">Archivo jar:</text>
+  <text string="JAR file:">Archivo .jar:</text>
   <text string="Max. RAM:">RAM Máxima </text>
   <text string="Min. RAM:">RAM Mínima </text>
   <text string="Java Version:">Versión de Java:</text>
@@ -482,7 +477,7 @@
   <text string="Application Settings">Configuración de la aplicación</text>
   <text string="Reset all settings">Restaurar la configuración de BukkitGUI</text>
   <text string="Check for updates on startup">Comprobar actualizaciones al iniciar BukkitGUI</text>
-  <text string="You might need to restart the GUI, in order for ">Es posible que debas reiniciar The BukkitGUI, para que </text>
+  <text string="You might need to restart the GUI, in order for ">Es posible que debas reiniciar BukkitGUI, para que </text>
   <text string="these settings to take full eff">se apliquen los cambios</text>
   <text string="ect.">.</text>
   <text string="Tabpages:">Mostrar:</text>
@@ -540,13 +535,11 @@
   <text string="Exit">Salir</text>
   <text string="The following xml file could not be loaded. Please check for errors">El siguiente archivo xml no se ha podido cargar. Por favor comprueba los errores</text>
   <text string="Invalid XML file">Archivo XML no válido</text>
-  <text
-    string="Oh no! something went wrong in the application. The application is unable to continue it's work, and will exit. Please report this error to the developers">
+  <text string="Oh no! something went wrong in the application. The application is unable to continue it's work, and will exit. Please report this error to the developers">
     ¡Oh no! Algo funciona mal en la aplicación. La aplicación no puede continuar con su trabajo, y se cerrará. Por favor informa de este error a los desarrolladores
   </text>
   <text string="Critical error">Error crítico</text>
-  <text
-    string="This file is too big to send using the error report. If you want to report it, please upload %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.xlog and send it to contact@bertware.net">
+  <text string="This file is too big to send using the error report. If you want to report it, please upload %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.xlog and send it to contact@bertware.net">
     Este archivo es demasiado grande para enviarlo por el sistema de Informes de errores. Si quieres informar, por favor dirígete a %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.xlog y envía el archivo a contact@bertware.net
   </text>
   <text string="file too big">archivo demasiado grande</text>
@@ -556,15 +549,13 @@
   <text string="Update information invalid: server returned error">Información de actualización inválida: el servidor a devuelto un error</text>
   <text string="Please contact the developers">Por favor contacta con el desarrollador</text>
   <text string="Server returned error">El servidor a devuelto un error</text>
-  <text
-    string="One of your backup profiles wasn't loaded: the file is probably corrupt! The backup profile was removed.">
+  <text string="One of your backup profiles wasn't loaded: the file is probably corrupt! The backup profile was removed.">
     Uno de los perfiles de restauración no se pueden cargar: probablemente el archivo esté corrupto! El perfil de restauración será eliminado.
   </text>
   <text string="Can't load backup profile">No se puede cargar el perfil de restauración</text>
   <text string="This file couldn't be created:">El siguiente archivo no se puede crear:</text>
   <text string="Couldn't create file">No se puede crear el archivo</text>
-  <text
-    string="The current bukkit version could not be determined. It seems like you don't have permissions to do this. Try running the GUI as administator">
+  <text string="The current bukkit version could not be determined. It seems like you don't have permissions to do this. Try running the GUI as administator">
     No se puede determinar la versión actual de Bukkit. Parece que GUI no tiene permisos para recoger esta información. Intenta ejecutar GUI como administrador.
   </text>
   <text string="Insufficient rights">Permisos Insuficientes</text>
@@ -591,46 +582,40 @@
   <text string="cannot update">no actualizable</text>
   <text string="server output">salida del servidor</text>
   <text string="kickall">Kikear a Todos</text>
-  <text string="close gui">cerrar gui</text>
+  <text string="close gui">cerrar GUI</text>
   <text string="Run this task when certain text is received from the server. Warning! this might be CPU intensive!">Ejecutar esta tarea cuando se reciba un determinado texto del servidor. Atención! esto puede cargar mucho la CPU!</text>
-  <text
-    string="the text that will trigger this. Note: if this text is CONTAINED in the server text, the event will run.">
+  <text string="the text that will trigger this. Note: if this text is CONTAINED in the server text, the event will run.">
     el texto que va a ejecutar esto. Nota: si el texto está CONTENIDO en el texto del servidor, el evento se ejecutará.
   </text>
   <text string="Kick all the players that are online.">Expulsa a todos los jugadores del servidor.</text>
   <text string="Optional: the reason for kicking them. (if you have a plugin that supports kick reasons)">Opcional: la razón de la expulsión. (si tienes un plugin que soporte razones de expulsión)</text>
   <text string="Close the GUI.">Cerrar BukkitGUI.</text>
-  <text
-    string="The server could not be started. It seems like you don't have permissions to do this. Try running the GUI as administator">
+  <text string="The server could not be started. It seems like you don't have permissions to do this. Try running the GUI as administator">
     El servidor no se puede iniciar. Es posible que no tengas permisos. Intenta ejecutar BukkitGUI como administrador.
   </text>
   <text string="Error">Error</text>
-  <text string="Right click for options, double click for details. Ctrl+click or Shift+click to select multiple items.">Botón derecho para mostrar las opciones, doble clic para obtener detalles. Ctrl+click or Shift+click para seleccionar más elementos.</text>
+  <text string="Right click for options, double click for details. Ctrl+click or Shift+click to select multiple items.">Botón derecho para mostrar las opciones, doble clic para obtener detalles. Ctrl+clic o Mayús+clic para seleccionar más elementos.</text>
   <text string="Test">Prueba</text>
-  <text string="Right click for options, double click for details. Ctrl+click or Shift+click to s">Botón derecho para mostrar las opciones, doble clic para obtener detalles. Ctrl+click or Shift+click para s</text>
-  <text string="elect multiple items.">eleccionar más elementos.</text>
+  <text string="Right click for options, double click for details. Ctrl+click or Shift+click to s">Botón derecho para mostrar las opciones, doble clic para obtener detalles. Ctrl+clic o Mayús+clic para </text>
+  <text string="elect multiple items.">seleccionar más elementos.</text>
   <text string="Updated">Actualizado</text>
   <text string="Adventure">Aventura</text>
-  <text
-    string="This file is too big to send using the error report. If you want to report it, please upload %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.log and send it to contact@bertware.net">
-    Este archivo es demasiado grande como para enviarlo como reporte de errores. Si quieres reportarlo, por favor coge el archivo %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.log y envialo a contact@bertware.net
+  <text string="This file is too big to send using the error report. If you want to report it, please upload %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.log and send it to contact@bertware.net">
+    Este archivo es demasiado grande como para enviarlo como reporte de errores. Si quieres reportarlo, por favor coge el archivo %appdata%/Bertware/BukkitGUI/Logging/BukkitGUI.log y envíalo a contact@bertware.net
   </text>
   <text string="The update couldn't be downloaded. The update URL is invalid. Try updating manually.">La actualización no se puede descargar. La ruta URL de descarga es incorrecta. Prueba a descargarla manualmente.</text>
   <text string="Error while updating">Error durante la actualización</text>
-  <text
-    string="The update couldn't be installed. It seems like you don't have permissions to do this. Try running the GUI as administator, or install the update manually.">
+  <text string="The update couldn't be installed. It seems like you don't have permissions to do this. Try running the GUI as administator, or install the update manually.">
     La actualización no se ha instalado. Parece ser que no tienes permisos para hacer esto. Intenta ejecutar BukkitGUI como administrador, o instala la actualización manualmente.
   </text>
   <text string="Enable task">Activar tarea</text>
   <text string="These changes will take effect the next time you start the GUI">Estos cambios surtirán efecto la próxima vez que se inicie BukkitGUI</text>
-  <text
-    string="The backup can't be performed: the following drive could not be found. Is this a removeable device (e.g. USB stick)">
+  <text string="The backup can't be performed: the following drive could not be found. Is this a removeable device (e.g. USB stick)">
     No se puede realizar la copia de seguridad: no se encuentra la ruta. Puede que sea una unidad extraible (ej. un PenDrive)
   </text>
   <text string="Drive not found">No se ha encontrado la ruta</text>
   <text string="An error occured while creating a backup for the following backup scheme:">A ocurrido un error cuando se creaba la copia de seguridad:</text>
-  <text
-    string="The backup might be incomplete or corrupt. Make sure all task settings are valid. The error has been logged">
+  <text string="The backup might be incomplete or corrupt. Make sure all task settings are valid. The error has been logged">
     La copia de seguridad es incompleta o corrupta. Asegúrate que todas las tareas sean correctas. El error se ha registrado correctamente
   </text>
   <text string="Backup failed">Copia de Seguridad errónea</text>
@@ -638,8 +623,7 @@
   <text string="Please write your feedback in English.">Por favor escribe el comentario en Inglés.</text>
   <text string="File download failed!">Descarga del archivo errónea!</text>
   <text string="Download failed!">Descarga errónea!</text>
-  <text
-    string="The downloaded file could not be saved. Are you allowed to write to this location? Try running as administrator">
+  <text string="The downloaded file could not be saved. Are you allowed to write to this location? Try running as administrator">
     El archivo descargado no se a guardado. ¿Tienes permisos de escritura esta ruta? Intenta ejecutarlo como administrador
   </text>
   <text string="You will now be redirected to a 3rd party website that is not owned by Bertware.">Ahora serás redirigido a una web de terceros que no es propiedad de Bertware.</text>
@@ -653,8 +637,7 @@
   <text string="Couldn't get the backup settings for backup scheme">No se puede obtener la copia de seguridad de la configuración</text>
   <text string="Task failed!">Tarea errónea!</text>
   <text string="&amp;Kill">&amp;Forzar</text>
-  <text
-    string="The server could not be started. It seems like you don't have permissions to access needed files. Try running the GUI as administator">
+  <text string="The server could not be started. It seems like you don't have permissions to access needed files. Try running the GUI as administator">
     No se puede iniciar el servidor. Es posible que no se pueda acceder a los archivos. Intenta ejecutar BukkitGUI como administrador.
   </text>
   <text string="File I/O error">Error I/O de archivo</text>
@@ -678,9 +661,8 @@
   <text string="Set custom slug...">Configurar slug...</text>
   <text string="Open folder...">Abrir carpeta...</text>
   <text string="Run in light mode">Ejecutar en modo básico</text>
-  <text string="Run GUI when windows starts">Ejecutar BukkitGUI al iniciar windows</text>
-  <text
-    string="WARNING: No craftbukkit file selected, bukkit version can't be determined. Auto update check cancelled.">
+  <text string="Run GUI when windows starts">Ejecutar BukkitGUI al iniciar Windows</text>
+  <text string="WARNING: No craftbukkit file selected, bukkit version can't be determined. Auto update check cancelled.">
     ATENCIÓN: No hay ningún archivo de CraftBukkit seleccionado y no se puede determinar la versión de Bukkit. La Auto-actualización ha sido cancelada.
   </text>
   <text string="WARNING: Turn of ">ATENCIÓN: Cámbialo </text>
@@ -697,9 +679,19 @@
   <text string="Enable this if you need to read chinese (or other UTF-8) text from the server out">¡ATENCIÓN NO ACTIVAR! Solo se debe activar si el servidor necesita leer o</text>
   <text string="put, or need to write chinese (or other UTF-8) text to the server input.">escribir en chino (o en otro tipo de texto UTF-8).</text>
   <text string="000% [00000MB]">000 [00000MB]</text>
-  <text string="This project takes a lot of time. &#xD;&#xA;Support it by donating.&#xD;&#xA;Click the images to ">Este proyecto necesita mucho tiempo y esfuerzo.+%0d%0aAyúdanos realizando una donación.%0d%0aClica en la imágen de </text>
-  <text string="Tell us what you think!&#xD;&#xA;Give feedback by clicking here">Comenta lo que piensas.&#xD;&#xA;Escribe tus sugerencias clicando aquí</text>
-  <text string="You might need to restart the GUI, in order for &#xD;&#xA;these settings to take full eff">Para aplicar los cambios de más abajo &#xD;&#xA;es necesario reiniciar la aplicación.</text>
+  <text string="This project takes a lot of time. &#xD;&#xA;Support it by donating.&#xD;&#xA;Click the images to ">
+    Este proyecto necesita mucho tiempo y esfuerzo.
+    Ayúdanos realizando una donación.
+    Clica en la imagen de
+  </text>
+  <text string="Tell us what you think!&#xD;&#xA;Give feedback by clicking here">
+    ¡Comenta lo que te parece!
+    Envía tus sugerencias clicando aquí.
+  </text>
+  <text string="You might need to restart the GUI, in order for &#xD;&#xA;these settings to take full eff">
+    Para aplicar los cambios realizados más abajo
+    es necesario reiniciar la aplicación.
+  </text>
   <text string="Iniciando servidor">Iniciando servidor</text>
   <text string="Servidor iniciado">Servidor iniciado</text>
   <text string="Parando servidor">Parando servidor</text>
@@ -714,4 +706,8 @@
   <text string="Browse console output">Buscar en la Consola</text>
   <text string="Unknown">Desconocido</text>
   <text string="Set-up port forwarding...">Configuración de puertos...</text>
+  <text string="00%">00%25</text>
+  <text string="Set-up port forwarding... (experimental)">Configurar Redirección de Puertos... (experimental)</text>
+  <text string="BukkitGui v2 is available! visit get.bertware.net">¡BukkitGui v2 está disponible en get.bertware.net!</text>
+  <text string="Ignored">Ignorar</text>
 </language>
