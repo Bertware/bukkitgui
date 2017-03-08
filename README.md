@@ -4,13 +4,9 @@ This project was continued in C#. You can find it here: https://github.com/Bertw
 ---------
 
 ## bukkitgui
-=========
-
 The bukkit GUI project - shortened BukkitGUI - is intended to provide server owners with a easy to use, powerful GUI. Except from clearly displaying server information, it also adds some powerful functions, like a task planner, error logger and solver, plugin manager,...
 
 ### Features
-=========
-
 * Coloured output, colours definable in settings
 * Detailed player list with context menu, quickly apply an action to a player
 * Advanced options to launch bukkit, update bukkit, auto update check for bukkit
@@ -26,41 +22,30 @@ The bukkit GUI project - shortened BukkitGUI - is intended to provide server own
 * port forwarding
 
 ### Use
-===
 Please see the project page at dev.bukkit.org for information, including video tutorials, on how to set-up and use this software.
 https://dev.bukkit.org/projects/bukkitgui?gameCategorySlug=bukkit-plugins&projectID=32715
 
 #### Remote Server Support
----------------------
-  
 The GUI can also show output and send commands to remote servers. The recommended way to use a remote server is by using JSONAPI. In order for this to work, the JSONAPI plugin should be installed on your server.
     
 If you want to start RemoteToolkit using the GUI, do the following: -Set the server type to bukkit -Select the remote toolkit jar file -Enter the following custom switch: "user:pass" without the ""
 
 #### Downloads
---------	
-  
 Recommended builds can be downloaded from Bukkitdev. If enabled, the GUI will check for updates and download those from bukkitdev after you agreed with the download.
   
 ### To-Do
-=====
-
-Portforwarding (work in progress) 
+* Portforwarding (work in progress) 
 
 ### Known Issues
-============
 
 Sometimes tasks run twice 
 
 ### compatibility
-=============
 #### operating systems
-------------------
 Windows XP and higher. If it doesn't work, make shure if you have .net framework 3.5.
 Linux and Mac aren't supported.
 
 #### minecraft servers
------------------
 The following minecraft servers are supported:
 
 * Bukkit build 800 and higher (lower isn't tested)
