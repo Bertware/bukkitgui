@@ -276,7 +276,11 @@ Namespace My.Resources
                 Return ResourceManager.GetString("lang_japanese", resourceCulture)
             End Get
         End Property
-        
+        Friend ReadOnly Property lang_korean() As String
+            Get
+                Return ResourceManager.GetString("lang_korean", resourceCulture)
+            End Get
+        End Property
         '''<summary>
         '''  Looks up a localized string similar to &lt;language version=&quot;1.0&quot;&gt;
         '''  &lt;text string=&quot;General&quot;&gt;Ogólne&lt;/text&gt;
