@@ -22,7 +22,7 @@ Namespace forms
 
     Public Class LanguageInstaller
         Private ReadOnly _languages() As String =
-                             {"bulgarian", "danish", "dutch", "french", "german", "italian", "japanese", "polish", "romanian", "russian",
+                             {"bulgarian", "danish", "dutch", "french", "german", "italian", "japanese", "korean", "polish", "romanian", "russian",
                               "simplifiedChinese", "spanish", "traditionalChinese", "turkish"}
 
         Private Event LanguagesLoaded()
@@ -33,7 +33,7 @@ Namespace forms
             t.Name = "LanguageInstaller_getlanguages"
             t.Start()
         End Sub
-
+    
         Private Sub update_ui() Handles Me.LanguagesLoaded
             If Me.InvokeRequired Then
                 Dim d As New ContextCallback(AddressOf update_ui)
