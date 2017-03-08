@@ -22,7 +22,7 @@ Namespace forms
 
     Public Class LanguageInstaller
         Private ReadOnly _languages() As String =
-                             {"bulgarian", "danish", "dutch", "french", "german", "italian", "japanese", "polish", "romanian", "russian",
+                             {"bulgarian", "danish", "dutch", "french", "german", "italian", "japanese", "korean", "polish", "romanian", "russian",
                               "simplifiedChinese", "spanish", "traditionalChinese", "turkish"}
 
         Private Event LanguagesLoaded()
