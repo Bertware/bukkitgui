@@ -1,14 +1,13 @@
-Want to add or fix something? Instead of forking this repo, fork the new version! Find it here: https://github.com/Bertware/bukkitgui2/ .
-----------------------------
+This project has been abandoned. Pull requests will be reviewed and accepted, but no active development is happening anymore.
+This project was continued in C#. You can find it here: https://github.com/Bertware/bukkitgui2/ .
+---------
 
-bukkitgui
+## bukkitgui
 =========
 
-The bukkit GUI project - shortened BukkitGUI - is intended to provide server owners with a easy to use, powerful GUI. Except from clearly displaying server information, it also adds some powerful functions, like a task planner, error logger and solver, plugin manager, . At this moment it does only use 30MB of your RAM, and 0% CPU when your server is running.
+The bukkit GUI project - shortened BukkitGUI - is intended to provide server owners with a easy to use, powerful GUI. Except from clearly displaying server information, it also adds some powerful functions, like a task planner, error logger and solver, plugin manager,...
 
-    CPU usage may raise when there is a lot of output, like on startup (with many plugins or) reload. 
-
-Features
+### Features
 =========
 
 * Coloured output, colours definable in settings
@@ -25,41 +24,41 @@ Features
 * Install, update, manage plugins from within the GUI 
 * port forwarding
 
-Use
+### Use
 ===
+Please see the project page at dev.bukkit.org for information, including video tutorials, on how to set-up and use this software.
+https://dev.bukkit.org/projects/bukkitgui?gameCategorySlug=bukkit-plugins&projectID=32715
 
-Remote Server Support
+#### Remote Server Support
 ---------------------
   
 The GUI can also show output and send commands to remote servers. The recommended way to use a remote server is by using JSONAPI. In order for this to work, the JSONAPI plugin should be installed on your server.
     
 If you want to start RemoteToolkit using the GUI, do the following: -Set the server type to bukkit -Select the remote toolkit jar file -Enter the following custom switch: "user:pass" without the ""
 
-  
-  
-Downloads
+#### Downloads
 --------	
   
 Recommended builds can be downloaded from Bukkitdev. If enabled, the GUI will check for updates and download those from bukkitdev after you agreed with the download.
   
-To-Do
+### To-Do
 =====
 
 Portforwarding (work in progress) 
 
-Known Issues
+### Known Issues
 ============
 
 Sometimes tasks run twice 
 
-compatibility
+### compatibility
 =============
-operating systems
+#### operating systems
 ------------------
 Windows XP and higher. If it doesn't work, make shure if you have .net framework 3.5.
 Linux and Mac aren't supported.
 
-minecraft servers
+#### minecraft servers
 -----------------
 The following minecraft servers are supported:
 
