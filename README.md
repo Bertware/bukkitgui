@@ -1,5 +1,6 @@
 This project has been abandoned. Pull requests will be reviewed and accepted, but no active development is happening anymore.
 This project was continued in C#. You can find it here: https://github.com/Bertware/bukkitgui2/ .
+
 ---------
 
 ## bukkitgui
